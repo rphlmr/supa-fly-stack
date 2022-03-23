@@ -51,8 +51,6 @@ export const action: ActionFunction = async ({ request }) => {
 
   const { email, password, redirectTo = "/notes" } = formValidation.data;
 
-  console.log(formValidation.data);
-
   const { authSession, authSessionError } = await signInWithEmail(
     email,
     password
