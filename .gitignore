@@ -1,0 +1,21 @@
+node_modules
+
+/build
+/public/build
+.env
+
+/cypress/screenshots
+/cypress/videos
+/prisma/data.db
+/prisma/data.db-journal
+/postgres-data
+/coverage
+
+/app/styles/tailwind.css
+
+.history
+.vscode
+# Supabase
+**/supabase/.branches
+**/supabase/.temp
+**/supabase/.env
