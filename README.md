@@ -163,6 +163,8 @@ We use GitHub Actions for continuous integration and deployment. Anything that g
 
 ### Cypress
 
+> Working locally but not on CI env ... First time with Cypress 🙃
+
 We use Cypress for our End-to-End tests in this project. You'll find those in the `cypress` directory. As you make changes, add to an existing file or create a new file in the `cypress/e2e` directory to test your changes.
 
 We use [`@testing-library/cypress`](https://testing-library.com/cypress) for selecting elements on the page semantically.
