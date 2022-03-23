@@ -7,6 +7,7 @@ import {
   getRedirectTo,
   makeRedirectToFromHere,
 } from "../utils/request.server";
+import { mapSession } from "~/utils/session-mapper";
 
 if (!process.env.SESSION_SECRET) {
   throw new Error("SESSION_SECRET is not set");
@@ -29,15 +30,6 @@ export interface UserSession {
   refreshToken: string;
   userId: string;
   email: string;
-}
-
-function mapSession(authSession: AuthSession): UserSession {
-  return {
-    accessToken: authSession.access_token,
-    refreshToken: authSession.refresh_token ?? "",
-    userId: authSession.user?.id ?? "",
-    email: authSession.user?.email ?? "",
-  };
 }
 
 /**
@@ -82,13 +74,16 @@ export async function commitUserSession(
   request: Request,
   {
     userSession,
-    flashMessage,
-  }: { userSession?: UserSession | null; flashMessage?: string | null } = {}
+    flashErrorMessage,
+  }: {
+    userSession?: UserSession | null;
+    flashErrorMessage?: string | null;
+  } = {}
 ) {
   const session = await getSession(request);
 
-  if (flashMessage) {
-    session.flash(ERROR_SESSION_KEY, flashMessage);
+  if (flashErrorMessage) {
+    session.flash(ERROR_SESSION_KEY, flashErrorMessage);
   }
 
   // allow user session to be null.
@@ -115,7 +110,7 @@ export async function createUserSession({
     headers: {
       "Set-Cookie": await commitUserSession(request, {
         userSession,
-        flashMessage: null,
+        flashErrorMessage: null,
       }),
     },
   });
@@ -160,7 +155,7 @@ async function assertUserSession(
         headers: {
           "Set-Cookie": await commitUserSession(request, {
             userSession: null,
-            flashMessage: "no-user-session",
+            flashErrorMessage: "no-user-session",
           }),
         },
       }
@@ -192,7 +187,7 @@ export async function refreshSession(request: Request): Promise<UserSession> {
       headers: {
         "Set-Cookie": await commitUserSession(request, {
           userSession: null,
-          flashMessage: "fail-refresh-user-session",
+          flashErrorMessage: "fail-refresh-user-session",
         }),
       },
     });

@@ -1,10 +1,12 @@
 import {
   Links,
   LiveReload,
+  LoaderFunction,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "remix";
 import type { LinksFunction, MetaFunction } from "remix";
 
@@ -20,16 +22,33 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1",
 });
 
+export const loader: LoaderFunction = () => {
+  return {
+    env: {
+      SUPABASE_URL: process.env.SUPABASE_URL,
+      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+    },
+  };
+};
+
 export default function App() {
+  const { env } = useLoaderData<Window>();
+
   return (
     <html lang="en" className="h-full">
       <head>
+        <title>Supa Fly Stack</title>
         <Meta />
         <Links />
       </head>
       <body className="h-full">
         <Outlet />
         <ScrollRestoration />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.env = ${JSON.stringify(env)}`,
+          }}
+        />
         <Scripts />
         <LiveReload />
       </body>

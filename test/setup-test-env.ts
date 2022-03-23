@@ -5,6 +5,7 @@ import { server } from "mocks/start";
 process.env.SESSION_SECRET = "super-duper-s3cret";
 process.env.SUPABASE_SERVICE_KEY = "{SERVICE_KEY}";
 process.env.SUPABASE_URL = "https://supabase-project.supabase.co";
+process.env.SERVER_URL = "http://localhost:3000";
 
 installGlobals();
 

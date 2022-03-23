@@ -11,7 +11,7 @@ import { USER_EMAIL, USER_ID, USER_PASSWORD } from "mocks/user";
 import { matchRequestUrl, rest } from "msw";
 import { createUser } from "~/models/user.server";
 import {
-  createNewUserAccount,
+  createUserAccount,
   getUserByAccessToken,
   refreshAccessToken,
 } from "./auth.server";
@@ -105,7 +105,7 @@ describe("auth.server : signInWithEmail", () => {
       if (matchesMethod && matchesUrl) fetchAuthTokenAPI.set(req.id, req);
     });
 
-    const result = await createNewUserAccount(USER_EMAIL, USER_PASSWORD);
+    const result = await createUserAccount(USER_EMAIL, USER_PASSWORD);
 
     server.events.removeAllListeners();
 
@@ -148,7 +148,7 @@ describe("auth.server : createNewUserAccount", () => {
       )
     );
 
-    const result = await createNewUserAccount(USER_EMAIL, USER_PASSWORD);
+    const result = await createUserAccount(USER_EMAIL, USER_PASSWORD);
 
     server.events.removeAllListeners();
 
@@ -204,7 +204,7 @@ describe("auth.server : createNewUserAccount", () => {
       )
     );
 
-    const result = await createNewUserAccount(USER_EMAIL, USER_PASSWORD);
+    const result = await createUserAccount(USER_EMAIL, USER_PASSWORD);
 
     server.events.removeAllListeners();
 
@@ -253,7 +253,7 @@ describe("auth.server : createNewUserAccount", () => {
     // @ts-expect-error missing vitest support
     createUser.mockReturnValueOnce({ createUserError: true });
 
-    const result = await createNewUserAccount(USER_EMAIL, USER_PASSWORD);
+    const result = await createUserAccount(USER_EMAIL, USER_PASSWORD);
 
     server.events.removeAllListeners();
 
@@ -296,7 +296,7 @@ describe("auth.server : createNewUserAccount", () => {
       if (matchesMethod && matchesUrl) fetchAuthTokenAPI.set(req.id, req);
     });
 
-    const result = await createNewUserAccount(USER_EMAIL, USER_PASSWORD);
+    const result = await createUserAccount(USER_EMAIL, USER_PASSWORD);
 
     server.events.removeAllListeners();
 

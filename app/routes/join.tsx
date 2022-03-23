@@ -1,5 +1,10 @@
 import * as React from "react";
-import type { ActionFunction, LoaderFunction, MetaFunction } from "remix";
+import {
+  ActionFunction,
+  LoaderFunction,
+  MetaFunction,
+  useTransition,
+} from "remix";
 import {
   Form,
   Link,
@@ -8,11 +13,12 @@ import {
   json,
   useActionData,
 } from "remix";
-import { createNewUserAccount } from "~/services/auth.server";
+import { createUserAccount } from "~/services/auth.server";
 import { createUserSession, getUserSession } from "~/services/session.server";
 import { getUserByEmail } from "~/models/user.server";
 import { getFormData, useFormInputProps } from "remix-params-helper";
 import { LoginFormSchema } from "./login";
+import ContinueWithEmail from "~/components/send-magic-link";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userSession = await getUserSession(request);
@@ -52,7 +58,7 @@ export const action: ActionFunction = async ({ request }) => {
     );
   }
 
-  const authSession = await createNewUserAccount(email, password);
+  const authSession = await createUserAccount(email, password);
 
   if (!authSession) {
     return json<ActionData>(
@@ -81,6 +87,9 @@ export default function Join() {
   const emailRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
   const inputProps = useFormInputProps(LoginFormSchema);
+  const transition = useTransition();
+  const disabled =
+    transition.state === "submitting" || transition.state === "loading";
 
   React.useEffect(() => {
     if (actionData?.errors?.email) {
@@ -114,6 +123,7 @@ export default function Join() {
                 aria-invalid={actionData?.errors?.email ? true : undefined}
                 aria-describedby="email-error"
                 className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
+                disabled={disabled}
               />
               {actionData?.errors?.email && (
                 <div className="pt-1 text-red-700" id="email-error">
@@ -141,6 +151,7 @@ export default function Join() {
                 aria-invalid={actionData?.errors?.password ? true : undefined}
                 aria-describedby="password-error"
                 className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
+                disabled={disabled}
               />
               {actionData?.errors?.password && (
                 <div className="pt-1 text-red-700" id="password-error">
@@ -154,6 +165,7 @@ export default function Join() {
           <button
             type="submit"
             className="w-full rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
+            disabled={disabled}
           >
             Create Account
           </button>
@@ -172,6 +184,21 @@ export default function Join() {
             </div>
           </div>
         </Form>
+        <div className="mt-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="bg-white px-2 text-gray-500">
+                Or continue with
+              </span>
+            </div>
+          </div>
+          <div className="mt-6">
+            <ContinueWithEmail />
+          </div>
+        </div>
       </div>
     </div>
   );

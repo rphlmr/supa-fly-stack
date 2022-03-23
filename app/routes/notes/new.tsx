@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Form, json, redirect, useActionData } from "remix";
+import { Form, json, redirect, useActionData, useTransition } from "remix";
 import type { ActionFunction } from "remix";
 import Alert from "@reach/alert";
 import {
@@ -56,6 +56,11 @@ export default function NewNotePage() {
   const titleRef = React.useRef<HTMLInputElement>(null);
   const bodyRef = React.useRef<HTMLTextAreaElement>(null);
   const inputProps = useFormInputProps(NewNoteFormSchema);
+  const transition = useTransition();
+  const disabled =
+    transition.state === "submitting" || transition.state === "loading";
+
+  console.log(transition.state);
 
   React.useEffect(() => {
     if (actionData?.errors?.title) {
@@ -87,6 +92,7 @@ export default function NewNotePage() {
             aria-errormessage={
               actionData?.errors?.title ? "title-error" : undefined
             }
+            disabled={disabled}
           />
         </label>
         {actionData?.errors?.title && (
@@ -109,6 +115,7 @@ export default function NewNotePage() {
             aria-errormessage={
               actionData?.errors?.body ? "body-error" : undefined
             }
+            disabled={disabled}
           />
         </label>
         {actionData?.errors?.body && (
@@ -122,6 +129,7 @@ export default function NewNotePage() {
         <button
           type="submit"
           className="rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
+          disabled={disabled}
         >
           Save
         </button>

@@ -25,6 +25,11 @@ export async function signInWithEmail(email: string, password: string) {
   return { authSession: data, authSessionError: error };
 }
 
+// export async function signInWithEmail(email: string, password: string) {
+//   const { data, error } = await supabaseAdmin.auth.api(email, password);
+//   return { authSession: data, authSessionError: error };
+// }
+
 export async function createAuthAccount(email: string, password: string) {
   const { data, error } = await supabaseAdmin.auth.api.createUser({
     email,
@@ -39,7 +44,10 @@ export async function _DANGEROUS_deleteAuthAccount(userId: string) {
   return supabaseAdmin.auth.api.deleteUser(userId);
 }
 
-export async function createNewUserAccount(email: string, password: string) {
+export async function createUserAccount(
+  email: string,
+  password: string
+): Promise<AuthSession | null> {
   const { authAccount, createAuthAccountError } = await createAuthAccount(
     email,
     password
@@ -70,4 +78,33 @@ export async function createNewUserAccount(email: string, password: string) {
   }
 
   return authSession;
+}
+
+export async function creatOAuthUser(id: string, email: string) {
+  const { createUserError } = await createUser({
+    id,
+    email,
+  });
+
+  // user account created and have a session but unable to store in User table
+  // we should delete the user account to allow retry create account again
+  if (createUserError) {
+    await _DANGEROUS_deleteAuthAccount(id);
+    return createUserError;
+  }
+}
+
+// yeah ... we can do that server-side. It's awesome
+export async function sendMagicLink({
+  email,
+  redirectTo,
+}: {
+  email: string;
+  redirectTo?: string;
+}) {
+  return supabaseAdmin.auth.api.sendMagicLinkEmail(email, {
+    redirectTo: `${process.env.SERVER_URL}/oauth/callback${
+      redirectTo ? `?redirectTo=${redirectTo}` : ""
+    }`,
+  });
 }

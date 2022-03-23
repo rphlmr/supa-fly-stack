@@ -14,7 +14,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Index() {
   const { email } = useLoaderData() as LoaderData;
   return (
-    <main className="relative min-h-screen bg-white sm:flex sm:items-center sm:justify-center">
+    <main className="relative min-h-screen bg-black sm:flex sm:items-center sm:justify-center">
       <div className="relative sm:pb-16 sm:pt-8">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="relative shadow-xl sm:overflow-hidden sm:rounded-2xl">
@@ -26,10 +26,16 @@ export default function Index() {
               />
               <div className="absolute inset-0 bg-[color:rgba(254,204,27,0.5)] mix-blend-multiply" />
             </div>
-            <div className="lg:pb-18 relative px-4 pt-16 pb-8 sm:px-6 sm:pt-24 sm:pb-14 lg:px-8 lg:pt-32">
-              <h1 className="text-center text-6xl font-extrabold tracking-tight sm:text-8xl lg:text-9xl">
-                <span className="block uppercase text-yellow-500 drop-shadow-md">
-                  Indie Stack
+            <div className="lg:pb-18 relative bg-black bg-opacity-50 px-4 pt-16 pb-8 sm:px-6 sm:pt-24 sm:pb-14 lg:px-8 lg:pt-32">
+              <h1 className="space-x-8 text-center text-6xl font-extrabold tracking-tight sm:text-8xl lg:text-9xl">
+                <span className="uppercase text-green-500 drop-shadow-md">
+                  Supa
+                </span>
+                <span className="uppercase text-purple-500 drop-shadow-md">
+                  Fly
+                </span>
+                <span className="uppercase text-yellow-500 drop-shadow-md">
+                  Stack
                 </span>
               </h1>
               <p className="mx-auto mt-6 max-w-lg text-center text-xl text-white sm:max-w-3xl">
@@ -45,19 +51,21 @@ export default function Index() {
                     View Notes for {email}
                   </Link>
                 ) : (
-                  <div className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0">
-                    <Link
-                      to="/join"
-                      className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
-                    >
-                      Sign up
-                    </Link>
-                    <Link
-                      to="/login"
-                      className="flex items-center justify-center rounded-md bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600  "
-                    >
-                      Log In
-                    </Link>
+                  <div className="space-y-4">
+                    <div className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0">
+                      <Link
+                        to="/join"
+                        className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
+                      >
+                        Sign up
+                      </Link>
+                      <Link
+                        to="/login"
+                        className="flex items-center justify-center rounded-md bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600  "
+                      >
+                        Log In
+                      </Link>
+                    </div>
                   </div>
                 )}
               </div>
@@ -76,14 +84,14 @@ export default function Index() {
           <div className="mt-6 flex flex-wrap justify-center gap-8">
             {[
               {
-                src: "https://user-images.githubusercontent.com/1500684/157764397-ccd8ea10-b8aa-4772-a99b-35de937319e1.svg",
-                alt: "Fly.io",
-                href: "https://fly.io",
-              },
-              {
-                src: "https://supabase.com/brand-assets/supabase-logo-wordmark--light.svg",
+                src: "https://supabase.com/brand-assets/supabase-logo-wordmark--dark.svg",
                 alt: "Supabase",
                 href: "https://supabase.com",
+              },
+              {
+                src: "https://fly.io/public/images/brand/logo-light.svg",
+                alt: "Fly.io",
+                href: "https://fly.io",
               },
               {
                 src: "https://user-images.githubusercontent.com/1500684/157764484-ad64a21a-d7fb-47e3-8669-ec046da20c1f.svg",
@@ -91,7 +99,7 @@ export default function Index() {
                 href: "https://prisma.io",
               },
               {
-                src: "https://user-images.githubusercontent.com/1500684/157764276-a516a239-e377-4a20-b44a-0ac7b65c8c14.svg",
+                src: "https://tailwindcss.com/_next/static/media/tailwindcss-logotype-white.e0b2bd6155fa0bed8e24ff6b28f4a911.svg",
                 alt: "Tailwind",
                 href: "https://tailwindcss.com",
               },

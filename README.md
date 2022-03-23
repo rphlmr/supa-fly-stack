@@ -1,6 +1,6 @@
 # Remix Supa Fly Stack
 
-![The Remix Indie Stack](https://repository-images.githubusercontent.com/465928257/a241fa49-bd4d-485a-a2a5-5cb8e4ee0abf)
+![The Remix Indie Stack](../supa-fly-stack/doc/supa-fly-stak.png)
 
 Learn more about [Remix Stacks](https://remix.run/stacks).
 
@@ -15,6 +15,7 @@ npx create-remix --template rphlmr/supa-fly-stack
 - Healthcheck endpoint for [Fly backups region fallbacks](https://fly.io/docs/reference/configuration/#services-http_checks)
 - [GitHub Actions](https://github.com/features/actions) for deploy on merge to production and staging environments
 - Email/Password Authentication with [cookie-based sessions](https://remix.run/docs/en/v1/api/remix#createcookiesessionstorage)
+  - **NEW** : Magic Link login 🥳
 - Database ORM with [Prisma](https://prisma.io)
 - Forms Schema (client and server sides !) validation with [Remix Params Helper](https://github.com/kiliman/remix-params-helper)
 - Styling with [Tailwind](https://tailwindcss.com/)
@@ -42,14 +43,16 @@ Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --
   > **Note:** Used all your free tiers ? Also works with [Supabase CLI](https://github.com/supabase/cli) and local self hosting
 
 - Go to https://app.supabase.io/project/{PROJECT}/api?page=auth to find your secrets
-- Add your `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` and `DATABASE_URL` in the `.env` file
+- Add your `SUPABASE_URL`, `SERVER_URL`, `SUPABASE_SERVICE_KEY` and `DATABASE_URL` in the `.env` file
+  > **Note:** `SERVER_URL` is your localhost on dev. It'll work for magic link login
 
-```
+```en
 DATABASE_URL="postgres://postgres:{STAGING_POSTGRES_PASSWORD}@db.{STAGING_YOUR_INSTANCE_NAME}.supabase.co:5432/postgres"
 SHADOW_DATABASE_URL="postgresql://postgres:postgres@localhost:12345/postgres"
 SUPABASE_SERVICE_KEY="{STAGING_SERVICE_KEY}"
 SUPABASE_URL="https://{STAGING_YOUR_INSTANCE_NAME}.supabase.co"
 SESSION_SECRET="super-duper-s3cret"
+SERVER_URL="http://localhost:3000"
 ```
 
 - Start Shadow database (Docker needs some time at initial run)
@@ -57,6 +60,8 @@ SESSION_SECRET="super-duper-s3cret"
   ```sh
   npm run shadow-db:setup
   ```
+
+````
 
 - Wait until you see `supabase-shadow_1 | PostgreSQL init process complete; ready for start up.` in console output
 
@@ -188,5 +193,5 @@ This project uses ESLint for linting. That is configured in `.eslintrc.js`.
 
 We use [Prettier](https://prettier.io/) for auto-formatting in this project. It's recommended to install an editor plugin (like the [VSCode Prettier plugin](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)) to get auto-formatting on save. There's also a `npm run format` script you can run to format all files in the project.
 
-
 CC BY-NC-SA 4.0
+````
