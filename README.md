@@ -94,6 +94,8 @@ This is a pretty simple note-taking app, but it's a good example of how you can 
 
 ## Deployment
 
+> Do what you know if you are a Fly.io expert.
+
 This Remix Stack comes with two GitHub Actions that handle automatically deploying your app to production and staging environments.
 
 Prior to your first deployment, you'll need to do a few things:
@@ -129,7 +131,7 @@ Prior to your first deployment, you'll need to do a few things:
 
 - Add a `FLY_API_TOKEN` to your GitHub repo. To do this, go to your user settings on Fly and create a new [token](https://web.fly.io/user/personal_access_tokens/new), then add it to [your repo secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) with the name `FLY_API_TOKEN`.
 
-- Add a `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` and `DATABASE_URL` to your fly app secrets, to do this you can run the following commands:
+- Add a `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `SERVER_URL` and `DATABASE_URL` to your fly app secrets, to do this you can run the following commands:
 
   ```sh
   # staging
@@ -137,12 +139,14 @@ Prior to your first deployment, you'll need to do a few things:
   fly secrets set SUPABASE_URL="https://{YOUR_STAGING_INSTANCE_NAME}.supabase.co" --app supa-fly-stack-template-staging
   fly secrets set SUPABASE_SERVICE_KEY="{STAGING_SERVICE_KEY}" --app supa-fly-stack-template-staging
   fly secrets set DATABASE_URL="postgres://postgres:{STAGING_POSTGRES_PASSWORD}@db.{STAGING_YOUR_INSTANCE_NAME}.supabase.co:5432/postgres" --app supa-fly-stack-template-staging
+   fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}" --app supa-fly-stack-template-staging
 
   # production
   fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app supa-fly-stack-template
   fly secrets set SUPABASE_URL="https://{YOUR_INSTANCE_NAME}.supabase.co" --app supa-fly-stack-template
   fly secrets set SUPABASE_SERVICE_KEY="{SERVICE_KEY}" --app supa-fly-stack-template
   fly secrets set DATABASE_URL="postgres://postgres:{POSTGRES_PASSWORD}@db.{YOUR_INSTANCE_NAME}.supabase.co:5432/postgres" --app supa-fly-stack-template
+     fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}" --app supa-fly-stack-template
   ```
 
   If you don't have openssl installed, you can also use [1password](https://1password.com/generate-password) to generate a random secret, just replace `$(openssl rand -hex 32)` with the generated secret.
