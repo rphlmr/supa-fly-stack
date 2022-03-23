@@ -61,8 +61,6 @@ SERVER_URL="http://localhost:3000"
   npm run shadow-db:setup
   ```
 
-````
-
 - Wait until you see `supabase-shadow_1 | PostgreSQL init process complete; ready for start up.` in console output
 
 - You can now `ctrl` + `c` to kill process
@@ -194,4 +192,7 @@ This project uses ESLint for linting. That is configured in `.eslintrc.js`.
 We use [Prettier](https://prettier.io/) for auto-formatting in this project. It's recommended to install an editor plugin (like the [VSCode Prettier plugin](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)) to get auto-formatting on save. There's also a `npm run format` script you can run to format all files in the project.
 
 CC BY-NC-SA 4.0
-````
+
+```
+
+```
