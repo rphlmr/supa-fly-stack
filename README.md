@@ -1,6 +1,6 @@
 # Remix Supa Fly Stack
 
-![The Remix Indie Stack](../supa-fly-stack/doc/supa-fly-stak.png)
+![The Remix Indie Stack](https://raw.githubusercontent.com/rphlmr/supa-fly-stack/main/doc/supa-fly-stak.png)
 
 Learn more about [Remix Stacks](https://remix.run/stacks).
 
