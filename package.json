@@ -10,7 +10,7 @@
     "build:remix": "remix build",
     "dev": "run-p dev:*",
     "dev:css": "npm run generate:css -- --watch",
-    "dev:remix": "node --require ./mocks ./node_modules/.bin/remix dev",
+    "dev:remix": "binode --require ./mocks -- @remix-run/dev:remix dev",
     "shadow-db:setup": "docker-compose up",
     "shadow-db:start": "docker-compose up -d",
     "shadow-db:stop": "docker-compose stop",
@@ -22,7 +22,7 @@
     "setup:db": "prisma migrate dev",
     "setup:seed": "prisma db seed",
     "start": "dotenv -- remix-serve build",
-    "start:mocks": "dotenv -- node --require ./mocks ./node_modules/.bin/remix-serve build",
+    "start:mocks": "dotenv -- binode --require ./mocks -- @remix-run/serve:remix-serve build",
     "test": "vitest",
     "test:cov": "vitest --coverage",
     "test:e2e:dev": "start-server-and-test dev http://localhost:3000 'cypress open'",
@@ -39,7 +39,6 @@
   ],
   "dependencies": {
     "@prisma/client": "^3.11.0",
-    "@reach/alert": "^0.16.0",
     "@remix-run/react": "*",
     "@remix-run/serve": "*",
     "@supabase/supabase-js": "^1.31.1",
@@ -59,9 +58,10 @@
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
     "@types/eslint": "^8.4.1",
-    "@types/react": "^17.0.40",
-    "@types/react-dom": "^17.0.13",
+    "@types/react": "^17.0.42",
+    "@types/react-dom": "^17.0.14",
     "@vitejs/plugin-react": "^1.2.0",
+    "binode": "^1.0.5",
     "c8": "^7.11.0",
     "cross-env": "^7.0.3",
     "cypress": "^9.5.2",
@@ -79,7 +79,7 @@
     "tailwindcss": "^3.0.23",
     "typescript": "^4.6.2",
     "vite-tsconfig-paths": "^3.4.1",
-    "vitest": "^0.7.6"
+    "vitest": "^0.7.10"
   },
   "engines": {
     "node": ">=14"
