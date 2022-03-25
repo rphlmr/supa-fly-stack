@@ -1,8 +1,8 @@
 import { AuthSession } from "~/database/supabase.server";
 import { createCookieSessionStorage, redirect } from "remix";
-import { getUserByAccessToken, refreshAccessToken } from "./auth.server";
+import { getAuthByAccessToken, refreshAccessToken } from "./auth.server";
 import {
-  canSafelyRedirect,
+  isGET,
   getCurrentPath,
   getRedirectTo,
   makeRedirectToFromHere,
@@ -129,14 +129,16 @@ export async function logout(request: Request) {
  * User session validations
  */
 
-export async function verifyUserSession(request: Request) {
+async function verifyUserSession(request: Request) {
   const session = await getUserSession(request);
 
   if (!session?.accessToken) return false;
 
-  const { error, user } = await getUserByAccessToken(session.accessToken);
+  const { error, user: authAccount } = await getAuthByAccessToken(
+    session.accessToken
+  );
 
-  if (error || !user) return false;
+  if (error || !authAccount) return false;
 
   return true;
 }
@@ -183,6 +185,8 @@ export async function refreshSession(request: Request): Promise<UserSession> {
         ? LOGIN_URL
         : `${LOGIN_URL}?${makeRedirectToFromHere(request)}`;
 
+    // here we throw instead of return because this function promise a UserSession and not a response object
+    // https://remix.run/docs/en/v1/guides/constraints#higher-order-functions
     throw redirect(redirectUrl, {
       headers: {
         "Set-Cookie": await commitUserSession(request, {
@@ -196,7 +200,9 @@ export async function refreshSession(request: Request): Promise<UserSession> {
   const refreshedUserSession = mapSession(refreshedSession);
 
   // refresh is ok and we can redirect
-  if (canSafelyRedirect(request)) {
+  if (isGET(request)) {
+    // here we throw instead of return because this function promise a UserSession and not a response object
+    // https://remix.run/docs/en/v1/guides/constraints#higher-order-functions
     throw redirect(getRedirectTo(request), {
       headers: {
         "Set-Cookie": await commitUserSession(request, {
@@ -232,16 +238,19 @@ export async function requireUserSession(
     onFailRedirectTo,
   });
 
-  // Ok, let's challenge its access token
-  const isValidSession = await verifyUserSession(request);
+  // ok, let's challenge its access token
+  const isValid = await verifyUserSession(request);
 
   // damn, access token expires but we can redirect. Let's go!
-  if (!isValidSession && canSafelyRedirect(request)) {
+  if (!isValid && isGET(request)) {
     throw redirect(`/refresh-session?${makeRedirectToFromHere(request)}`);
   }
 
-  // so, user session expires and we can't redirect. Let's try to return a refresh session 🧐
-  if (!isValidSession) {
+  // so, maybe we are in a POST / PUT / PATCH / DELETE method
+  // user session is valid but we doesn't know if it'll expire in a microsecond.
+  // it can be problematic if you use this access token to fetch one of your external api
+  // let's refresh session in case of 🧐
+  if (!isGET(request)) {
     return refreshSession(request);
   }
 

@@ -12,7 +12,7 @@ export function getRedirectTo(request: Request, defaultRedirectTo = "/") {
 }
 
 // allow redirect on GET only
-export function canSafelyRedirect(request: Request) {
+export function isGET(request: Request) {
   return request.method.toLowerCase() === "get";
 }
 

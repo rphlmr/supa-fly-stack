@@ -1,5 +1,5 @@
 import {
-  canSafelyRedirect,
+  isGET,
   getCurrentPath,
   getRedirectTo,
   makeRedirectToFromHere,
@@ -46,18 +46,16 @@ describe("request.server : getRedirectTo", () => {
   });
 });
 
-describe("request.server : canSafelyRedirect", () => {
+describe("request.server : isGET", () => {
   it("should return false for POST / PUT / PATCH / DELETE methods", () => {
-    expect(canSafelyRedirect(new Request("", { method: "POST" }))).toBeFalsy();
-    expect(canSafelyRedirect(new Request("", { method: "PUT" }))).toBeFalsy();
-    expect(canSafelyRedirect(new Request("", { method: "PATCH" }))).toBeFalsy();
-    expect(
-      canSafelyRedirect(new Request("", { method: "DELETE" }))
-    ).toBeFalsy();
+    expect(isGET(new Request("", { method: "POST" }))).toBeFalsy();
+    expect(isGET(new Request("", { method: "PUT" }))).toBeFalsy();
+    expect(isGET(new Request("", { method: "PATCH" }))).toBeFalsy();
+    expect(isGET(new Request("", { method: "DELETE" }))).toBeFalsy();
   });
 
   it("should return true for GET method", async () => {
-    expect(canSafelyRedirect(new Request("", { method: "GET" }))).toBeTruthy();
+    expect(isGET(new Request("", { method: "GET" }))).toBeTruthy();
   });
 });
 

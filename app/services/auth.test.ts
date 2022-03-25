@@ -12,7 +12,7 @@ import { matchRequestUrl, rest } from "msw";
 import { createUser } from "~/models/user.server";
 import {
   createUserAccount,
-  getUserByAccessToken,
+  getAuthByAccessToken,
   refreshAccessToken,
 } from "./auth.server";
 
@@ -20,7 +20,7 @@ vitest.mock("../models/user.server", () => ({
   createUser: vitest.fn().mockResolvedValue({}),
 }));
 
-describe("auth.server : getUserByAccessToken", () => {
+describe("auth.server : getAuthByAccessToken", () => {
   it("should fetch supabase getUser auth api", async () => {
     expect.assertions(3);
 
@@ -37,7 +37,7 @@ describe("auth.server : getUserByAccessToken", () => {
       if (matchesMethod && matchesUrl) fetchAuthUserAPI.set(req.id, req);
     });
 
-    const { error, user } = await getUserByAccessToken("valid");
+    const { error, user } = await getAuthByAccessToken("valid");
 
     server.events.removeAllListeners();
 

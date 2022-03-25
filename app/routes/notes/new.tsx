@@ -59,8 +59,6 @@ export default function NewNotePage() {
   const disabled =
     transition.state === "submitting" || transition.state === "loading";
 
-  console.log(transition.state);
-
   React.useEffect(() => {
     if (actionData?.errors?.title) {
       titleRef.current?.focus();

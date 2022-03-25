@@ -2,8 +2,7 @@ import { supabaseAdmin } from "~/database/supabase.server";
 import type { AuthSession } from "~/database/supabase.server";
 import { createUser } from "../models/user.server";
 
-// TODO move to auth model ?
-export async function getUserByAccessToken(
+export async function getAuthByAccessToken(
   accessToken: AuthSession["access_token"]
 ) {
   return supabaseAdmin.auth.api.getUser(accessToken);

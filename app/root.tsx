@@ -24,7 +24,7 @@ export const meta: MetaFunction = () => ({
 
 export const loader: LoaderFunction = () => {
   return {
-    env: {
+    ENV: {
       SUPABASE_URL: process.env.SUPABASE_URL,
       SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
     },
@@ -32,12 +32,12 @@ export const loader: LoaderFunction = () => {
 };
 
 export default function App() {
-  const { env } = useLoaderData<Window>();
+  const { ENV } = useLoaderData<Window>();
 
   return (
     <html lang="en" className="h-full">
       <head>
-        <title>Supa Fly Stack</title>
+        <title>Remix Notes</title>
         <Meta />
         <Links />
       </head>
@@ -46,7 +46,7 @@ export default function App() {
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.env = ${JSON.stringify(env)}`,
+            __html: `window.ENV = ${JSON.stringify(ENV)}`,
           }}
         />
         <Scripts />

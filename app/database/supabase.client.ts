@@ -3,16 +3,16 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 declare global {
   var __sbc__: SupabaseClient;
   interface Window {
-    env: {
+    ENV: {
       SUPABASE_URL: string;
       SUPABASE_ANON_KEY: string;
     };
   }
 }
 
-if (!window.env.SUPABASE_URL) throw new Error("SUPABASE_URL is not set");
+if (!window.ENV.SUPABASE_URL) throw new Error("SUPABASE_URL is not set");
 
-if (!window.env.SUPABASE_ANON_KEY)
+if (!window.ENV.SUPABASE_ANON_KEY)
   throw new Error("SUPABASE_ANON_KEY is not set");
 
 let supabaseClient: SupabaseClient;
@@ -30,7 +30,7 @@ let supabaseClient: SupabaseClient;
 // Use Remix fetch polyfill for node (See https://remix.run/docs/en/v1/other-api/node)
 
 function getSupabaseClient() {
-  return createClient(window.env.SUPABASE_URL, window.env.SUPABASE_ANON_KEY, {
+  return createClient(window.ENV.SUPABASE_URL, window.ENV.SUPABASE_ANON_KEY, {
     autoRefreshToken: false,
     persistSession: false,
   });
