@@ -8,7 +8,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       SUPABASE_URL: string;
-      SUPABASE_SERVICE_KEY: string;
+      SUPABASE_SERVICE_ROLE: string;
       SERVER_URL: string;
     }
   }
@@ -18,8 +18,8 @@ if (!process.env.SUPABASE_URL) {
   throw new Error("SUPABASE_URL is not set");
 }
 
-if (!process.env.SUPABASE_SERVICE_KEY) {
-  throw new Error("SUPABASE_SERVICE_KEY is not set");
+if (!process.env.SUPABASE_SERVICE_ROLE) {
+  throw new Error("SUPABASE_SERVICE_ROLE is not set");
 }
 
 if (!process.env.SERVER_URL) throw new Error("SERVER_URL is not set");
@@ -41,7 +41,7 @@ let supabaseAdmin: SupabaseClient;
 function getSupabaseAdmin() {
   return createClient(
     process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_KEY,
+    process.env.SUPABASE_SERVICE_ROLE,
     { autoRefreshToken: false, persistSession: false }
   );
 }

@@ -42,14 +42,16 @@ Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --
 
   > **Note:** Used all your free tiers ? Also works with [Supabase CLI](https://github.com/supabase/cli) and local self hosting
 
-- Go to https://app.supabase.io/project/{PROJECT}/api?page=auth to find your secrets
-- Add your `SUPABASE_URL`, `SERVER_URL`, `SUPABASE_SERVICE_KEY` and `DATABASE_URL` in the `.env` file
+- Go to https://app.supabase.io/project/{PROJECT}/settings/api to find your secrets
+- "Project API keys"
+- Add your `SUPABASE_URL`, `SERVER_URL`, `SUPABASE_SERVICE_ROLE` (aka `service_role` `secret`), `SUPABASE_ANON_PUBLIC` (aka `anon` `public`) and `DATABASE_URL` in the `.env` file
   > **Note:** `SERVER_URL` is your localhost on dev. It'll work for magic link login
 
 ```en
 DATABASE_URL="postgres://postgres:{STAGING_POSTGRES_PASSWORD}@db.{STAGING_YOUR_INSTANCE_NAME}.supabase.co:5432/postgres"
 SHADOW_DATABASE_URL="postgresql://postgres:postgres@localhost:12345/postgres"
-SUPABASE_SERVICE_KEY="{STAGING_SERVICE_KEY}"
+SUPABASE_ANON_PUBLIC="{ANON_PUBLIC}"
+SUPABASE_SERVICE_ROLE="{SERVICE_ROLE}"
 SUPABASE_URL="https://{STAGING_YOUR_INSTANCE_NAME}.supabase.co"
 SESSION_SECRET="super-duper-s3cret"
 SERVER_URL="http://localhost:3000"
@@ -137,14 +139,16 @@ Prior to your first deployment, you'll need to do a few things:
   # staging
   fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app supa-fly-stack-template-staging
   fly secrets set SUPABASE_URL="https://{YOUR_STAGING_INSTANCE_NAME}.supabase.co" --app supa-fly-stack-template-staging
-  fly secrets set SUPABASE_SERVICE_KEY="{STAGING_SERVICE_KEY}" --app supa-fly-stack-template-staging
+  fly secrets set SUPABASE_SERVICE_ROLE="{STAGING_SUPABASE_SERVICE_ROLE}" --app supa-fly-stack-template-staging
+  fly secrets set SUPABASE_ANON_PUBLIC="{STAGING_SUPABASE_ANON_PUBLIC}" --app supa-fly-stack-template-staging
   fly secrets set DATABASE_URL="postgres://postgres:{STAGING_POSTGRES_PASSWORD}@db.{STAGING_YOUR_INSTANCE_NAME}.supabase.co:5432/postgres" --app supa-fly-stack-template-staging
    fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}" --app supa-fly-stack-template-staging
 
   # production
   fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app supa-fly-stack-template
   fly secrets set SUPABASE_URL="https://{YOUR_INSTANCE_NAME}.supabase.co" --app supa-fly-stack-template
-  fly secrets set SUPABASE_SERVICE_KEY="{SERVICE_KEY}" --app supa-fly-stack-template
+  fly secrets set SUPABASE_SERVICE_ROLE="{SUPABASE_SERVICE_ROLE}" --app supa-fly-stack-template
+  fly secrets set SUPABASE_ANON_PUBLIC="{SUPABASE_ANON_PUBLIC}" --app supa-fly-stack-template
   fly secrets set DATABASE_URL="postgres://postgres:{POSTGRES_PASSWORD}@db.{YOUR_INSTANCE_NAME}.supabase.co:5432/postgres" --app supa-fly-stack-template
      fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}" --app supa-fly-stack-template
   ```
