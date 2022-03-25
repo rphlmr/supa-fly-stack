@@ -38,7 +38,7 @@ function createAccount({
   password?: string;
 } = {}) {
   cy.exec(
-    `dotenv -- node --require esbuild-register ./cypress/support/create-user.ts "${email}" "${password}"`
+    `dotenv -- npx ts-node --require tsconfig-paths/register ./cypress/support/create-user.ts "${email}" "${password}"`
   );
   cy.then(() => ({ email, password })).as("user");
 }
@@ -59,7 +59,7 @@ function cleanupUser({ email }: { email?: string } = {}) {
 
 function deleteUserByEmail(email: string) {
   cy.exec(
-    `dotenv -- node --require esbuild-register ./cypress/support/delete-user.ts "${email}"`
+    `dotenv -- npx ts-node --require tsconfig-paths/register ./cypress/support/delete-user.ts "${email}"`
   );
   cy.clearCookie("__session");
 }
