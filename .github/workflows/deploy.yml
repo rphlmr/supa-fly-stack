@@ -80,8 +80,16 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
-      - name: 🏄 Copy test env vars
-        run: cp .env.example .env
+      - name: 🔑 Make envfile
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          envkey_SUPABASE_ANON_PUBLIC: ${{ secrets.SUPABASE_ANON_PUBLIC }}
+          envkey_SUPABASE_SERVICE_ROLE: ${{ secrets.SUPABASE_SERVICE_ROLE }}
+          envkey_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          envkey_SERVER_URL: ${{ secrets.SERVER_URL }}
+          envkey_DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          file_name: .env
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
@@ -108,10 +116,6 @@ jobs:
           wait-on: "http://localhost:8811"
         env:
           PORT: "8811"
-          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-          SUPABASE_ANON_PUBLIC: ${{ secrets.SUPABASE_ANON_PUBLIC }}
-          SUPABASE_SERVICE_ROLE: ${{ secrets.SUPABASE_SERVICE_ROLE }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
 
   build:
     name: 🐳 Build
