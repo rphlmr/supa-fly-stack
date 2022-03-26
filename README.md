@@ -150,7 +150,7 @@ Prior to your first deployment, you'll need to do a few things:
   fly secrets set SUPABASE_SERVICE_ROLE="{SUPABASE_SERVICE_ROLE}" --app supa-fly-stack-template
   fly secrets set SUPABASE_ANON_PUBLIC="{SUPABASE_ANON_PUBLIC}" --app supa-fly-stack-template
   fly secrets set DATABASE_URL="postgres://postgres:{POSTGRES_PASSWORD}@db.{YOUR_INSTANCE_NAME}.supabase.co:5432/postgres" --app supa-fly-stack-template
-     fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}" --app supa-fly-stack-template
+  fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}" --app supa-fly-stack-template
   ```
 
   If you don't have openssl installed, you can also use [1password](https://1password.com/generate-password) to generate a random secret, just replace `$(openssl rand -hex 32)` with the generated secret.
@@ -162,6 +162,8 @@ Now that every is set up you can commit and push your changes to your repo. Ever
 > DISCLAIMER : Github actions ==> I'm not an expert about that. Read carefully before using it
 
 We use GitHub Actions for continuous integration and deployment. Anything that gets into the `main` branch will be deployed to production after running tests/build/etc. Anything in the `dev` branch will be deployed to staging.
+
+You have to add some env secrets for cypress.
 
 ## Testing
 

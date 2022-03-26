@@ -108,6 +108,10 @@ jobs:
           wait-on: "http://localhost:8811"
         env:
           PORT: "8811"
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          SUPABASE_ANON_PUBLIC: ${{ secrets.SUPABASE_ANON_PUBLIC }}
+          SUPABASE_SERVICE_ROLE: ${{ secrets.SUPABASE_SERVICE_ROLE }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
 
   build:
     name: 🐳 Build
