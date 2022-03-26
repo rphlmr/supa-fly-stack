@@ -35,7 +35,10 @@ export default function App() {
   const { ENV } = useLoaderData<Window>();
 
   return (
-    <html lang="en" className="h-full">
+    <html
+      lang="en"
+      className="h-full"
+    >
       <head>
         <title>Remix Notes</title>
         <Meta />

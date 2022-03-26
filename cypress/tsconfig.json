@@ -15,11 +15,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "noEmit": true,
-    "types": [
-      "node",
-      "cypress",
-      "@testing-library/cypress"
-    ],
+    "types": ["node", "cypress", "@testing-library/cypress"],
     "esModuleInterop": true,
     "jsx": "react",
     "moduleResolution": "node",
@@ -27,14 +23,9 @@
     "strict": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "typeRoots": [
-      "../types",
-      "../node_modules/@types"
-    ],
+    "typeRoots": ["../types", "../node_modules/@types"],
     "paths": {
-      "~/*": [
-        "../app/*"
-      ]
+      "~/*": ["../app/*"]
     }
   }
 }

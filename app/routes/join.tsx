@@ -102,7 +102,10 @@ export default function Join() {
   return (
     <div className="flex min-h-full flex-col justify-center">
       <div className="mx-auto w-full max-w-md px-8">
-        <Form method="post" className="space-y-6">
+        <Form
+          method="post"
+          className="space-y-6"
+        >
           <div>
             <label
               htmlFor="email"
@@ -126,7 +129,10 @@ export default function Join() {
                 disabled={disabled}
               />
               {actionData?.errors?.email && (
-                <div className="pt-1 text-red-700" id="email-error">
+                <div
+                  className="pt-1 text-red-700"
+                  id="email-error"
+                >
                   {actionData.errors.email}
                 </div>
               )}
@@ -154,14 +160,21 @@ export default function Join() {
                 disabled={disabled}
               />
               {actionData?.errors?.password && (
-                <div className="pt-1 text-red-700" id="password-error">
+                <div
+                  className="pt-1 text-red-700"
+                  id="password-error"
+                >
                   {actionData.errors.password}
                 </div>
               )}
             </div>
           </div>
 
-          <input type="hidden" name="redirectTo" value={redirectTo} />
+          <input
+            type="hidden"
+            name="redirectTo"
+            value={redirectTo}
+          />
           <button
             type="submit"
             className="w-full rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
