@@ -63,7 +63,7 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
-  // first time sign in, let's create a brand new User row in supabase
+  // first time sign in, let's create a brand-new User row in supabase
   const createUserError = await creatOAuthUser(
     userSession.userId,
     userSession.email
@@ -97,7 +97,7 @@ export default function LoginCallback() {
     const { data: authListener } = supabaseClient.auth.onAuthStateChange(
       (event, authSession) => {
         if (event === "SIGNED_IN") {
-          // supabase auth listener give us a user session
+          // supabase auth listener give us a user session,
           // but we can't use it directly, client-side, because we can't access sessionStorage from here
           // so, we map what we need, and let's back-end to the work
           const userSession = mapSession(authSession!);

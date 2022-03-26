@@ -15,6 +15,7 @@ node_modules
 
 .history
 .vscode
+.idea
 # Supabase
 **/supabase/.branches
 **/supabase/.temp

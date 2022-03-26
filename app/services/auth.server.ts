@@ -1,6 +1,6 @@
 import { supabaseAdmin } from "~/database/supabase.server";
 import type { AuthSession } from "~/database/supabase.server";
-import { createUser } from "../models/user.server";
+import { createUser } from "~/models/user.server";
 
 export async function getAuthByAccessToken(
   accessToken: AuthSession["access_token"]
@@ -23,11 +23,6 @@ export async function signInWithEmail(email: string, password: string) {
   );
   return { authSession: data, authSessionError: error };
 }
-
-// export async function signInWithEmail(email: string, password: string) {
-//   const { data, error } = await supabaseAdmin.auth.api(email, password);
-//   return { authSession: data, authSessionError: error };
-// }
 
 export async function createAuthAccount(email: string, password: string) {
   const { data, error } = await supabaseAdmin.auth.api.createUser({

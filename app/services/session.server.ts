@@ -6,7 +6,7 @@ import {
   getCurrentPath,
   getRedirectTo,
   makeRedirectToFromHere,
-} from "../utils/request.server";
+} from "~/utils/request.server";
 import { mapSession } from "~/utils/session-mapper";
 
 if (!process.env.SESSION_SECRET) {
@@ -22,7 +22,7 @@ const ERROR_SESSION_KEY = "error";
 const LOGIN_URL = "/login";
 
 /**
- * Whats stored in session storage cookie
+ * What's stored in session storage cookie
  */
 
 export interface UserSession {
@@ -138,9 +138,7 @@ async function verifyUserSession(request: Request) {
     session.accessToken
   );
 
-  if (error || !authAccount) return false;
-
-  return true;
+  return !(error || !authAccount);
 }
 
 async function assertUserSession(
@@ -247,7 +245,7 @@ export async function requireUserSession(
   }
 
   // so, maybe we are in a POST / PUT / PATCH / DELETE method
-  // user session is valid but we doesn't know if it'll expire in a microsecond.
+  // user session is valid, but we don't know if it'll expire in a microsecond.
   // it can be problematic if you use this access token to fetch one of your external api
   // let's refresh session in case of 🧐
   if (!isGET(request)) {
