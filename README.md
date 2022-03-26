@@ -133,7 +133,9 @@ Prior to your first deployment, you'll need to do a few things:
 
 - Add a `FLY_API_TOKEN` to your GitHub repo. To do this, go to your user settings on Fly and create a new [token](https://web.fly.io/user/personal_access_tokens/new), then add it to [your repo secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) with the name `FLY_API_TOKEN`.
 
-- Add a `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `SERVER_URL` and `DATABASE_URL` to your fly app secrets, to do this you can run the following commands:
+- Add a `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE`,`SUPABASE_ANON_PUBLIC`, `SERVER_URL` and `DATABASE_URL` to your fly app secrets
+  
+  To do this you can run the following commands:
 
   ```sh
   # staging
@@ -142,7 +144,7 @@ Prior to your first deployment, you'll need to do a few things:
   fly secrets set SUPABASE_SERVICE_ROLE="{STAGING_SUPABASE_SERVICE_ROLE}" --app supa-fly-stack-template-staging
   fly secrets set SUPABASE_ANON_PUBLIC="{STAGING_SUPABASE_ANON_PUBLIC}" --app supa-fly-stack-template-staging
   fly secrets set DATABASE_URL="postgres://postgres:{STAGING_POSTGRES_PASSWORD}@db.{STAGING_YOUR_INSTANCE_NAME}.supabase.co:5432/postgres" --app supa-fly-stack-template-staging
-   fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}" --app supa-fly-stack-template-staging
+  fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}" --app supa-fly-stack-template-staging
 
   # production
   fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app supa-fly-stack-template
@@ -163,13 +165,14 @@ Now that every is set up you can commit and push your changes to your repo. Ever
 
 We use GitHub Actions for continuous integration and deployment. Anything that gets into the `main` branch will be deployed to production after running tests/build/etc. Anything in the `dev` branch will be deployed to staging.
 
-You have to add some env secrets for cypress.
+👉 **You have to add some env secrets for cypress.** 👈
+
+Add a `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE`,`SUPABASE_ANON_PUBLIC`, `SERVER_URL` and `DATABASE_URL` to [your repo secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
+
 
 ## Testing
 
 ### Cypress
-
-> Working locally but not on CI env ... First time with Cypress 🙃
 
 We use Cypress for our End-to-End tests in this project. You'll find those in the `cypress` directory. As you make changes, add to an existing file or create a new file in the `cypress/e2e` directory to test your changes.
 
