@@ -5,13 +5,13 @@ if (!process.env.SUPABASE_URL) {
   throw new Error("SUPABASE_URL is not set");
 }
 
-if (!process.env.SUPABASE_SERVICE_KEY) {
-  throw new Error("SUPABASE_SERVICE_KEY is not set");
+if (!process.env.SUPABASE_SERVICE_ROLE) {
+  throw new Error("SUPABASE_SERVICE_ROLE is not set");
 }
 
 const supabaseAdmin = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY,
+  process.env.SUPABASE_SERVICE_ROLE,
   { autoRefreshToken: false, persistSession: false }
 );
 
