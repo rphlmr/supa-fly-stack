@@ -18,7 +18,7 @@
     "generate:css": "tailwindcss -o ./app/styles/tailwind.css",
     "postinstall": "remix setup node",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-    "setup": "run-s shadow-db:start setup:seed shadow-db:stop",
+    "setup": "run-s shadow-db:start setup:db setup:seed shadow-db:stop",
     "setup:db": "prisma migrate dev",
     "setup:seed": "prisma db seed",
     "start": "remix-serve build",
