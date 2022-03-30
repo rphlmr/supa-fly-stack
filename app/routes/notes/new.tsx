@@ -95,7 +95,7 @@ export default function NewNotePage() {
         {actionData?.errors?.title && (
           <div
             className="pt-1 text-red-700"
-            id="title=error"
+            id="title-error"
           >
             {actionData.errors.title}
           </div>
@@ -121,7 +121,7 @@ export default function NewNotePage() {
         {actionData?.errors?.body && (
           <div
             className="pt-1 text-red-700"
-            id="body=error"
+            id="body-error"
           >
             {actionData.errors.body}
           </div>
