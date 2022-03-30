@@ -40,7 +40,11 @@ Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --
 
   > **Note:** Only one for playing around with Supabase or 2 for `staging` and `production`
 
-  > **Note:** Used all your free tiers ? Also works with [Supabase CLI](https://github.com/supabase/cli) and local self hosting
+  > **Note:** Used all your free tiers ? Also works with [Supabase CLI](https://github.com/supabase/cli) and local self-hosting
+  
+  > **Note:** Create a strong database password, but prefer a passphrase, it'll be more easy to use in connection string (no need to escape special char)
+  > 
+  > *example : my_strong_passphrase*
 
 - Go to https://app.supabase.io/project/{PROJECT}/settings/api to find your secrets
 - "Project API keys"
