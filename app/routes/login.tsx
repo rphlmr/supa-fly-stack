@@ -44,6 +44,10 @@ interface ActionData {
 }
 
 export const action: ActionFunction = async ({ request }) => {
+  if (request.method !== "POST") {
+    return json({ message: "Method not allowed" }, 405);
+  }
+
   const formValidation = await getFormData(request, LoginFormSchema);
 
   if (!formValidation.success) {

@@ -1,8 +1,12 @@
 import type { ActionFunction, LoaderFunction } from "remix";
-import { redirect } from "remix";
+import { json, redirect } from "remix";
 import { logout } from "~/services/session.server";
 
 export const action: ActionFunction = async ({ request }) => {
+  if (request.method !== "POST") {
+    return json({ message: "Method not allowed" }, 405);
+  }
+
   return logout(request);
 };
 
