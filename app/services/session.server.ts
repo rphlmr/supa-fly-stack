@@ -82,15 +82,13 @@ export async function commitUserSession(
 ) {
   const session = await getSession(request);
 
-  if (flashErrorMessage) {
-    session.flash(ERROR_SESSION_KEY, flashErrorMessage);
-  }
-
   // allow user session to be null.
   // useful you want to clear session and display a message explaining why
   if (userSession !== undefined) {
     session.set(USER_SESSION_KEY, userSession);
   }
+
+  session.flash(ERROR_SESSION_KEY, flashErrorMessage);
 
   return sessionStorage.commitSession(session);
 }
