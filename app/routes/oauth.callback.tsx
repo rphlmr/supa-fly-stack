@@ -97,8 +97,10 @@ export default function LoginCallback() {
     const { data: authListener } = supabaseClient.auth.onAuthStateChange(
       (event, authSession) => {
         if (event === "SIGNED_IN") {
-          // supabase auth listener give us a user session,
-          // but we can't use it directly, client-side, because we can't access sessionStorage from here
+          // supabase sdk has ability to read url fragment that contains your token after third party provider redirects you here
+          // this fragment url looks like https://.....#access_token=evxxxxxxxx&refresh_token=xxxxxx, and it's not readable server-side (Oauth security)
+          // supabase auth listener gives us a user session, based on what it founds in this fragment url
+          // we can't use it directly, client-side, because we can't access sessionStorage from here
           // so, we map what we need, and let's back-end to the work
           const userSession = mapSession(authSession!);
           const formData = new FormData();
