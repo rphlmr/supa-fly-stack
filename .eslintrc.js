@@ -62,9 +62,6 @@ module.exports = {
     // meh...
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/sort-type-union-intersection-members": "off",
-    "jsx-a11y/media-has-caption": "off",
-    "jsx-a11y/label-has-associated-control": "off",
-    "jsx-a11y/alt-text": "off", // it's not smart enough...
     "react/jsx-filename-extension": "off",
     "@typescript-eslint/no-namespace": "off",
     // I can't figure these out:
