@@ -1,4 +1,5 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
+export type { SupabaseClient };
 
 declare global {
   var __sbc__: SupabaseClient;
@@ -15,8 +16,6 @@ if (!window.ENV.SUPABASE_URL) throw new Error("SUPABASE_URL is not set");
 if (!window.ENV.SUPABASE_ANON_PUBLIC)
   throw new Error("SUPABASE_ANON_PUBLIC is not set");
 
-let supabaseClient: SupabaseClient;
-
 // const supabaseOptions = {
 //   fetch, // see ⚠️ cloudflare
 //   schema: "public",
@@ -29,7 +28,7 @@ let supabaseClient: SupabaseClient;
 // ⚠️ cloudflare needs you define fetch option : https://github.com/supabase/supabase-js#custom-fetch-implementation
 // Use Remix fetch polyfill for node (See https://remix.run/docs/en/v1/other-api/node)
 
-function getSupabaseClient() {
+export function getSupabaseClient() {
   return createClient(
     window.ENV.SUPABASE_URL,
     window.ENV.SUPABASE_ANON_PUBLIC,
@@ -39,18 +38,3 @@ function getSupabaseClient() {
     }
   );
 }
-
-// this is needed because in development we don't want to restart
-// the server with every change, but we want to make sure we don't
-// create a new connection to Supabase with every change either.
-// in production, we'll have a single Supabase instance.
-if (process.env.NODE_ENV === "production") {
-  supabaseClient = getSupabaseClient();
-} else {
-  if (!global.__sbc__) {
-    global.__sbc__ = getSupabaseClient();
-  }
-  supabaseClient = global.__sbc__;
-}
-
-export { supabaseClient };

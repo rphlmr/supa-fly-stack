@@ -113,6 +113,7 @@ export default function LoginPage() {
           method="post"
           className="space-y-6"
           ref={formRef}
+          replace
         >
           <div>
             <label

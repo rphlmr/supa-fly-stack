@@ -1,5 +1,5 @@
-import { prisma } from "~/database/prisma.server";
 import type { User, Note } from "@prisma/client";
+import { prisma } from "~/database/prisma.server";
 export type { Note } from "@prisma/client";
 
 export async function getNote({
@@ -62,4 +62,8 @@ export async function deleteNote({
   return prisma.note.deleteMany({
     where: { id, userId },
   });
+}
+
+export async function getNoteCount() {
+  return prisma.note.count();
 }

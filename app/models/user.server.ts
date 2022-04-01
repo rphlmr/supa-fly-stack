@@ -1,6 +1,6 @@
-import { prisma } from "~/database/prisma.server";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { User } from "@prisma/client";
+import { prisma } from "~/database/prisma.server";
 
 export type { User } from "@prisma/client";
 

@@ -1,4 +1,4 @@
-import { AuthSession } from "~/database/supabase.server";
+import type { AuthSession } from "~/database/supabase.server";
 import { createCookieSessionStorage, redirect } from "remix";
 import { getAuthByAccessToken, refreshAccessToken } from "./auth.server";
 import {
@@ -30,7 +30,14 @@ export interface UserSession {
   refreshToken: string;
   userId: string;
   email: string;
+  expiresIn: number;
+  expiresAt: number;
 }
+
+export type RealtimeSession = Pick<
+  UserSession,
+  "accessToken" | "expiresIn" | "expiresAt"
+>;
 
 /**
  * Session storage CRUD
