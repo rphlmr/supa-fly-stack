@@ -2,8 +2,6 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 export type { SupabaseClient };
 
 declare global {
-  // eslint-disable-next-line no-var
-  var __sbc__: SupabaseClient;
   interface Window {
     ENV: {
       SUPABASE_URL: string;
