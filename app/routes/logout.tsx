@@ -1,5 +1,6 @@
 import type { ActionFunction, LoaderFunction } from "remix";
 import { json, redirect } from "remix";
+
 import { logout } from "~/services/session.server";
 
 export const action: ActionFunction = async ({ request }) => {
@@ -10,6 +11,4 @@ export const action: ActionFunction = async ({ request }) => {
   return logout(request);
 };
 
-export const loader: LoaderFunction = async () => {
-  return redirect("/");
-};
+export const loader: LoaderFunction = async () => redirect("/");

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
+
 import { useMatches } from "remix";
 
 /**
@@ -36,7 +37,7 @@ export function useInterval(callback: () => void, delay?: number) {
       savedCallback.current?.();
     }
     if (delay) {
-      let id = setInterval(tick, delay * 1_000);
+      const id = setInterval(tick, delay * 1_000);
       return () => clearInterval(id);
     }
   }, [delay]);

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { useFetcher } from "remix";
 
 export default function ContinueWithEmail() {

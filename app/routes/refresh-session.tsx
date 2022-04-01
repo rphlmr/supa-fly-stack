@@ -1,6 +1,7 @@
-import type { LoaderFunction } from "remix";
+import type { LoaderFunction, ActionFunction } from "remix";
+import { json } from "remix";
+
 import { commitUserSession, refreshSession } from "~/services/session.server";
-import { ActionFunction, json } from "remix";
 
 // this is just for supabase realtime session refresh
 export const action: ActionFunction = async ({ request }) => {

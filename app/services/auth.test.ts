@@ -1,3 +1,5 @@
+import { matchRequestUrl, rest } from "msw";
+
 import {
   authSession,
   authAccount,
@@ -8,8 +10,8 @@ import {
 } from "mocks/handlers";
 import { server } from "mocks/start";
 import { USER_EMAIL, USER_ID, USER_PASSWORD } from "mocks/user";
-import { matchRequestUrl, rest } from "msw";
 import { createUser } from "~/models/user.server";
+
 import {
   createUserAccount,
   getAuthByAccessToken,
@@ -139,12 +141,11 @@ describe("auth.server : createNewUserAccount", () => {
     server.use(
       rest.post(
         `${SUPABASE_URL}${SUPABASE_AUTH_ADMIN_USER_API}`,
-        async (req, res, ctx) => {
-          return res.once(
+        async (req, res, ctx) =>
+          res.once(
             ctx.status(400),
             ctx.json({ message: "create-account-error", status: 400 })
-          );
-        }
+          )
       )
     );
 
@@ -195,12 +196,11 @@ describe("auth.server : createNewUserAccount", () => {
     server.use(
       rest.post(
         `${SUPABASE_URL}${SUPABASE_AUTH_TOKEN_API}`,
-        async (req, res, ctx) => {
-          return res.once(
+        async (req, res, ctx) =>
+          res.once(
             ctx.status(400),
             ctx.json({ message: "sign-in-error", status: 400 })
-          );
-        }
+          )
       )
     );
 

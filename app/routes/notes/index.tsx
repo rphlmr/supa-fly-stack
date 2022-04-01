@@ -1,8 +1,10 @@
-import { json, Link, LoaderFunction, useLoaderData, useSubmit } from "remix";
 import { useEffect } from "react";
-import { requireUserSession } from "~/services/session.server";
-import { getNoteCount } from "~/models/note.server";
+
+import { json, Link, LoaderFunction, useLoaderData, useSubmit } from "remix";
+
 import { useSupabase } from "~/context/supabase";
+import { getNoteCount } from "~/models/note.server";
+import { requireUserSession } from "~/services/session.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireUserSession(request);

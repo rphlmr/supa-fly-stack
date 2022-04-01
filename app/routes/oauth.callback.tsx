@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+
 import {
   ActionFunction,
   json,
@@ -10,11 +11,12 @@ import {
 } from "remix";
 import { getFormData } from "remix-params-helper";
 import { z } from "zod";
+
+import { useSupabase } from "~/context/supabase";
 import { getUserByEmail } from "~/models/user.server";
 import { creatOAuthUser } from "~/services/auth.server";
 import { commitUserSession, getUserSession } from "~/services/session.server";
 import { mapSession } from "~/utils/session-mapper";
-import { useSupabase } from "~/context/supabase";
 
 const ActionSchema = z.object({
   accessToken: z.string(),

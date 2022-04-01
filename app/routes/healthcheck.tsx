@@ -1,5 +1,6 @@
 // learn more: https://fly.io/docs/reference/configuration/#services-http_checks
 import type { LoaderFunction } from "remix";
+
 import { prisma } from "~/database/prisma.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -18,6 +19,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     ]);
     return new Response("OK");
   } catch (error: unknown) {
+    // eslint-disable-next-line no-console
     console.log("healthcheck ❌", { error });
     return new Response("ERROR", { status: 500 });
   }

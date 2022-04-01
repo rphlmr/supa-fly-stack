@@ -1,8 +1,10 @@
 import { createContext, ReactElement, useContext, useState } from "react";
-import { useInterval, useMatchesData } from "~/utils/hooks";
+
 import { useFetcher } from "remix";
-import { RealtimeSession } from "~/services/session.server";
+
 import { getSupabaseClient, SupabaseClient } from "~/database/supabase.client";
+import type { RealtimeSession } from "~/services/session.server";
+import { useInterval, useMatchesData } from "~/utils/hooks";
 
 const isBrowser = typeof window !== "undefined";
 

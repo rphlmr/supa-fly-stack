@@ -10,13 +10,15 @@ import {
   useLoaderData,
 } from "remix";
 import type { LinksFunction, MetaFunction } from "remix";
-import tailwindStylesheetUrl from "./styles/tailwind.css";
-import { getUserSession } from "~/services/session.server";
-import { SupabaseProvider } from "~/context/supabase";
 
-export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
-};
+import { SupabaseProvider } from "~/context/supabase";
+import { getUserSession } from "~/services/session.server";
+
+import tailwindStylesheetUrl from "./styles/tailwind.css";
+
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: tailwindStylesheetUrl },
+];
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",

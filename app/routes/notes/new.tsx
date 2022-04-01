@@ -1,13 +1,15 @@
 import * as React from "react";
+
 import { Form, json, redirect, useActionData, useTransition } from "remix";
 import type { ActionFunction } from "remix";
+import { getFormData, useFormInputProps } from "remix-params-helper";
+import { z } from "zod";
+
+import { createNote } from "~/models/note.server";
 import {
   commitUserSession,
   requireUserSession,
 } from "~/services/session.server";
-import { createNote } from "~/models/note.server";
-import { z } from "zod";
-import { getFormData, useFormInputProps } from "remix-params-helper";
 
 export const NewNoteFormSchema = z.object({
   title: z.string().min(2, "require-title"),

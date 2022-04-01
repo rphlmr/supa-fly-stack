@@ -1,11 +1,10 @@
 import * as React from "react";
+
 import {
   ActionFunction,
   LoaderFunction,
   MetaFunction,
   useTransition,
-} from "remix";
-import {
   Form,
   json,
   Link,
@@ -15,6 +14,7 @@ import {
 } from "remix";
 import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
+
 import ContinueWithEmail from "~/components/send-magic-link";
 import { signInWithEmail } from "~/services/auth.server";
 import { createUserSession, getUserSession } from "~/services/session.server";
@@ -80,11 +80,9 @@ export const action: ActionFunction = async ({ request }) => {
   });
 };
 
-export const meta: MetaFunction = () => {
-  return {
-    title: "Login",
-  };
-};
+export const meta: MetaFunction = () => ({
+  title: "Login",
+});
 
 export default function LoginPage() {
   const [searchParams] = useSearchParams();

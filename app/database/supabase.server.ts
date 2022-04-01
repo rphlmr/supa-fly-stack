@@ -4,6 +4,7 @@ import type { AuthSession } from "@supabase/supabase-js";
 export type { AuthSession };
 
 declare global {
+  // eslint-disable-next-line no-var
   var __sba__: SupabaseClient;
   namespace NodeJS {
     interface ProcessEnv {
