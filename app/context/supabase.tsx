@@ -25,7 +25,7 @@ export const SupabaseProvider = ({ children }: { children: ReactElement }) => {
     SupabaseClient | undefined
   >(() => {
     // prevents server side initial state
-    if (isBrowser) return getSupabaseClient();
+    if (isBrowser) return getSupabaseClient(); // init a default client in browser. Needed for oauth callback
   });
   const refresh = useFetcher();
 
@@ -40,8 +40,8 @@ export const SupabaseProvider = ({ children }: { children: ReactElement }) => {
       });
   }, expiresIn);
 
-  // if code executed client side
-  // after root loader fetch, if user session is refresh, it's time to refresh supabase client
+  // when client side
+  // after root loader fetch, if user session is refresh, it's time to create a new supabase client
   if (isBrowser && expiresAt !== currentExpiresAt) {
     // recreate a supabase client to force provider's consumer to rerender
     const client = getSupabaseClient();
