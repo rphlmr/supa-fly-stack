@@ -11,9 +11,10 @@ export async function getAuthByAccessToken(
 export async function refreshAccessToken(refreshToken: string) {
   return supabaseAdmin.auth.api
     .refreshAccessToken(refreshToken)
-    .then(({ data: authSession, error }) => {
-      return { refreshedSession: authSession, error };
-    });
+    .then(({ data: authSession, error }) => ({
+      refreshedSession: authSession,
+      error,
+    }));
 }
 
 export async function signInWithEmail(email: string, password: string) {

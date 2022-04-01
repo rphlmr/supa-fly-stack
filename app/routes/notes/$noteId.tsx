@@ -1,7 +1,7 @@
 import type { LoaderFunction, ActionFunction } from "remix";
-import { redirect } from "remix";
-import { json, useLoaderData, useCatch, Form } from "remix";
+import { redirect, json, useLoaderData, useCatch, Form } from "remix";
 import invariant from "tiny-invariant";
+
 import { deleteNote, getNote } from "~/models/note.server";
 import type { Note } from "~/models/note.server";
 import {
@@ -62,8 +62,6 @@ export default function NoteDetailsPage() {
 }
 
 export function ErrorBoundary({ error }: { error: Error }) {
-  console.error(error);
-
   return <div>An unexpected error occurred: {error.message}</div>;
 }
 

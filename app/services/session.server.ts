@@ -1,6 +1,6 @@
-import { AuthSession } from "~/database/supabase.server";
 import { createCookieSessionStorage, redirect } from "remix";
-import { getAuthByAccessToken, refreshAccessToken } from "./auth.server";
+
+import type { AuthSession } from "~/database/supabase.server";
 import {
   isGET,
   getCurrentPath,
@@ -8,6 +8,8 @@ import {
   makeRedirectToFromHere,
 } from "~/utils/request.server";
 import { mapSession } from "~/utils/session-mapper";
+
+import { getAuthByAccessToken, refreshAccessToken } from "./auth.server";
 
 if (!process.env.SESSION_SECRET) {
   throw new Error("SESSION_SECRET is not set");
@@ -30,7 +32,14 @@ export interface UserSession {
   refreshToken: string;
   userId: string;
   email: string;
+  expiresIn: number;
+  expiresAt: number;
 }
+
+export type RealtimeSession = Pick<
+  UserSession,
+  "accessToken" | "expiresIn" | "expiresAt"
+>;
 
 /**
  * Session storage CRUD

@@ -1,10 +1,6 @@
 import * as React from "react";
-import {
-  ActionFunction,
-  LoaderFunction,
-  MetaFunction,
-  useTransition,
-} from "remix";
+
+import type { ActionFunction, LoaderFunction, MetaFunction } from "remix";
 import {
   Form,
   Link,
@@ -12,13 +8,15 @@ import {
   useSearchParams,
   json,
   useActionData,
+  useTransition,
 } from "remix";
+import { getFormData, useFormInputProps } from "remix-params-helper";
+
+import ContinueWithEmail from "~/components/send-magic-link";
+import { getUserByEmail } from "~/models/user.server";
+import { LoginFormSchema } from "~/routes/login";
 import { createUserAccount } from "~/services/auth.server";
 import { createUserSession, getUserSession } from "~/services/session.server";
-import { getUserByEmail } from "~/models/user.server";
-import { getFormData, useFormInputProps } from "remix-params-helper";
-import { LoginFormSchema } from "./login";
-import ContinueWithEmail from "~/components/send-magic-link";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userSession = await getUserSession(request);
@@ -78,11 +76,9 @@ export const action: ActionFunction = async ({ request }) => {
   });
 };
 
-export const meta: MetaFunction = () => {
-  return {
-    title: "Sign Up",
-  };
-};
+export const meta: MetaFunction = () => ({
+  title: "Sign Up",
+});
 
 export default function Join() {
   const [searchParams] = useSearchParams();
@@ -109,6 +105,7 @@ export default function Join() {
         <Form
           method="post"
           className="space-y-6"
+          replace
         >
           <div>
             <label

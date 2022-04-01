@@ -1,6 +1,7 @@
 import { ActionFunction, json } from "remix";
 import { getFormData } from "remix-params-helper";
 import { z } from "zod";
+
 import { sendMagicLink } from "~/services/auth.server";
 
 const ActionSchema = z.object({

@@ -1,4 +1,5 @@
 import {
+  json,
   Links,
   LiveReload,
   LoaderFunction,
@@ -10,11 +11,14 @@ import {
 } from "remix";
 import type { LinksFunction, MetaFunction } from "remix";
 
+import { SupabaseProvider } from "~/context/supabase";
+import { getUserSession } from "~/services/session.server";
+
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 
-export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
-};
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: tailwindStylesheetUrl },
+];
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -22,17 +26,24 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1",
 });
 
-export const loader: LoaderFunction = () => {
-  return {
+export const loader: LoaderFunction = async ({ request }) => {
+  const userSession = await getUserSession(request);
+
+  return json({
+    realtimeSession: {
+      accessToken: userSession?.accessToken,
+      expiresIn: userSession?.expiresIn,
+      expiresAt: userSession?.expiresAt,
+    },
     ENV: {
       SUPABASE_URL: process.env.SUPABASE_URL,
       SUPABASE_ANON_PUBLIC: process.env.SUPABASE_ANON_PUBLIC,
     },
-  };
+  });
 };
 
 export default function App() {
-  const { ENV } = useLoaderData<Window>();
+  const { ENV } = useLoaderData() as Window;
 
   return (
     <html
@@ -40,12 +51,13 @@ export default function App() {
       className="h-full"
     >
       <head>
-        <title>Remix Notes</title>
         <Meta />
         <Links />
       </head>
       <body className="h-full">
-        <Outlet />
+        <SupabaseProvider>
+          <Outlet />
+        </SupabaseProvider>
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{

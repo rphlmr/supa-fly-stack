@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+
 import {
   ActionFunction,
   json,
@@ -6,11 +7,12 @@ import {
   redirect,
   useActionData,
   useSearchParams,
+  useSubmit,
 } from "remix";
-import { useSubmit } from "remix";
 import { getFormData } from "remix-params-helper";
 import { z } from "zod";
-import { supabaseClient } from "~/database/supabase.client";
+
+import { useSupabase } from "~/context/supabase";
 import { getUserByEmail } from "~/models/user.server";
 import { creatOAuthUser } from "~/services/auth.server";
 import { commitUserSession, getUserSession } from "~/services/session.server";
@@ -22,6 +24,8 @@ const ActionSchema = z.object({
   userId: z.string(),
   email: z.string().email(),
   redirectTo: z.string().optional(),
+  expiresIn: z.number(),
+  expiresAt: z.number(),
 });
 
 // imagine a user go back after OAuth login success or type this URL
@@ -96,9 +100,10 @@ export default function LoginCallback() {
   const submit = useSubmit();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? "/notes";
+  const supabase = useSupabase();
 
   useEffect(() => {
-    const { data: authListener } = supabaseClient.auth.onAuthStateChange(
+    const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, authSession) => {
         if (event === "SIGNED_IN") {
           // supabase sdk has ability to read url fragment that contains your token after third party provider redirects you here
@@ -110,12 +115,12 @@ export default function LoginCallback() {
           const formData = new FormData();
 
           for (const [key, value] of Object.entries(userSession)) {
-            formData.append(key, value);
+            formData.append(key, value as string);
           }
 
           formData.append("redirectTo", redirectTo);
 
-          submit(formData, { method: "post" });
+          submit(formData, { method: "post", replace: true });
         }
       }
     );
@@ -124,7 +129,7 @@ export default function LoginCallback() {
       // prevent memory leak. Listener stays alive 👨‍🎤
       authListener?.unsubscribe();
     };
-  }, [submit, redirectTo]);
+  }, [supabase, submit, redirectTo]);
 
   return error ? <div>{error.message}</div> : null;
 }
