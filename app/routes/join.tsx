@@ -12,7 +12,7 @@ import {
 } from "remix";
 import { getFormData, useFormInputProps } from "remix-params-helper";
 
-import ContinueWithEmail from "~/components/send-magic-link";
+import ContinueWithEmail from "~/components/continue-with-email";
 import { getUserByEmail } from "~/models/user.server";
 import { LoginFormSchema } from "~/routes/login";
 import { createUserAccount } from "~/services/auth.server";

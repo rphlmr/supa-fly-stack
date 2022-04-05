@@ -13,10 +13,10 @@ export default function ContinueWithEmail() {
     : "Continue with email";
 
   React.useEffect(() => {
-    if (type === "done" && !data?.error) {
+    if (isSuccessFull) {
       ref.current?.reset();
     }
-  }, [type, data]);
+  }, [isSuccessFull]);
 
   return (
     <sendMagicLink.Form

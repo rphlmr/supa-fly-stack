@@ -15,7 +15,7 @@ import {
 import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
 
-import ContinueWithEmail from "~/components/send-magic-link";
+import ContinueWithEmail from "~/components/continue-with-email";
 import { signInWithEmail } from "~/services/auth.server";
 import { createUserSession, getUserSession } from "~/services/session.server";
 
