@@ -1,6 +1,6 @@
 import { createContext, ReactElement, useContext, useState } from "react";
 
-import { useFetcher } from "remix";
+import { useFetcher } from "@remix-run/react";
 
 import { getSupabaseClient, SupabaseClient } from "~/database/supabase.client";
 import type { RealtimeSession } from "~/services/session.server";

@@ -1,5 +1,5 @@
-import type { LoaderFunction, ActionFunction } from "remix";
-import { json } from "remix";
+import type { LoaderFunction, ActionFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 
 import { commitUserSession, refreshSession } from "~/services/session.server";
 

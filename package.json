@@ -16,7 +16,6 @@
     "shadow-db:stop": "docker-compose stop",
     "format": "prettier --write .",
     "generate:css": "tailwindcss -o ./app/styles/tailwind.css",
-    "postinstall": "remix setup node",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "setup": "run-s shadow-db:start setup:db setup:seed shadow-db:stop",
     "setup:db": "prisma migrate dev",
@@ -41,7 +40,8 @@
     "@supabase/supabase-js": "^1.31.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "remix": "*",
+    "@remix-run/node": "*",
+    "@remix-run/server-runtime": "*",
     "remix-params-helper": "^0.4.8",
     "tiny-invariant": "^1.2.0",
     "zod": "^3.14.3"

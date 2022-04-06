@@ -1,4 +1,5 @@
-import { ActionFunction, json } from "remix";
+import type { ActionFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { getFormData } from "remix-params-helper";
 import { z } from "zod";
 

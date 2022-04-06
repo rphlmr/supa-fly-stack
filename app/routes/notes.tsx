@@ -1,5 +1,6 @@
-import { Form, json, useLoaderData, Outlet, Link, NavLink } from "remix";
-import type { LoaderFunction } from "remix";
+import { json } from "@remix-run/node";
+import type { LoaderFunction } from "@remix-run/node";
+import { Form, useLoaderData, Outlet, Link, NavLink } from "@remix-run/react";
 
 import { getUserNoteListItems } from "~/models/note.server";
 import { requireUserSession } from "~/services/session.server";

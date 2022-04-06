@@ -1,15 +1,18 @@
+import type {
+  LinksFunction,
+  LoaderFunction,
+  MetaFunction,
+} from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
-  json,
   Links,
   LiveReload,
-  LoaderFunction,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
   useLoaderData,
-} from "remix";
-import type { LinksFunction, MetaFunction } from "remix";
+} from "@remix-run/react";
 
 import { SupabaseProvider } from "~/context/supabase";
 import { getUserSession } from "~/services/session.server";

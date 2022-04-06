@@ -1,7 +1,8 @@
 import * as React from "react";
 
-import { Form, json, redirect, useActionData, useTransition } from "remix";
-import type { ActionFunction } from "remix";
+import { json, redirect } from "@remix-run/node";
+import type { ActionFunction } from "@remix-run/node";
+import { Form, useActionData, useTransition } from "@remix-run/react";
 import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
 

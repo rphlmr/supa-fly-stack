@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useFetcher } from "remix";
+import { useFetcher } from "@remix-run/react";
 
 export default function ContinueWithEmail() {
   const ref = React.useRef<HTMLFormElement>(null);
