@@ -1,14 +1,8 @@
 import { useEffect } from "react";
 
-import {
-  ActionFunction,
-  json,
-  LoaderFunction,
-  redirect,
-  useActionData,
-  useSearchParams,
-  useSubmit,
-} from "remix";
+import { json, redirect } from "@remix-run/node";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { useActionData, useSearchParams, useSubmit } from "@remix-run/react";
 import { getFormData } from "remix-params-helper";
 import { z } from "zod";
 

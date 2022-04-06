@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 
-import { json, Link, LoaderFunction, useLoaderData, useSubmit } from "remix";
+import type { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { Link, useLoaderData, useSubmit } from "@remix-run/react";
 
 import { useSupabase } from "~/context/supabase";
 import { getNoteCount } from "~/models/note.server";

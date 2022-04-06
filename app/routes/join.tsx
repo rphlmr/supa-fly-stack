@@ -1,15 +1,18 @@
 import * as React from "react";
 
-import type { ActionFunction, LoaderFunction, MetaFunction } from "remix";
+import type {
+  ActionFunction,
+  LoaderFunction,
+  MetaFunction,
+} from "@remix-run/node";
+import { redirect, json } from "@remix-run/node";
 import {
   Form,
   Link,
-  redirect,
-  useSearchParams,
-  json,
   useActionData,
+  useSearchParams,
   useTransition,
-} from "remix";
+} from "@remix-run/react";
 import { getFormData, useFormInputProps } from "remix-params-helper";
 
 import ContinueWithEmail from "~/components/continue-with-email";
