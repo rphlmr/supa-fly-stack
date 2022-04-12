@@ -1,33 +1,32 @@
 import * as React from "react";
 
-import type {
-  ActionFunction,
-  LoaderFunction,
-  MetaFunction,
-} from "@remix-run/node";
+import type { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
-import {
-  Form,
-  Link,
-  useActionData,
-  useSearchParams,
-  useTransition,
-} from "@remix-run/react";
+import { Form, Link, useActionData, useSearchParams, useTransition } from "@remix-run/react";
 import { getFormData, useFormInputProps } from "remix-params-helper";
+import { z } from "zod";
 
-import ContinueWithEmail from "~/components/continue-with-email";
-import { getUserByEmail } from "~/models/user.server";
-import { LoginFormSchema } from "~/routes/login";
-import { createUserAccount } from "~/services/auth.server";
-import { createUserSession, getUserSession } from "~/services/session.server";
+import { ContinueWithEmail } from "~/core/auth/components";
+import { createAuthSession, getAuthSession } from "~/core/auth/session.server";
+import { createUserAccountByEmailPassword } from "~/modules/user/mutations";
+import { getUserByEmail } from "~/modules/user/queries";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const userSession = await getUserSession(request);
+  const authSession = await getAuthSession(request);
 
-  if (userSession) return redirect("/notes");
+  if (authSession) return redirect("/notes");
 
   return json({});
 };
+
+const JoinFormSchema = z.object({
+  email: z
+    .string()
+    .email("invalid-email")
+    .transform((email) => email.toLowerCase()),
+  password: z.string().min(8, "password-too-short"),
+  redirectTo: z.string().optional(),
+});
 
 interface ActionData {
   errors: {
@@ -41,7 +40,7 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ message: "Method not allowed" }, 405);
   }
 
-  const formValidation = await getFormData(request, LoginFormSchema);
+  const formValidation = await getFormData(request, JoinFormSchema);
 
   if (!formValidation.success) {
     return json<ActionData>(
@@ -57,22 +56,16 @@ export const action: ActionFunction = async ({ request }) => {
   const existingUser = await getUserByEmail(email);
 
   if (existingUser) {
-    return json<ActionData>(
-      { errors: { email: "user-already-exist" } },
-      { status: 400 }
-    );
+    return json<ActionData>({ errors: { email: "user-already-exist" } }, { status: 400 });
   }
 
-  const authSession = await createUserAccount(email, password);
+  const authSession = await createUserAccountByEmailPassword(email, password);
 
   if (!authSession) {
-    return json<ActionData>(
-      { errors: { email: "unable-to-create-account" } },
-      { status: 500 }
-    );
+    return json<ActionData>({ errors: { email: "unable-to-create-account" } }, { status: 500 });
   }
 
-  return createUserSession({
+  return createAuthSession({
     request,
     authSession,
     redirectTo,
@@ -89,10 +82,9 @@ export default function Join() {
   const actionData = useActionData() as ActionData;
   const emailRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
-  const inputProps = useFormInputProps(LoginFormSchema);
+  const inputProps = useFormInputProps(JoinFormSchema);
   const transition = useTransition();
-  const disabled =
-    transition.state === "submitting" || transition.state === "loading";
+  const disabled = transition.state === "submitting" || transition.state === "loading";
 
   React.useEffect(() => {
     if (actionData?.errors?.email) {
@@ -207,9 +199,7 @@ export default function Join() {
               <div className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-2 text-gray-500">
-                Or continue with
-              </span>
+              <span className="bg-white px-2 text-gray-500">Or continue with</span>
             </div>
           </div>
           <div className="mt-6">

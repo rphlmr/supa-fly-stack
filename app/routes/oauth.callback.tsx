@@ -6,13 +6,14 @@ import { useActionData, useSearchParams, useSubmit } from "@remix-run/react";
 import { getFormData } from "remix-params-helper";
 import { z } from "zod";
 
-import { useSupabase } from "~/context/supabase";
-import { getUserByEmail } from "~/models/user.server";
-import { creatOAuthUser } from "~/services/auth.server";
-import { commitUserSession, getUserSession } from "~/services/session.server";
-import { mapSession } from "~/utils/session-mapper";
+import { commitAuthSession, getAuthSession } from "~/core/auth/session.server";
+import { mapAuthSession } from "~/core/auth/utils/map-auth-session";
+import { useSupabase } from "~/core/integrations/supabase/context";
+import { assertIsPost } from "~/core/utils/http.server";
+import { createUserAccountFromOAuth } from "~/modules/user/mutations";
+import { getUserByEmail } from "~/modules/user/queries";
 
-const ActionSchema = z.object({
+const AuthSessionSchema = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),
   userId: z.string(),
@@ -25,9 +26,9 @@ const ActionSchema = z.object({
 // imagine a user go back after OAuth login success or type this URL
 // we don't want him to fall in a black hole 👽
 export const loader: LoaderFunction = async ({ request }) => {
-  const userSession = await getUserSession(request);
+  const authSession = await getAuthSession(request);
 
-  if (userSession) return redirect("/notes");
+  if (authSession) return redirect("/notes");
 
   return json({});
 };
@@ -37,11 +38,9 @@ interface ActionData {
 }
 
 export const action: ActionFunction = async ({ request }) => {
-  if (request.method !== "POST") {
-    return json({ message: "Method not allowed" }, 405);
-  }
+  assertIsPost(request);
 
-  const form = await getFormData(request, ActionSchema);
+  const form = await getFormData(request, AuthSessionSchema);
 
   if (!form.success) {
     return json<ActionData>(
@@ -52,24 +51,21 @@ export const action: ActionFunction = async ({ request }) => {
     );
   }
 
-  const { redirectTo = "/notes", ...userSession } = form.data;
+  const { redirectTo = "/notes", ...authSession } = form.data;
 
   // user have un account, skip creation part and just commit session
-  if (await getUserByEmail(userSession.email)) {
+  if (await getUserByEmail(authSession.email)) {
     return redirect(redirectTo, {
       headers: {
-        "Set-Cookie": await commitUserSession(request, {
-          userSession,
+        "Set-Cookie": await commitAuthSession(request, {
+          authSession,
         }),
       },
     });
   }
 
   // first time sign in, let's create a brand-new User row in supabase
-  const createUserError = await creatOAuthUser(
-    userSession.userId,
-    userSession.email
-  );
+  const createUserError = await createUserAccountFromOAuth(authSession.userId, authSession.email);
 
   if (createUserError) {
     return json<ActionData>(
@@ -82,8 +78,8 @@ export const action: ActionFunction = async ({ request }) => {
 
   return redirect(redirectTo, {
     headers: {
-      "Set-Cookie": await commitUserSession(request, {
-        userSession,
+      "Set-Cookie": await commitAuthSession(request, {
+        authSession,
       }),
     },
   });
@@ -97,27 +93,28 @@ export default function LoginCallback() {
   const supabase = useSupabase();
 
   useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, authSession) => {
-        if (event === "SIGNED_IN") {
-          // supabase sdk has ability to read url fragment that contains your token after third party provider redirects you here
-          // this fragment url looks like https://.....#access_token=evxxxxxxxx&refresh_token=xxxxxx, and it's not readable server-side (Oauth security)
-          // supabase auth listener gives us a user session, based on what it founds in this fragment url
-          // we can't use it directly, client-side, because we can't access sessionStorage from here
-          // so, we map what we need, and let's back-end to the work
-          const userSession = mapSession(authSession!);
-          const formData = new FormData();
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, supabaseSession) => {
+      if (event === "SIGNED_IN") {
+        // supabase sdk has ability to read url fragment that contains your token after third party provider redirects you here
+        // this fragment url looks like https://.....#access_token=evxxxxxxxx&refresh_token=xxxxxx, and it's not readable server-side (Oauth security)
+        // supabase auth listener gives us a user session, based on what it founds in this fragment url
+        // we can't use it directly, client-side, because we can't access sessionStorage from here
+        // so, we map what we need, and let's back-end to the work
+        const authSession = mapAuthSession(supabaseSession);
 
-          for (const [key, value] of Object.entries(userSession)) {
-            formData.append(key, value as string);
-          }
+        if (!authSession) return;
 
-          formData.append("redirectTo", redirectTo);
+        const formData = new FormData();
 
-          submit(formData, { method: "post", replace: true });
+        for (const [key, value] of Object.entries(authSession)) {
+          formData.append(key, value as string);
         }
+
+        formData.append("redirectTo", redirectTo);
+
+        submit(formData, { method: "post", replace: true });
       }
-    );
+    });
 
     return () => {
       // prevent memory leak. Listener stays alive 👨‍🎤

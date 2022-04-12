@@ -3,19 +3,18 @@ import { redirect, json } from "@remix-run/node";
 import { Form, useCatch, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
-import { deleteNote, getNote } from "~/models/note.server";
-import type { Note } from "~/models/note.server";
-import {
-  commitUserSession,
-  requireUserSession,
-} from "~/services/session.server";
+import { requireAuthSession } from "~/core/auth/guards";
+import { commitAuthSession } from "~/core/auth/session.server";
+import type { Note } from "~/core/database/db.server";
+import { deleteNote } from "~/modules/note/mutations";
+import { getNote } from "~/modules/note/queries";
 
 type LoaderData = {
   note: Note;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const { userId } = await requireUserSession(request);
+  const { userId } = await requireAuthSession(request);
   invariant(params.noteId, "noteId not found");
 
   const note = await getNote({ userId, id: params.noteId });
@@ -30,14 +29,14 @@ export const action: ActionFunction = async ({ request, params }) => {
     return json({ message: "Method not allowed" }, 405);
   }
 
-  const userSession = await requireUserSession(request);
+  const authSession = await requireAuthSession(request);
   invariant(params.noteId, "noteId not found");
 
-  await deleteNote({ userId: userSession.userId, id: params.noteId });
+  await deleteNote({ userId: authSession.userId, id: params.noteId });
 
   return redirect("/notes", {
     headers: {
-      "Set-Cookie": await commitUserSession(request, { userSession }),
+      "Set-Cookie": await commitAuthSession(request, { authSession }),
     },
   });
 };

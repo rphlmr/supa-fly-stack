@@ -35,8 +35,8 @@ module.exports = {
     "cypress",
     "test",
     "mocks",
-    "prisma",
     "remix.init",
+    "seed.server.ts",
   ],
   // we're using vitest which has a very similar API to jest
   // (so the linting plugins work nicely), but it we have to explicitly
@@ -59,18 +59,19 @@ module.exports = {
   rules: {
     "no-console": "warn",
     "arrow-body-style": ["warn", "as-needed"],
-    // meh...
+    "react/jsx-filename-extension": "off",
+    // @typescript-eslint
+    "@typescript-eslint/consistent-type-imports": "error",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/sort-type-union-intersection-members": "off",
-    "react/jsx-filename-extension": "off",
     "@typescript-eslint/no-namespace": "off",
-    // I can't figure these out:
     "@typescript-eslint/no-unsafe-call": "off",
     "@typescript-eslint/no-unsafe-assignment": "off",
     "@typescript-eslint/no-unsafe-member-access": "off",
-    // enable these again someday:
     "@typescript-eslint/no-unsafe-argument": "off",
-    // this one isn't smart enough for our "~/" imports
+    "@typescript-eslint/no-throw-literal": "off", // for CatchBoundaries
+    //import
+    "import/no-default-export": "error",
     "import/order": [
       "error",
       {
@@ -90,7 +91,32 @@ module.exports = {
         },
       },
     ],
-    // for CatchBoundaries
-    "@typescript-eslint/no-throw-literal": "off",
+    "import/no-restricted-paths": [
+      "error",
+      {
+        zones: [
+          {
+            target: "./app/core",
+            from: "./app/modules",
+          },
+          {
+            target: "./app/core",
+            from: "./app/routes",
+          },
+          {
+            target: "./app/modules",
+            from: "./app/routes",
+          },
+        ],
+      },
+    ],
   },
+  overrides: [
+    {
+      files: ["./app/root.tsx", "./app/entry.client.tsx", "./app/entry.server.tsx", "./app/routes/**/*.tsx"],
+      rules: {
+        "import/no-default-export": "off",
+      },
+    },
+  ],
 };

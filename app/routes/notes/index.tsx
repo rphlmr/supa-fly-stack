@@ -4,12 +4,12 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData, useSubmit } from "@remix-run/react";
 
-import { useSupabase } from "~/context/supabase";
-import { getNoteCount } from "~/models/note.server";
-import { requireUserSession } from "~/services/session.server";
+import { requireAuthSession } from "~/core/auth/guards";
+import { useSupabase } from "~/core/integrations/supabase/context";
+import { getNoteCount } from "~/modules/note/queries";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  await requireUserSession(request);
+  await requireAuthSession(request);
 
   const nbOfNotes = await getNoteCount();
 

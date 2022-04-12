@@ -1,27 +1,26 @@
 import type { LoaderFunction, ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 
-import { commitUserSession, refreshSession } from "~/services/session.server";
+import { refreshAuthSession } from "~/core/auth/mutations";
+import { commitAuthSession } from "~/core/auth/session.server";
+import { assertIsPost } from "~/core/utils/http.server";
 
 // this is just for supabase realtime session refresh
 export const action: ActionFunction = async ({ request }) => {
-  if (request.method !== "POST") {
-    return json({ message: "Method not allowed" }, 405);
-  }
+  assertIsPost(request);
 
-  const userSession = await refreshSession(request);
+  const authSession = await refreshAuthSession(request);
 
   return json(
     { success: true },
     {
       headers: {
-        "Set-Cookie": await commitUserSession(request, {
-          userSession,
+        "Set-Cookie": await commitAuthSession(request, {
+          authSession,
         }),
       },
     }
   );
 };
 
-export const loader: LoaderFunction = async ({ request }) =>
-  refreshSession(request);
+export const loader: LoaderFunction = async ({ request }) => refreshAuthSession(request);
