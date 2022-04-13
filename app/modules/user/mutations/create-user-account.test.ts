@@ -1,9 +1,14 @@
 import { matchRequestUrl, rest } from "msw";
 
-import { SUPABASE_URL, SUPABASE_AUTH_TOKEN_API, SUPABASE_AUTH_ADMIN_USER_API, authSession } from "mocks/handlers";
+import {
+  SUPABASE_URL,
+  SUPABASE_AUTH_TOKEN_API,
+  SUPABASE_AUTH_ADMIN_USER_API,
+  authSession,
+} from "mocks/handlers";
 import { server } from "mocks/start";
 import { USER_EMAIL, USER_ID, USER_PASSWORD } from "mocks/user";
-import { db } from "~/core/database/db.server";
+import { db } from "~/core/database";
 
 import { createUserAccount } from "./create-user-account.server";
 
@@ -24,15 +29,24 @@ describe(createUserAccount.name, () => {
 
     server.events.on("request:start", (req) => {
       const matchesMethod = req.method === "POST";
-      const matchesUrl = matchRequestUrl(req.url, SUPABASE_AUTH_ADMIN_USER_API, SUPABASE_URL).matches;
+      const matchesUrl = matchRequestUrl(
+        req.url,
+        SUPABASE_AUTH_ADMIN_USER_API,
+        SUPABASE_URL
+      ).matches;
 
       if (matchesMethod && matchesUrl) fetchAuthAdminUserAPI.set(req.id, req);
     });
 
     // https://mswjs.io/docs/api/setup-server/use#one-time-override
     server.use(
-      rest.post(`${SUPABASE_URL}${SUPABASE_AUTH_ADMIN_USER_API}`, async (req, res, ctx) =>
-        res.once(ctx.status(400), ctx.json({ message: "create-account-error", status: 400 }))
+      rest.post(
+        `${SUPABASE_URL}${SUPABASE_AUTH_ADMIN_USER_API}`,
+        async (req, res, ctx) =>
+          res.once(
+            ctx.status(400),
+            ctx.json({ message: "create-account-error", status: 400 })
+          )
       )
     );
 
@@ -60,21 +74,34 @@ describe(createUserAccount.name, () => {
 
     server.events.on("request:start", (req) => {
       const matchesMethod = req.method === "POST";
-      const matchesUrl = matchRequestUrl(req.url, SUPABASE_AUTH_TOKEN_API, SUPABASE_URL).matches;
+      const matchesUrl = matchRequestUrl(
+        req.url,
+        SUPABASE_AUTH_TOKEN_API,
+        SUPABASE_URL
+      ).matches;
 
       if (matchesMethod && matchesUrl) fetchAuthTokenAPI.set(req.id, req);
     });
 
     server.events.on("request:start", (req) => {
       const matchesMethod = req.method === "DELETE";
-      const matchesUrl = matchRequestUrl(req.url, `${SUPABASE_AUTH_ADMIN_USER_API}/*`, SUPABASE_URL).matches;
+      const matchesUrl = matchRequestUrl(
+        req.url,
+        `${SUPABASE_AUTH_ADMIN_USER_API}/*`,
+        SUPABASE_URL
+      ).matches;
 
       if (matchesMethod && matchesUrl) fetchAuthAdminUserAPI.set(req.id, req);
     });
 
     server.use(
-      rest.post(`${SUPABASE_URL}${SUPABASE_AUTH_TOKEN_API}`, async (req, res, ctx) =>
-        res.once(ctx.status(400), ctx.json({ message: "sign-in-error", status: 400 }))
+      rest.post(
+        `${SUPABASE_URL}${SUPABASE_AUTH_TOKEN_API}`,
+        async (req, res, ctx) =>
+          res.once(
+            ctx.status(400),
+            ctx.json({ message: "sign-in-error", status: 400 })
+          )
       )
     );
 
@@ -85,11 +112,15 @@ describe(createUserAccount.name, () => {
     expect(result).toBeNull();
     expect(fetchAuthTokenAPI.size).toEqual(1);
     const [signInRequest] = fetchAuthTokenAPI.values();
-    expect(signInRequest.body).toEqual(JSON.stringify({ email: USER_EMAIL, password: USER_PASSWORD }));
+    expect(signInRequest.body).toEqual(
+      JSON.stringify({ email: USER_EMAIL, password: USER_PASSWORD })
+    );
     expect(fetchAuthAdminUserAPI.size).toEqual(1);
     // expect call delete auth account with the expected user id
     const [authAdminUserReq] = fetchAuthAdminUserAPI.values();
-    expect(authAdminUserReq.url.pathname).toEqual(`${SUPABASE_AUTH_ADMIN_USER_API}/${USER_ID}`);
+    expect(authAdminUserReq.url.pathname).toEqual(
+      `${SUPABASE_AUTH_ADMIN_USER_API}/${USER_ID}`
+    );
   });
 
   it("should return null and delete auth account if unable to create user in database", async () => {
@@ -100,14 +131,22 @@ describe(createUserAccount.name, () => {
 
     server.events.on("request:start", (req) => {
       const matchesMethod = req.method === "POST";
-      const matchesUrl = matchRequestUrl(req.url, SUPABASE_AUTH_TOKEN_API, SUPABASE_URL).matches;
+      const matchesUrl = matchRequestUrl(
+        req.url,
+        SUPABASE_AUTH_TOKEN_API,
+        SUPABASE_URL
+      ).matches;
 
       if (matchesMethod && matchesUrl) fetchAuthTokenAPI.set(req.id, req);
     });
 
     server.events.on("request:start", (req) => {
       const matchesMethod = req.method === "DELETE";
-      const matchesUrl = matchRequestUrl(req.url, `${SUPABASE_AUTH_ADMIN_USER_API}/*`, SUPABASE_URL).matches;
+      const matchesUrl = matchRequestUrl(
+        req.url,
+        `${SUPABASE_AUTH_ADMIN_USER_API}/*`,
+        SUPABASE_URL
+      ).matches;
 
       if (matchesMethod && matchesUrl) fetchAuthAdminUserAPI.set(req.id, req);
     });
@@ -125,7 +164,9 @@ describe(createUserAccount.name, () => {
 
     // expect call delete auth account with the expected user id
     const [authAdminUserReq] = fetchAuthAdminUserAPI.values();
-    expect(authAdminUserReq.url.pathname).toEqual(`${SUPABASE_AUTH_ADMIN_USER_API}/${USER_ID}`);
+    expect(authAdminUserReq.url.pathname).toEqual(
+      `${SUPABASE_AUTH_ADMIN_USER_API}/${USER_ID}`
+    );
   });
 
   it("should create an account", async () => {
@@ -136,14 +177,22 @@ describe(createUserAccount.name, () => {
 
     server.events.on("request:start", (req) => {
       const matchesMethod = req.method === "POST";
-      const matchesUrl = matchRequestUrl(req.url, SUPABASE_AUTH_ADMIN_USER_API, SUPABASE_URL).matches;
+      const matchesUrl = matchRequestUrl(
+        req.url,
+        SUPABASE_AUTH_ADMIN_USER_API,
+        SUPABASE_URL
+      ).matches;
 
       if (matchesMethod && matchesUrl) fetchAuthAdminUserAPI.set(req.id, req);
     });
 
     server.events.on("request:start", (req) => {
       const matchesMethod = req.method === "POST";
-      const matchesUrl = matchRequestUrl(req.url, SUPABASE_AUTH_TOKEN_API, SUPABASE_URL).matches;
+      const matchesUrl = matchRequestUrl(
+        req.url,
+        SUPABASE_AUTH_TOKEN_API,
+        SUPABASE_URL
+      ).matches;
 
       if (matchesMethod && matchesUrl) fetchAuthTokenAPI.set(req.id, req);
     });
@@ -155,7 +204,9 @@ describe(createUserAccount.name, () => {
 
     server.events.removeAllListeners();
 
-    expect(db.user.create).toBeCalledWith({ data: { email: USER_EMAIL, id: USER_ID } });
+    expect(db.user.create).toBeCalledWith({
+      data: { email: USER_EMAIL, id: USER_ID },
+    });
     expect(result).toEqual(authSession);
     expect(fetchAuthAdminUserAPI.size).toEqual(1);
     expect(fetchAuthTokenAPI.size).toEqual(1);

@@ -6,7 +6,7 @@
 import { installGlobals } from "@remix-run/node/globals";
 
 import { deleteAuthAccount } from "~/core/auth/mutations";
-import { db } from "~/core/database/db.server";
+import { db } from "~/core/database";
 import { getUserByEmail } from "~/modules/user/queries";
 
 installGlobals();

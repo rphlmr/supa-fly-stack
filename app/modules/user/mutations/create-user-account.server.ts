@@ -4,7 +4,7 @@ import {
   signInWithEmail,
 } from "~/core/auth/mutations";
 import type { AuthSession } from "~/core/auth/session.server";
-import { db } from "~/core/database/db.server";
+import { db } from "~/core/database";
 
 async function createUser({
   email,

@@ -1,7 +1,10 @@
-import type { Note, User } from "~/core/database/db.server";
-import { db } from "~/core/database/db.server";
+import type { Note, User } from "~/core/database";
+import { db } from "~/core/database";
 
-export async function deleteNote({ id, userId }: Pick<Note, "id"> & { userId: User["id"] }) {
+export async function deleteNote({
+  id,
+  userId,
+}: Pick<Note, "id"> & { userId: User["id"] }) {
   return db.note.deleteMany({
     where: { id, userId },
   });

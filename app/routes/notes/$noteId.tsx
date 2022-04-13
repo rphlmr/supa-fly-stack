@@ -5,7 +5,7 @@ import invariant from "tiny-invariant";
 
 import { requireAuthSession } from "~/core/auth/guards";
 import { commitAuthSession } from "~/core/auth/session.server";
-import type { Note } from "~/core/database/db.server";
+import type { Note } from "~/core/database";
 import { deleteNote } from "~/modules/note/mutations";
 import { getNote } from "~/modules/note/queries";
 

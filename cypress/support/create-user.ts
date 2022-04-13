@@ -6,7 +6,7 @@
 
 import { installGlobals } from "@remix-run/node/globals";
 import { createAuthAccount } from "~/core/auth/mutations";
-import { db } from "~/core/database/db.server";
+import { db } from "~/core/database";
 
 installGlobals();
 
