@@ -21,7 +21,8 @@ async function deleteUser(email: string) {
 
   const user = await getUserByEmail(email);
 
-  await db.user.delete({ where: { email: email.toLowerCase() } });
+  await db.user.delete({ where: { email: user?.email } });
+
   await deleteAuthAccount(user?.id!);
 }
 

@@ -26,7 +26,7 @@ async function createAccount(email: string, password: string) {
 
   const newUser = await db.user.create({
     data: {
-      email,
+      email: email.toLowerCase(),
       id: authAccount.id,
     },
   });

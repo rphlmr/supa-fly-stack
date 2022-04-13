@@ -1,6 +1,6 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 
-import { SESSION_ERROR_KEY, SESSION_KEY } from "./const";
+import { SESSION_ERROR_KEY, SESSION_KEY, SESSION_MAX_AGE } from "./const";
 
 if (!process.env.SESSION_SECRET) {
   throw new Error("SESSION_SECRET is not set");
@@ -15,7 +15,10 @@ export interface AuthSession {
   expiresAt: number;
 }
 
-export type RealtimeAuthSession = Pick<AuthSession, "accessToken" | "expiresIn" | "expiresAt">;
+export type RealtimeAuthSession = Pick<
+  AuthSession,
+  "accessToken" | "expiresIn" | "expiresAt"
+>;
 
 /**
  * Session storage CRUD
@@ -25,6 +28,7 @@ const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: "__session",
     httpOnly: true,
+    maxAge: 0,
     path: "/",
     sameSite: "lax",
     secrets: [process.env.SESSION_SECRET],
@@ -56,7 +60,9 @@ export async function getSession(request: Request) {
   return sessionStorage.getSession(cookie);
 }
 
-export async function getAuthSession(request: Request): Promise<AuthSession | null> {
+export async function getAuthSession(
+  request: Request
+): Promise<AuthSession | null> {
   const session = await getSession(request);
   return session.get(SESSION_KEY);
 }
@@ -81,7 +87,7 @@ export async function commitAuthSession(
 
   session.flash(SESSION_ERROR_KEY, flashErrorMessage);
 
-  return sessionStorage.commitSession(session);
+  return sessionStorage.commitSession(session, { maxAge: SESSION_MAX_AGE });
 }
 
 export async function destroyAuthSession(request: Request) {

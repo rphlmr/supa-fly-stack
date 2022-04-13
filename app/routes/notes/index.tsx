@@ -3,6 +3,7 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
 import { requireAuthSession } from "~/core/auth/guards";
+// import { useWatchNotes } from "~/modules/note/hooks";
 import { getNoteCount } from "~/modules/note/queries";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -17,6 +18,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function NoteIndexPage() {
   const { nbOfNotes } = useLoaderData();
+  // useWatchNotes();
 
   return (
     <>
@@ -31,7 +33,7 @@ export default function NoteIndexPage() {
       </p>
       <br />
       <div>
-        <h2>Live stream number of notes</h2>
+        <h2>Server number of notes:</h2>
         <span>{nbOfNotes}</span>
       </div>
     </>

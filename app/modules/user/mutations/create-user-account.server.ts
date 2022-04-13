@@ -1,8 +1,15 @@
-import { createAuthAccount, deleteAuthAccount, signInWithEmail } from "~/core/auth/mutations";
+import {
+  createAuthAccount,
+  deleteAuthAccount,
+  signInWithEmail,
+} from "~/core/auth/mutations";
 import type { AuthSession } from "~/core/auth/session.server";
 import { db } from "~/core/database/db.server";
 
-async function createUser({ email, userId }: Pick<AuthSession, "userId" | "email">) {
+async function createUser({
+  email,
+  userId,
+}: Pick<AuthSession, "userId" | "email">) {
   return db.user
     .create({
       data: {
@@ -14,7 +21,10 @@ async function createUser({ email, userId }: Pick<AuthSession, "userId" | "email
     .catch(() => null);
 }
 
-export async function tryCreateUser({ email, userId }: Pick<AuthSession, "userId" | "email">) {
+export async function tryCreateUser({
+  email,
+  userId,
+}: Pick<AuthSession, "userId" | "email">) {
   const user = await createUser({
     userId,
     email,
@@ -30,7 +40,10 @@ export async function tryCreateUser({ email, userId }: Pick<AuthSession, "userId
   return user;
 }
 
-export async function createUserAccount(email: string, password: string): Promise<AuthSession | null> {
+export async function createUserAccount(
+  email: string,
+  password: string
+): Promise<AuthSession | null> {
   const authAccount = await createAuthAccount(email, password);
 
   // ok, no user account created

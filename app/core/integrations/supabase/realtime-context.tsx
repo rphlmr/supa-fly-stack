@@ -18,13 +18,24 @@ function useOptionalRealtimeSession(): Partial<RealtimeAuthSession> {
   return data?.realtimeSession || {};
 }
 
-const SupabaseContext = createContext<SupabaseClient | undefined>(undefined);
+const SupabaseRealtimeContext = createContext<SupabaseClient | undefined>(
+  undefined
+);
 
-export const SupabaseProvider = ({ children }: { children: ReactElement }) => {
+// in root.tsx, wrap <Outlet /> with <SupabaseRealtimeProvider> to use realtime features
+export const SupabaseRealtimeProvider = ({
+  children,
+}: {
+  children: ReactElement;
+}) => {
   // what root loader data returns
   const { accessToken, expiresIn, expiresAt } = useOptionalRealtimeSession();
-  const [currentExpiresAt, setCurrentExpiresAt] = useState<number | undefined>();
-  const [supabaseClient, setSupabaseClient] = useState<SupabaseClient | undefined>(() => {
+  const [currentExpiresAt, setCurrentExpiresAt] = useState<
+    number | undefined
+  >();
+  const [supabaseRealtimeClient, setSupabaseRealtimeClient] = useState<
+    SupabaseClient | undefined
+  >(() => {
     // prevents server side initial state
     if (isBrowser) return getSupabaseClient(); // init a default client in browser. Needed for oauth callback
   });
@@ -52,17 +63,23 @@ export const SupabaseProvider = ({ children }: { children: ReactElement }) => {
 
     // refresh provider's state
     setCurrentExpiresAt(expiresAt);
-    setSupabaseClient(client);
+    setSupabaseRealtimeClient(client);
   }
 
-  return <SupabaseContext.Provider value={supabaseClient}>{children}</SupabaseContext.Provider>;
+  return (
+    <SupabaseRealtimeContext.Provider value={supabaseRealtimeClient}>
+      {children}
+    </SupabaseRealtimeContext.Provider>
+  );
 };
 
-export const useRealtimeSupabase = () => {
-  const context = useContext(SupabaseContext);
+export const useSupabaseRealtime = () => {
+  const context = useContext(SupabaseRealtimeContext);
 
   if (isBrowser && context === undefined) {
-    throw new Error(`useSupabaseClient must be used within a SupabaseClientProvider.`);
+    throw new Error(
+      `useSupabaseRealtime must be used within a SupabaseClientProvider.`
+    );
   }
 
   return context as SupabaseClient;

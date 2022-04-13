@@ -31,8 +31,7 @@
     "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run"
   },
   "prettier": {
-    "singleAttributePerLine": true,
-    "printWidth": 120
+    "singleAttributePerLine": true
   },
   "dependencies": {
     "@prisma/client": "^3.12.0",
@@ -90,6 +89,6 @@
   },
   "prisma": {
     "schema": "app/core/database/schema.prisma",
-    "seed": "ts-node --require tsconfig-paths/register app/core/database/seed.ts"
+    "seed": "ts-node --require tsconfig-paths/register app/core/database/seed.server.ts"
   }
 }

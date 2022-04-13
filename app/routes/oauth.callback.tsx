@@ -94,28 +94,30 @@ export default function LoginCallback() {
   useEffect(() => {
     const supabase = getSupabaseClient();
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, supabaseSession) => {
-      if (event === "SIGNED_IN") {
-        // supabase sdk has ability to read url fragment that contains your token after third party provider redirects you here
-        // this fragment url looks like https://.....#access_token=evxxxxxxxx&refresh_token=xxxxxx, and it's not readable server-side (Oauth security)
-        // supabase auth listener gives us a user session, based on what it founds in this fragment url
-        // we can't use it directly, client-side, because we can't access sessionStorage from here
-        // so, we map what we need, and let's back-end to the work
-        const authSession = mapAuthSession(supabaseSession);
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, supabaseSession) => {
+        if (event === "SIGNED_IN") {
+          // supabase sdk has ability to read url fragment that contains your token after third party provider redirects you here
+          // this fragment url looks like https://.....#access_token=evxxxxxxxx&refresh_token=xxxxxx, and it's not readable server-side (Oauth security)
+          // supabase auth listener gives us a user session, based on what it founds in this fragment url
+          // we can't use it directly, client-side, because we can't access sessionStorage from here
+          // so, we map what we need, and let's back-end to the work
+          const authSession = mapAuthSession(supabaseSession);
 
-        if (!authSession) return;
+          if (!authSession) return;
 
-        const formData = new FormData();
+          const formData = new FormData();
 
-        for (const [key, value] of Object.entries(authSession)) {
-          formData.append(key, value as string);
+          for (const [key, value] of Object.entries(authSession)) {
+            formData.append(key, value as string);
+          }
+
+          formData.append("redirectTo", redirectTo);
+
+          submit(formData, { method: "post", replace: true });
         }
-
-        formData.append("redirectTo", redirectTo);
-
-        submit(formData, { method: "post", replace: true });
       }
-    });
+    );
 
     return () => {
       // prevent memory leak. Listener stays alive 👨‍🎤
