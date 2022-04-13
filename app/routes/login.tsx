@@ -58,8 +58,6 @@ export const action: ActionFunction = async ({ request }) => {
     return json<ActionData>({ errors: { email: "invalid-email-password" } }, { status: 400 });
   }
 
-  console.log(authSession);
-
   return createAuthSession({
     request,
     authSession,

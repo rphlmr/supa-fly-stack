@@ -12,7 +12,6 @@ import { mapAuthSession } from "../utils/map-auth-session";
 async function refreshAccessToken(refreshToken: string) {
   const { data, error } = await supabaseAdmin.auth.api.refreshAccessToken(refreshToken);
 
-  console.log("refreshAccessToken", "old", refreshToken, "new", data?.refresh_token, "data", data, "error", error);
   if (!data || error) return null;
 
   return mapAuthSession(data);
@@ -24,7 +23,6 @@ export async function refreshAuthSession(request: Request): Promise<AuthSession>
 
   const refreshedAuthSession = await refreshAccessToken(authSession.refreshToken);
 
-  console.log("refreshedAuthSession", refreshedAuthSession);
   // 👾 game over, log in again
   // yes, arbitrary, but it's a good way to don't let an illegal user here with an expired token
   if (!refreshedAuthSession) {
@@ -45,7 +43,6 @@ export async function refreshAuthSession(request: Request): Promise<AuthSession>
     });
   }
 
-  console.log("isGet", isGet(request));
   // refresh is ok and we can redirect
   if (isGet(request)) {
     // here we throw instead of return because this function promise a UserSession and not a response object

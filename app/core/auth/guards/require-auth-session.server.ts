@@ -38,7 +38,6 @@ export async function requireAuthSession(
   // ok, let's challenge its access token
   const isValidSession = await verifyAuthSession(authSession);
 
-  console.log("isValidSession", isValidSession);
   // damn, access token expires but we can redirect. Let's go!
   if (!isValidSession && isGet(request)) {
     throw redirect(`/refresh-session?${makeRedirectToFromHere(request)}`);
