@@ -8,7 +8,7 @@ import { getAuthAccountByAccessToken } from "./get-auth-account.server";
 
 describe(getAuthAccountByAccessToken.name, () => {
   it("should fetch supabase getUser auth api", async () => {
-    expect.assertions(3);
+    expect.assertions(2);
 
     const fetchAuthUserAPI = new Map();
 
@@ -19,11 +19,10 @@ describe(getAuthAccountByAccessToken.name, () => {
       if (matchesMethod && matchesUrl) fetchAuthUserAPI.set(req.id, req);
     });
 
-    const [authAccount, error] = await getAuthAccountByAccessToken("valid");
+    const authAccount = await getAuthAccountByAccessToken("valid");
 
     server.events.removeAllListeners();
 
-    expect(error).toBeNull();
     expect(authAccount).toEqual({ id: USER_ID });
     expect(fetchAuthUserAPI.size).toEqual(1);
   });

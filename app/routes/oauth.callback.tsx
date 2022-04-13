@@ -8,9 +8,9 @@ import { z } from "zod";
 
 import { commitAuthSession, getAuthSession } from "~/core/auth/session.server";
 import { mapAuthSession } from "~/core/auth/utils/map-auth-session";
-import { useSupabase } from "~/core/integrations/supabase/context";
+import { getSupabaseClient } from "~/core/integrations/supabase/supabase.client";
 import { assertIsPost } from "~/core/utils/http.server";
-import { createUserAccountFromOAuth } from "~/modules/user/mutations";
+import { tryCreateUser } from "~/modules/user/mutations";
 import { getUserByEmail } from "~/modules/user/queries";
 
 const AuthSessionSchema = z.object({
@@ -65,9 +65,9 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   // first time sign in, let's create a brand-new User row in supabase
-  const createUserError = await createUserAccountFromOAuth(authSession.userId, authSession.email);
+  const user = await tryCreateUser(authSession);
 
-  if (createUserError) {
+  if (!user) {
     return json<ActionData>(
       {
         message: "create-user-error",
@@ -90,9 +90,10 @@ export default function LoginCallback() {
   const submit = useSubmit();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? "/notes";
-  const supabase = useSupabase();
 
   useEffect(() => {
+    const supabase = getSupabaseClient();
+
     const { data: authListener } = supabase.auth.onAuthStateChange((event, supabaseSession) => {
       if (event === "SIGNED_IN") {
         // supabase sdk has ability to read url fragment that contains your token after third party provider redirects you here
@@ -120,7 +121,7 @@ export default function LoginCallback() {
       // prevent memory leak. Listener stays alive 👨‍🎤
       authListener?.unsubscribe();
     };
-  }, [supabase, submit, redirectTo]);
+  }, [submit, redirectTo]);
 
   return error ? <div>{error.message}</div> : null;
 }

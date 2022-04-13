@@ -58,7 +58,7 @@ export const SupabaseProvider = ({ children }: { children: ReactElement }) => {
   return <SupabaseContext.Provider value={supabaseClient}>{children}</SupabaseContext.Provider>;
 };
 
-export const useSupabase = () => {
+export const useRealtimeSupabase = () => {
   const context = useContext(SupabaseContext);
 
   if (isBrowser && context === undefined) {

@@ -52,11 +52,13 @@ export const action: ActionFunction = async ({ request }) => {
 
   const { email, password, redirectTo = "/notes" } = formValidation.data;
 
-  const [authSession, authSessionError] = await signInWithEmail(email, password);
+  const authSession = await signInWithEmail(email, password);
 
-  if (!authSession || authSessionError) {
+  if (!authSession) {
     return json<ActionData>({ errors: { email: "invalid-email-password" } }, { status: 400 });
   }
+
+  console.log(authSession);
 
   return createAuthSession({
     request,

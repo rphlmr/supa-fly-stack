@@ -1,7 +1,6 @@
 import { redirect } from "@remix-run/node";
 
 import { supabaseAdmin } from "~/core/integrations/supabase/supabase.server";
-import type { SupabaseError } from "~/core/integrations/supabase/types";
 import { getCurrentPath, getRedirectTo, isGet, makeRedirectToFromHere } from "~/core/utils/http.server";
 
 import { LOGIN_URL } from "../const";
@@ -10,21 +9,25 @@ import type { AuthSession } from "../session.server";
 import { commitAuthSession } from "../session.server";
 import { mapAuthSession } from "../utils/map-auth-session";
 
-export async function refreshAccessToken(refreshToken: string): Promise<[AuthSession | null, SupabaseError | null]> {
-  return supabaseAdmin.auth.api
-    .refreshAccessToken(refreshToken)
-    .then(({ data, error }) => [mapAuthSession(data), error]);
+async function refreshAccessToken(refreshToken: string) {
+  const { data, error } = await supabaseAdmin.auth.api.refreshAccessToken(refreshToken);
+
+  console.log("refreshAccessToken", "old", refreshToken, "new", data?.refresh_token, "data", data, "error", error);
+  if (!data || error) return null;
+
+  return mapAuthSession(data);
 }
 
 // used in /refresh-session's loader
 export async function refreshAuthSession(request: Request): Promise<AuthSession> {
   const authSession = await assertAuthSession(request);
 
-  const [refreshedAuthSession, error] = await refreshAccessToken(authSession.refreshToken);
+  const refreshedAuthSession = await refreshAccessToken(authSession.refreshToken);
 
+  console.log("refreshedAuthSession", refreshedAuthSession);
   // 👾 game over, log in again
   // yes, arbitrary, but it's a good way to don't let an illegal user here with an expired token
-  if (!refreshedAuthSession || error) {
+  if (!refreshedAuthSession) {
     const currentPath = getCurrentPath(request);
     const redirectUrl =
       // if user access /refresh-session by typing url, don't loop
@@ -42,6 +45,7 @@ export async function refreshAuthSession(request: Request): Promise<AuthSession>
     });
   }
 
+  console.log("isGet", isGet(request));
   // refresh is ok and we can redirect
   if (isGet(request)) {
     // here we throw instead of return because this function promise a UserSession and not a response object

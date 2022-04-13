@@ -1,11 +1,8 @@
-import { useEffect } from "react";
-
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, useLoaderData, useSubmit } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 
 import { requireAuthSession } from "~/core/auth/guards";
-import { useSupabase } from "~/core/integrations/supabase/context";
 import { getNoteCount } from "~/modules/note/queries";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -19,25 +16,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function NoteIndexPage() {
-  const supabase = useSupabase();
   const { nbOfNotes } = useLoaderData();
-  const submit = useSubmit();
-
-  useEffect(() => {
-    const subscription = supabase
-      .from("Note")
-      .on("INSERT", () => {
-        submit(null, { replace: true });
-      })
-      .on("DELETE", () => {
-        submit(null, { replace: true });
-      })
-      .subscribe();
-
-    return () => {
-      subscription?.unsubscribe();
-    };
-  }, [supabase, submit]);
 
   return (
     <>

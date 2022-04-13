@@ -22,7 +22,7 @@ describe(signInWithEmail.name, () => {
       if (matchesMethod && matchesUrl) fetchAuthTokenAPI.set(req.id, req);
     });
 
-    const [result] = await signInWithEmail(USER_EMAIL, USER_PASSWORD);
+    const result = await signInWithEmail(USER_EMAIL, USER_PASSWORD);
 
     server.events.removeAllListeners();
 

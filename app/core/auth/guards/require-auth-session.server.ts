@@ -5,17 +5,12 @@ import { isGet, makeRedirectToFromHere } from "~/core/utils/http.server";
 import { refreshAuthSession } from "../mutations/refresh-auth-session.server";
 import { getAuthAccountByAccessToken } from "../queries/get-auth-account.server";
 import type { AuthSession } from "../session.server";
-import { getAuthSession } from "../session.server";
 import { assertAuthSession } from "./assert-auth-session.server";
 
-export async function verifyAuthSession(request: Request) {
-  const session = await getAuthSession(request);
+async function verifyAuthSession(authSession: AuthSession) {
+  const authAccount = await getAuthAccountByAccessToken(authSession.accessToken);
 
-  if (!session?.accessToken) return false;
-
-  const [authAccount, error] = await getAuthAccountByAccessToken(session.accessToken);
-
-  return !(error || !authAccount);
+  return Boolean(authAccount);
 }
 
 /**
@@ -36,15 +31,16 @@ export async function requireAuthSession(
   { onFailRedirectTo }: { onFailRedirectTo?: string } = {}
 ): Promise<AuthSession> {
   // hello there
-  const userSession = await assertAuthSession(request, {
+  const authSession = await assertAuthSession(request, {
     onFailRedirectTo,
   });
 
   // ok, let's challenge its access token
-  const isValid = await verifyAuthSession(request);
+  const isValidSession = await verifyAuthSession(authSession);
 
+  console.log("isValidSession", isValidSession);
   // damn, access token expires but we can redirect. Let's go!
-  if (!isValid && isGet(request)) {
+  if (!isValidSession && isGet(request)) {
     throw redirect(`/refresh-session?${makeRedirectToFromHere(request)}`);
   }
 
@@ -57,5 +53,5 @@ export async function requireAuthSession(
   }
 
   // finally, we have a valid session, let's return it
-  return userSession;
+  return authSession;
 }

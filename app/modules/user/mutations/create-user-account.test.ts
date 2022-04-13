@@ -5,7 +5,7 @@ import { server } from "mocks/start";
 import { USER_EMAIL, USER_ID, USER_PASSWORD } from "mocks/user";
 import { db } from "~/core/database/db.server";
 
-import { createUserAccountByEmailPassword } from "./create-user-account.server";
+import { createUserAccount } from "./create-user-account.server";
 
 // mock db
 vitest.mock("~/core/database/db.server", () => ({
@@ -16,7 +16,7 @@ vitest.mock("~/core/database/db.server", () => ({
   },
 }));
 
-describe(createUserAccountByEmailPassword.name, () => {
+describe(createUserAccount.name, () => {
   it("should return null if no auth account created", async () => {
     expect.assertions(3);
 
@@ -36,7 +36,7 @@ describe(createUserAccountByEmailPassword.name, () => {
       )
     );
 
-    const result = await createUserAccountByEmailPassword(USER_EMAIL, USER_PASSWORD);
+    const result = await createUserAccount(USER_EMAIL, USER_PASSWORD);
 
     server.events.removeAllListeners();
 
@@ -78,7 +78,7 @@ describe(createUserAccountByEmailPassword.name, () => {
       )
     );
 
-    const result = await createUserAccountByEmailPassword(USER_EMAIL, USER_PASSWORD);
+    const result = await createUserAccount(USER_EMAIL, USER_PASSWORD);
 
     server.events.removeAllListeners();
 
@@ -112,9 +112,10 @@ describe(createUserAccountByEmailPassword.name, () => {
       if (matchesMethod && matchesUrl) fetchAuthAdminUserAPI.set(req.id, req);
     });
 
-    db.user.create.mockReturnValueOnce(null);
+    //@ts-expect-error missing vitest type
+    db.user.create.mockResolvedValue(null);
 
-    const result = await createUserAccountByEmailPassword(USER_EMAIL, USER_PASSWORD);
+    const result = await createUserAccount(USER_EMAIL, USER_PASSWORD);
 
     server.events.removeAllListeners();
 
@@ -147,7 +148,10 @@ describe(createUserAccountByEmailPassword.name, () => {
       if (matchesMethod && matchesUrl) fetchAuthTokenAPI.set(req.id, req);
     });
 
-    const result = await createUserAccountByEmailPassword(USER_EMAIL, USER_PASSWORD);
+    //@ts-expect-error missing vitest type
+    db.user.create.mockResolvedValue({ id: USER_ID, email: USER_EMAIL });
+
+    const result = await createUserAccount(USER_EMAIL, USER_PASSWORD);
 
     server.events.removeAllListeners();
 

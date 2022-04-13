@@ -18,7 +18,7 @@ async function createAccount(email: string, password: string) {
     throw new Error("All test emails must end in @example.com");
   }
 
-  const [authAccount] = await createAuthAccount(email, password);
+  const authAccount = await createAuthAccount(email, password);
 
   if (!authAccount) {
     throw new Error("Failed to create user account for cypress");

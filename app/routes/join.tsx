@@ -8,7 +8,7 @@ import { z } from "zod";
 
 import { ContinueWithEmail } from "~/core/auth/components";
 import { createAuthSession, getAuthSession } from "~/core/auth/session.server";
-import { createUserAccountByEmailPassword } from "~/modules/user/mutations";
+import { createUserAccount } from "~/modules/user/mutations";
 import { getUserByEmail } from "~/modules/user/queries";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -59,7 +59,7 @@ export const action: ActionFunction = async ({ request }) => {
     return json<ActionData>({ errors: { email: "user-already-exist" } }, { status: 400 });
   }
 
-  const authSession = await createUserAccountByEmailPassword(email, password);
+  const authSession = await createUserAccount(email, password);
 
   if (!authSession) {
     return json<ActionData>({ errors: { email: "unable-to-create-account" } }, { status: 500 });
