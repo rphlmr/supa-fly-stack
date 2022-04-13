@@ -18,7 +18,7 @@ import { z } from "zod";
 
 import { signInWithEmail } from "~/core/auth/mutations";
 import { createAuthSession, getAuthSession } from "~/core/auth/session.server";
-import { ContinueWithEmail } from "~/core/components";
+import { ContinueWithEmailForm } from "~/core/components";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const authSession = await getAuthSession(request);
@@ -213,7 +213,7 @@ export default function LoginPage() {
             </div>
           </div>
           <div className="mt-6">
-            <ContinueWithEmail />
+            <ContinueWithEmailForm />
           </div>
         </div>
       </div>

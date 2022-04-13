@@ -2,7 +2,7 @@ import React from "react";
 
 import { useFetcher } from "@remix-run/react";
 
-export function ContinueWithEmail() {
+export function ContinueWithEmailForm() {
   const ref = React.useRef<HTMLFormElement>(null);
   const sendMagicLink = useFetcher();
   const { data, state, type } = sendMagicLink;

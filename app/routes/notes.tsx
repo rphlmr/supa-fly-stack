@@ -1,12 +1,16 @@
 import { json } from "@remix-run/node";
 import type { LoaderFunction } from "@remix-run/node";
-import { Form, useLoaderData, Outlet, Link, NavLink } from "@remix-run/react";
+import { useLoaderData, Outlet, Link, NavLink } from "@remix-run/react";
 
 import { requireAuthSession } from "~/core/auth/guards";
+import { LogoutButton } from "~/core/components";
 import { notFound } from "~/core/utils/http.server";
 import { getNotes } from "~/modules/note/queries";
 
-type LoaderData = { email: string; notes: Awaited<ReturnType<typeof getNotes>> };
+type LoaderData = {
+  email: string;
+  notes: Awaited<ReturnType<typeof getNotes>>;
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
   const { userId, email } = await requireAuthSession(request);
@@ -30,17 +34,7 @@ export default function NotesPage() {
           <Link to=".">Notes</Link>
         </h1>
         <p>{data.email}</p>
-        <Form
-          action="/logout"
-          method="post"
-        >
-          <button
-            type="submit"
-            className="rounded bg-slate-600 py-2 px-4 text-blue-100 hover:bg-blue-500 active:bg-blue-600"
-          >
-            Logout
-          </button>
-        </Form>
+        <LogoutButton />
       </header>
 
       <main className="flex h-full bg-white">
@@ -61,7 +55,9 @@ export default function NotesPage() {
               {data.notes.map((note) => (
                 <li key={note.id}>
                   <NavLink
-                    className={({ isActive }) => `block border-b p-4 text-xl ${isActive ? "bg-white" : ""}`}
+                    className={({ isActive }) =>
+                      `block border-b p-4 text-xl ${isActive ? "bg-white" : ""}`
+                    }
                     to={note.id}
                   >
                     📝 {note.title}

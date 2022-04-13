@@ -17,7 +17,7 @@ import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
 
 import { createAuthSession, getAuthSession } from "~/core/auth/session.server";
-import { ContinueWithEmail } from "~/core/components";
+import { ContinueWithEmailForm } from "~/core/components";
 import { createUserAccount } from "~/modules/user/mutations";
 import { getUserByEmail } from "~/modules/user/queries";
 
@@ -222,7 +222,7 @@ export default function Join() {
             </div>
           </div>
           <div className="mt-6">
-            <ContinueWithEmail />
+            <ContinueWithEmailForm />
           </div>
         </div>
       </div>
