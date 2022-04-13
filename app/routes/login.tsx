@@ -1,14 +1,24 @@
 import * as React from "react";
 
-import type { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
+import type {
+  ActionFunction,
+  LoaderFunction,
+  MetaFunction,
+} from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, Link, useActionData, useSearchParams, useTransition } from "@remix-run/react";
+import {
+  Form,
+  Link,
+  useActionData,
+  useSearchParams,
+  useTransition,
+} from "@remix-run/react";
 import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
 
-import { ContinueWithEmail } from "~/core/auth/components";
 import { signInWithEmail } from "~/core/auth/mutations";
 import { createAuthSession, getAuthSession } from "~/core/auth/session.server";
+import { ContinueWithEmail } from "~/core/components";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const authSession = await getAuthSession(request);
@@ -55,7 +65,10 @@ export const action: ActionFunction = async ({ request }) => {
   const authSession = await signInWithEmail(email, password);
 
   if (!authSession) {
-    return json<ActionData>({ errors: { email: "invalid-email-password" } }, { status: 400 });
+    return json<ActionData>(
+      { errors: { email: "invalid-email-password" } },
+      { status: 400 }
+    );
   }
 
   return createAuthSession({
@@ -78,7 +91,8 @@ export default function LoginPage() {
   const formRef = React.useRef<HTMLFormElement>(null);
   const inputProps = useFormInputProps(LoginFormSchema);
   const transition = useTransition();
-  const disabled = transition.state === "submitting" || transition.state === "loading";
+  const disabled =
+    transition.state === "submitting" || transition.state === "loading";
 
   React.useEffect(() => {
     if (actionData?.errors?.email) {
@@ -193,7 +207,9 @@ export default function LoginPage() {
               <div className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-2 text-gray-500">Or continue with</span>
+              <span className="bg-white px-2 text-gray-500">
+                Or continue with
+              </span>
             </div>
           </div>
           <div className="mt-6">
