@@ -14,9 +14,7 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 
-import { SupabaseProvider } from "~/context/supabase";
-import { getUserSession } from "~/services/session.server";
-
+import { getAuthSession } from "./core/auth/session.server";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -30,13 +28,13 @@ export const meta: MetaFunction = () => ({
 });
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const userSession = await getUserSession(request);
+  const authSession = await getAuthSession(request);
 
   return json({
     realtimeSession: {
-      accessToken: userSession?.accessToken,
-      expiresIn: userSession?.expiresIn,
-      expiresAt: userSession?.expiresAt,
+      accessToken: authSession?.accessToken,
+      expiresIn: authSession?.expiresIn,
+      expiresAt: authSession?.expiresAt,
     },
     ENV: {
       SUPABASE_URL: process.env.SUPABASE_URL,
@@ -58,9 +56,7 @@ export default function App() {
         <Links />
       </head>
       <body className="h-full">
-        <SupabaseProvider>
-          <Outlet />
-        </SupabaseProvider>
+        <Outlet />
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{

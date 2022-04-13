@@ -2,22 +2,22 @@ import { json } from "@remix-run/node";
 import type { LoaderFunction } from "@remix-run/node";
 import { Form, useLoaderData, Outlet, Link, NavLink } from "@remix-run/react";
 
-import { getUserNoteListItems } from "~/models/note.server";
-import { requireUserSession } from "~/services/session.server";
-import { notFound } from "~/utils/request.server";
+import { requireAuthSession } from "~/core/auth/guards";
+import { notFound } from "~/core/utils/http.server";
+import { getNotes } from "~/modules/note/queries";
 
-type LoaderData = NonNullable<Awaited<ReturnType<typeof getUserNoteListItems>>>;
+type LoaderData = { email: string; notes: Awaited<ReturnType<typeof getNotes>> };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const { userId } = await requireUserSession(request);
+  const { userId, email } = await requireAuthSession(request);
 
-  const userNoteListItems = await getUserNoteListItems({ userId });
+  const notes = await getNotes({ userId });
 
-  if (!userNoteListItems) {
+  if (!notes) {
     throw notFound(`No user with id ${userId}`);
   }
 
-  return json<LoaderData>(userNoteListItems);
+  return json<LoaderData>({ email, notes });
 };
 
 export default function NotesPage() {
@@ -61,9 +61,7 @@ export default function NotesPage() {
               {data.notes.map((note) => (
                 <li key={note.id}>
                   <NavLink
-                    className={({ isActive }) =>
-                      `block border-b p-4 text-xl ${isActive ? "bg-white" : ""}`
-                    }
+                    className={({ isActive }) => `block border-b p-4 text-xl ${isActive ? "bg-white" : ""}`}
                     to={note.id}
                   >
                     📝 {note.title}

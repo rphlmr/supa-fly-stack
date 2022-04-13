@@ -34,7 +34,7 @@
     "singleAttributePerLine": true
   },
   "dependencies": {
-    "@prisma/client": "^3.11.1",
+    "@prisma/client": "^3.12.0",
     "@remix-run/react": "*",
     "@remix-run/serve": "*",
     "@supabase/supabase-js": "^1.31.1",
@@ -88,6 +88,7 @@
     "node": ">=14"
   },
   "prisma": {
-    "seed": "ts-node --require tsconfig-paths/register prisma/seed.ts"
+    "schema": "app/core/database/schema.prisma",
+    "seed": "ts-node --require tsconfig-paths/register app/core/database/seed.server.ts"
   }
 }

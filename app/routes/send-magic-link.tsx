@@ -3,9 +3,10 @@ import { json } from "@remix-run/node";
 import { getFormData } from "remix-params-helper";
 import { z } from "zod";
 
-import { sendMagicLink } from "~/services/auth.server";
+import { sendMagicLink } from "~/core/auth/mutations";
+import { assertIsPost } from "~/core/utils/http.server";
 
-const ActionSchema = z.object({
+const MagicLinkSchema = z.object({
   email: z
     .string()
     .email("invalid-email")
@@ -18,11 +19,9 @@ interface ActionData {
 }
 
 export const action: ActionFunction = async ({ request }) => {
-  if (request.method !== "POST") {
-    return json({ message: "Method not allowed" }, 405);
-  }
+  assertIsPost(request);
 
-  const form = await getFormData(request, ActionSchema);
+  const form = await getFormData(request, MagicLinkSchema);
 
   if (!form.success) {
     return json<ActionData>(

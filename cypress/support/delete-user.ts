@@ -4,8 +4,10 @@
 // and that user will get deleted
 
 import { installGlobals } from "@remix-run/node/globals";
-import { deleteUserByEmail, getUserByEmail } from "~/models/user.server";
-import { _DANGEROUS_deleteAuthAccount } from "~/services/auth.server";
+
+import { deleteAuthAccount } from "~/core/auth/mutations";
+import { db } from "~/core/database/db.server";
+import { getUserByEmail } from "~/modules/user/queries";
 
 installGlobals();
 
@@ -18,8 +20,10 @@ async function deleteUser(email: string) {
   }
 
   const user = await getUserByEmail(email);
-  await deleteUserByEmail(email);
-  await _DANGEROUS_deleteAuthAccount(user?.id!);
+
+  await db.user.delete({ where: { email: user?.email } });
+
+  await deleteAuthAccount(user?.id!);
 }
 
 deleteUser(process.argv[2]);

@@ -6,11 +6,9 @@ import { Form, useActionData, useTransition } from "@remix-run/react";
 import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
 
-import { createNote } from "~/models/note.server";
-import {
-  commitUserSession,
-  requireUserSession,
-} from "~/services/session.server";
+import { requireAuthSession } from "~/core/auth/guards";
+import { commitAuthSession } from "~/core/auth/session.server";
+import { createNote } from "~/modules/note/mutations";
 
 export const NewNoteFormSchema = z.object({
   title: z.string().min(2, "require-title"),
@@ -29,7 +27,7 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ message: "Method not allowed" }, 405);
   }
 
-  const userSession = await requireUserSession(request);
+  const authSession = await requireAuthSession(request);
   const formValidation = await getFormData(request, NewNoteFormSchema);
 
   if (!formValidation.success) {
@@ -40,7 +38,7 @@ export const action: ActionFunction = async ({ request }) => {
       {
         status: 400,
         headers: {
-          "Set-Cookie": await commitUserSession(request, { userSession }),
+          "Set-Cookie": await commitAuthSession(request, { authSession }),
         },
       }
     );
@@ -48,11 +46,11 @@ export const action: ActionFunction = async ({ request }) => {
 
   const { title, body } = formValidation.data;
 
-  const note = await createNote({ title, body, userId: userSession.userId });
+  const note = await createNote({ title, body, userId: authSession.userId });
 
   return redirect(`/notes/${note.id}`, {
     headers: {
-      "Set-Cookie": await commitUserSession(request, { userSession }),
+      "Set-Cookie": await commitAuthSession(request, { authSession }),
     },
   });
 };
@@ -63,8 +61,7 @@ export default function NewNotePage() {
   const bodyRef = React.useRef<HTMLTextAreaElement>(null);
   const inputProps = useFormInputProps(NewNoteFormSchema);
   const transition = useTransition();
-  const disabled =
-    transition.state === "submitting" || transition.state === "loading";
+  const disabled = transition.state === "submitting" || transition.state === "loading";
 
   React.useEffect(() => {
     if (actionData?.errors?.title) {
@@ -93,9 +90,7 @@ export default function NewNotePage() {
             name="title"
             className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
             aria-invalid={actionData?.errors?.title ? true : undefined}
-            aria-errormessage={
-              actionData?.errors?.title ? "title-error" : undefined
-            }
+            aria-errormessage={actionData?.errors?.title ? "title-error" : undefined}
             disabled={disabled}
           />
         </label>
@@ -119,9 +114,7 @@ export default function NewNotePage() {
             rows={8}
             className="w-full flex-1 rounded-md border-2 border-blue-500 py-2 px-3 text-lg leading-6"
             aria-invalid={actionData?.errors?.body ? true : undefined}
-            aria-errormessage={
-              actionData?.errors?.body ? "body-error" : undefined
-            }
+            aria-errormessage={actionData?.errors?.body ? "body-error" : undefined}
             disabled={disabled}
           />
         </label>
