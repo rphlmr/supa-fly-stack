@@ -13,16 +13,6 @@ import { assertIsPost } from "~/core/utils/http.server";
 import { tryCreateUser } from "~/modules/user/mutations";
 import { getUserByEmail } from "~/modules/user/queries";
 
-const AuthSessionSchema = z.object({
-  accessToken: z.string(),
-  refreshToken: z.string(),
-  userId: z.string(),
-  email: z.string().email(),
-  redirectTo: z.string().optional(),
-  expiresIn: z.number(),
-  expiresAt: z.number(),
-});
-
 // imagine a user go back after OAuth login success or type this URL
 // we don't want him to fall in a black hole 👽
 export const loader: LoaderFunction = async ({ request }) => {
@@ -40,7 +30,17 @@ interface ActionData {
 export const action: ActionFunction = async ({ request }) => {
   assertIsPost(request);
 
-  const form = await getFormData(request, AuthSessionSchema);
+  const schema = z.object({
+    accessToken: z.string(),
+    refreshToken: z.string(),
+    userId: z.string(),
+    email: z.string().email(),
+    redirectTo: z.string().optional(),
+    expiresIn: z.number(),
+    expiresAt: z.number(),
+  });
+
+  const form = await getFormData(request, schema);
 
   if (!form.success) {
     return json<ActionData>(
