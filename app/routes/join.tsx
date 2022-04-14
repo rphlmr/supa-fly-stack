@@ -18,6 +18,7 @@ import { z } from "zod";
 
 import { createAuthSession, getAuthSession } from "~/core/auth/session.server";
 import { ContinueWithEmailForm } from "~/core/components";
+import { assertIsPost } from "~/core/utils/http.server";
 import { createUserAccount } from "~/modules/user/mutations";
 import { getUserByEmail } from "~/modules/user/queries";
 
@@ -46,9 +47,7 @@ interface ActionData {
 }
 
 export const action: ActionFunction = async ({ request }) => {
-  if (request.method !== "POST") {
-    return json({ message: "Method not allowed" }, 405);
-  }
+  assertIsPost(request);
 
   const formValidation = await getFormData(request, JoinFormSchema);
 

@@ -19,6 +19,7 @@ import { z } from "zod";
 import { signInWithEmail } from "~/core/auth/mutations";
 import { createAuthSession, getAuthSession } from "~/core/auth/session.server";
 import { ContinueWithEmailForm } from "~/core/components";
+import { assertIsPost } from "~/core/utils/http.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const authSession = await getAuthSession(request);
@@ -45,9 +46,7 @@ interface ActionData {
 }
 
 export const action: ActionFunction = async ({ request }) => {
-  if (request.method !== "POST") {
-    return json({ message: "Method not allowed" }, 405);
-  }
+  assertIsPost(request);
 
   const formValidation = await getFormData(request, LoginFormSchema);
 

@@ -6,6 +6,7 @@ import invariant from "tiny-invariant";
 import { requireAuthSession } from "~/core/auth/guards";
 import { commitAuthSession } from "~/core/auth/session.server";
 import type { Note } from "~/core/database";
+import { assertIsDelete } from "~/core/utils/http.server";
 import { deleteNote } from "~/modules/note/mutations";
 import { getNote } from "~/modules/note/queries";
 
@@ -25,9 +26,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  if (request.method !== "DELETE") {
-    return json({ message: "Method not allowed" }, 405);
-  }
+  assertIsDelete(request);
 
   const authSession = await requireAuthSession(request);
   invariant(params.noteId, "noteId not found");

@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { requireAuthSession } from "~/core/auth/guards";
 import { commitAuthSession } from "~/core/auth/session.server";
+import { assertIsPost } from "~/core/utils/http.server";
 import { createNote } from "~/modules/note/mutations";
 
 export const NewNoteFormSchema = z.object({
@@ -23,9 +24,7 @@ type ActionData = {
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  if (request.method !== "POST") {
-    return json({ message: "Method not allowed" }, 405);
-  }
+  assertIsPost(request);
 
   const authSession = await requireAuthSession(request);
   const formValidation = await getFormData(request, NewNoteFormSchema);
@@ -61,7 +60,8 @@ export default function NewNotePage() {
   const bodyRef = React.useRef<HTMLTextAreaElement>(null);
   const inputProps = useFormInputProps(NewNoteFormSchema);
   const transition = useTransition();
-  const disabled = transition.state === "submitting" || transition.state === "loading";
+  const disabled =
+    transition.state === "submitting" || transition.state === "loading";
 
   React.useEffect(() => {
     if (actionData?.errors?.title) {
@@ -90,7 +90,9 @@ export default function NewNotePage() {
             name="title"
             className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
             aria-invalid={actionData?.errors?.title ? true : undefined}
-            aria-errormessage={actionData?.errors?.title ? "title-error" : undefined}
+            aria-errormessage={
+              actionData?.errors?.title ? "title-error" : undefined
+            }
             disabled={disabled}
           />
         </label>
@@ -114,7 +116,9 @@ export default function NewNotePage() {
             rows={8}
             className="w-full flex-1 rounded-md border-2 border-blue-500 py-2 px-3 text-lg leading-6"
             aria-invalid={actionData?.errors?.body ? true : undefined}
-            aria-errormessage={actionData?.errors?.body ? "body-error" : undefined}
+            aria-errormessage={
+              actionData?.errors?.body ? "body-error" : undefined
+            }
             disabled={disabled}
           />
         </label>
