@@ -41,10 +41,10 @@ Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --
   > **Note:** Only one for playing around with Supabase or 2 for `staging` and `production`
 
   > **Note:** Used all your free tiers ? Also works with [Supabase CLI](https://github.com/supabase/cli) and local self-hosting
-  
+
   > **Note:** Create a strong database password, but prefer a passphrase, it'll be more easy to use in connection string (no need to escape special char)
-  > 
-  > *example : my_strong_passphrase*
+  >
+  > _example : my_strong_passphrase_
 
 - Go to https://app.supabase.io/project/{PROJECT}/settings/api to find your secrets
 - "Project API keys"
@@ -94,9 +94,8 @@ The database seed script creates a new user with some data you can use to get st
 
 This is a pretty simple note-taking app, but it's a good example of how you can build a full stack app with Prisma, Supabase and Remix. The main functionality is creating users, logging in and out (handling access and refresh tokens + refresh on expire), and creating and deleting notes.
 
-- auth [./app/services/auth.server.ts](./app/services/auth.server.ts)
-- user sessions, and verifying them [./app/services/session.server.ts](./app/services/session.server.ts)
-- creating, and deleting notes [./app/models/note.server.ts](./app/models/note.server.ts)
+- auth / session [./app/core/auth](./app/core/auth)
+- creating, and deleting notes [./app/modules/note](./app/modules/note)
 
 ## Deployment
 
