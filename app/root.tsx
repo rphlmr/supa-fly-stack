@@ -14,7 +14,6 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 
-import { getAuthSession } from "./core/auth/session.server";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -27,21 +26,27 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1",
 });
 
-export const loader: LoaderFunction = async ({ request }) => {
-  const authSession = await getAuthSession(request);
+export const loader: LoaderFunction = async ({ request }) =>
+  // uncomment if you want to use realtime supabase features
+  // const authSession = await getAuthSession(request);
 
-  return json({
-    realtimeSession: {
-      accessToken: authSession?.accessToken,
-      expiresIn: authSession?.expiresIn,
-      expiresAt: authSession?.expiresAt,
-    },
+  // return json({
+  //   realtimeSession: {
+  //     accessToken: authSession?.accessToken,
+  //     expiresIn: authSession?.expiresIn,
+  //     expiresAt: authSession?.expiresAt,
+  //   },
+  //   ENV: {
+  //     SUPABASE_URL: process.env.SUPABASE_URL,
+  //     SUPABASE_ANON_PUBLIC: process.env.SUPABASE_ANON_PUBLIC,
+  //   },
+  // });
+  json({
     ENV: {
       SUPABASE_URL: process.env.SUPABASE_URL,
       SUPABASE_ANON_PUBLIC: process.env.SUPABASE_ANON_PUBLIC,
     },
   });
-};
 
 export default function App() {
   const { ENV } = useLoaderData() as Window;
