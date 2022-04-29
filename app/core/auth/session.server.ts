@@ -1,5 +1,6 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 
+import { safeRedirect } from "../utils/http.server";
 import { SESSION_ERROR_KEY, SESSION_KEY, SESSION_MAX_AGE } from "./const";
 
 if (!process.env.SESSION_SECRET) {
@@ -45,7 +46,7 @@ export async function createAuthSession({
   authSession: AuthSession;
   redirectTo: string;
 }) {
-  return redirect(redirectTo, {
+  return redirect(safeRedirect(redirectTo), {
     headers: {
       "Set-Cookie": await commitAuthSession(request, {
         authSession,

@@ -1,38 +1,48 @@
-import { isGet, getCurrentPath, getRedirectTo, makeRedirectToFromHere, notFound } from "./http.server";
+import {
+  isGet,
+  getCurrentPath,
+  getRedirectTo,
+  makeRedirectToFromHere,
+  notFound,
+  isPost,
+  safeRedirect,
+} from "./http.server";
 
-describe("request.server : getCurrentPath", () => {
+describe(getCurrentPath.name, () => {
   it("should return current request url path", () => {
-    expect(getCurrentPath(new Request("https://my-app.com/profile"))).toBe("/profile");
-  });
-
-  it("should return url redirectTo param value", () => {
-    expect(getRedirectTo(new Request("https://my-app.com?redirectTo=/profile"))).toBe("/profile");
-  });
-});
-
-describe("request.server : makeRedirectToFromHere", () => {
-  it("should return search params with redirectTo set with current request url path", () => {
-    expect(makeRedirectToFromHere(new Request("https://my-app.com/profile"))).toEqual(
-      new URLSearchParams([["redirectTo", "/profile"]])
+    expect(getCurrentPath(new Request("https://my-app.com/profile"))).toBe(
+      "/profile"
     );
   });
+});
 
-  it("should return url redirectTo param value", () => {
-    expect(getRedirectTo(new Request("https://my-app.com?redirectTo=/profile"))).toBe("/profile");
+describe(makeRedirectToFromHere.name, () => {
+  it("should return search params with redirectTo set with current request url path", () => {
+    expect(
+      makeRedirectToFromHere(new Request("https://my-app.com/profile"))
+    ).toEqual(new URLSearchParams([["redirectTo", "/profile"]]));
   });
 });
 
-describe("request.server : getRedirectTo", () => {
+describe(getRedirectTo.name, () => {
   it("should return default redirectTo value", () => {
     expect(getRedirectTo(new Request("https://my-app.com"))).toBe("/");
   });
 
   it("should return url redirectTo param value", () => {
-    expect(getRedirectTo(new Request("https://my-app.com?redirectTo=/profile"))).toBe("/profile");
+    expect(
+      getRedirectTo(new Request("https://my-app.com?redirectTo=/profile"))
+    ).toBe("/profile");
+  });
+
+  it("should return root redirectTo param value if invalid param value", () => {
+    expect(
+      getRedirectTo(new Request("https://my-app.com?redirectTo=//profile"))
+    ).toBe("/");
   });
 });
 
-describe("request.server : isGET", () => {
+describe(isGet.name, () => {
   it("should return false for POST / PUT / PATCH / DELETE methods", () => {
     expect(isGet(new Request("", { method: "POST" }))).toBeFalsy();
     expect(isGet(new Request("", { method: "PUT" }))).toBeFalsy();
@@ -45,12 +55,44 @@ describe("request.server : isGET", () => {
   });
 });
 
-describe("request.server : notFound", () => {
+describe(isPost.name, () => {
+  it("should return false for GET / PUT / PATCH / DELETE methods", () => {
+    expect(isPost(new Request("", { method: "GET" }))).toBeFalsy();
+    expect(isPost(new Request("", { method: "PUT" }))).toBeFalsy();
+    expect(isPost(new Request("", { method: "PATCH" }))).toBeFalsy();
+    expect(isPost(new Request("", { method: "DELETE" }))).toBeFalsy();
+  });
+
+  it("should return true for POST method", async () => {
+    expect(isPost(new Request("", { method: "POST" }))).toBeTruthy();
+  });
+});
+
+describe(notFound.name, () => {
   it("should return 404 status", () => {
     expect(notFound("").status).toBe(404);
   });
 
   it("should return message", async () => {
-    expect(await notFound("not-found-message").text()).toBe("not-found-message");
+    expect(await notFound("not-found-message").text()).toBe(
+      "not-found-message"
+    );
+  });
+});
+
+describe(safeRedirect.name, () => {
+  it("should return root path if invalid destination", () => {
+    expect(safeRedirect(null)).toBe("/");
+    expect(safeRedirect(undefined)).toBe("/");
+    // @ts-expect-error js wrong type
+    expect(safeRedirect(false)).toBe("/");
+    expect(safeRedirect("")).toBe("/");
+    expect(safeRedirect("my-url")).toBe("/");
+    expect(safeRedirect("//")).toBe("/");
+    expect(safeRedirect("//my-url")).toBe("/");
+  });
+
+  it("should return destination path", () => {
+    expect(safeRedirect("/notes")).toBe("/notes");
   });
 });
