@@ -9,7 +9,7 @@ import { z } from "zod";
 import { commitAuthSession, getAuthSession } from "~/core/auth/session.server";
 import { mapAuthSession } from "~/core/auth/utils/map-auth-session";
 import { getSupabaseClient } from "~/core/integrations/supabase/supabase.client";
-import { assertIsPost } from "~/core/utils/http.server";
+import { assertIsPost, safeRedirect } from "~/core/utils/http.server";
 import { tryCreateUser } from "~/modules/user/mutations";
 import { getUserByEmail } from "~/modules/user/queries";
 
@@ -51,11 +51,12 @@ export const action: ActionFunction = async ({ request }) => {
     );
   }
 
-  const { redirectTo = "/notes", ...authSession } = form.data;
+  const { redirectTo, ...authSession } = form.data;
+  const safeRedirectTo = safeRedirect(redirectTo, "/notes");
 
   // user have un account, skip creation part and just commit session
   if (await getUserByEmail(authSession.email)) {
-    return redirect(redirectTo, {
+    return redirect(safeRedirectTo, {
       headers: {
         "Set-Cookie": await commitAuthSession(request, {
           authSession,
@@ -76,7 +77,7 @@ export const action: ActionFunction = async ({ request }) => {
     );
   }
 
-  return redirect(redirectTo, {
+  return redirect(safeRedirectTo, {
     headers: {
       "Set-Cookie": await commitAuthSession(request, {
         authSession,

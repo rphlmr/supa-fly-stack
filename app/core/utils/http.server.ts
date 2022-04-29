@@ -8,7 +8,7 @@ export function makeRedirectToFromHere(request: Request) {
 
 export function getRedirectTo(request: Request, defaultRedirectTo = "/") {
   const url = new URL(request.url);
-  return url.searchParams.get("redirectTo") ?? defaultRedirectTo;
+  return safeRedirect(url.searchParams.get("redirectTo"), defaultRedirectTo);
 }
 
 export function isGet(request: Request) {
@@ -27,7 +27,7 @@ export function notFound(message: string) {
   return new Response(message, { status: 404 });
 }
 
-export function notAllowedMethod(message: string) {
+function notAllowedMethod(message: string) {
   return new Response(message, { status: 405 });
 }
 
@@ -44,4 +44,27 @@ export function assertIsDelete(
   if (!isDelete(request)) {
     throw notAllowedMethod(message);
   }
+}
+
+/**
+ * This should be used any time the redirect path is user-provided
+ * (Like the query string on our login/signup pages). This avoids
+ * open-redirect vulnerabilities.
+ * @param {string} to The redirect destination
+ * @param {string} defaultRedirect The redirect to use if the to is unsafe.
+ */
+export function safeRedirect(
+  to: FormDataEntryValue | string | null | undefined,
+  defaultRedirect = "/"
+) {
+  if (
+    !to ||
+    typeof to !== "string" ||
+    !to.startsWith("/") ||
+    to.startsWith("//")
+  ) {
+    return defaultRedirect;
+  }
+
+  return to;
 }

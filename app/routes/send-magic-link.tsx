@@ -11,7 +11,6 @@ const MagicLinkSchema = z.object({
     .string()
     .email("invalid-email")
     .transform((email) => email.toLowerCase()),
-  redirectTo: z.string().optional(),
 });
 
 interface ActionData {
@@ -32,7 +31,7 @@ export const action: ActionFunction = async ({ request }) => {
     );
   }
 
-  const { error } = await sendMagicLink(form.data);
+  const { error } = await sendMagicLink(form.data.email);
 
   if (error) {
     return json<ActionData>(
