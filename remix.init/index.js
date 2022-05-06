@@ -22,6 +22,10 @@ async function main({ rootDirectory }) {
   const EXAMPLE_ENV_PATH = path.join(rootDirectory, ".env.example");
   const ENV_PATH = path.join(rootDirectory, ".env");
   const PACKAGE_JSON_PATH = path.join(rootDirectory, "package.json");
+  const STACK_GITHUB_ACTION = path.join(
+    rootDirectory,
+    ".github/workflows/for-this-stack-repo-only.yml"
+  );
 
   const REPLACER = "supa-fly-stack-template";
 
@@ -36,6 +40,7 @@ async function main({ rootDirectory }) {
     fs.readFile(README_PATH, "utf-8"),
     fs.readFile(EXAMPLE_ENV_PATH, "utf-8"),
     fs.readFile(PACKAGE_JSON_PATH, "utf-8"),
+    fs.rm(STACK_GITHUB_ACTION),
   ]);
 
   const newEnv = env.replace(
