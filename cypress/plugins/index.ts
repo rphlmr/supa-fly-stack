@@ -9,6 +9,7 @@ module.exports = (
     integrationFolder: "cypress/e2e",
     video: false,
     screenshotOnRunFailure: !process.env.CI,
+    defaultCommandTimeout: 10000,
   };
   Object.assign(config, configOverrides);
 
