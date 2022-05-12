@@ -1,9 +1,10 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 
+import { NODE_ENV, SESSION_SECRET } from "../utils/env.server";
 import { safeRedirect } from "../utils/http.server";
 import { SESSION_ERROR_KEY, SESSION_KEY, SESSION_MAX_AGE } from "./const";
 
-if (!process.env.SESSION_SECRET) {
+if (!SESSION_SECRET) {
   throw new Error("SESSION_SECRET is not set");
 }
 
@@ -32,8 +33,8 @@ const sessionStorage = createCookieSessionStorage({
     maxAge: 0,
     path: "/",
     sameSite: "lax",
-    secrets: [process.env.SESSION_SECRET],
-    secure: process.env.NODE_ENV === "production",
+    secrets: [SESSION_SECRET],
+    secure: NODE_ENV === "production",
   },
 });
 

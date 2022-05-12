@@ -14,6 +14,7 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 
+import { SUPABASE_ANON_PUBLIC, SUPABASE_URL } from "./core/utils/env.server";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -37,14 +38,14 @@ export const loader: LoaderFunction = async ({ request }) =>
   //     expiresAt: authSession?.expiresAt,
   //   },
   //   ENV: {
-  //     SUPABASE_URL: process.env.SUPABASE_URL,
-  //     SUPABASE_ANON_PUBLIC: process.env.SUPABASE_ANON_PUBLIC,
+  //     SUPABASE_URL,
+  //     SUPABASE_ANON_PUBLIC,
   //   },
   // });
   json({
     ENV: {
-      SUPABASE_URL: process.env.SUPABASE_URL,
-      SUPABASE_ANON_PUBLIC: process.env.SUPABASE_ANON_PUBLIC,
+      SUPABASE_URL,
+      SUPABASE_ANON_PUBLIC,
     },
   });
 
