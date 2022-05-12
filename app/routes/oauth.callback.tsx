@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { json, redirect } from "@remix-run/node";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { useActionData, useSearchParams, useSubmit } from "@remix-run/react";
+import { useActionData, useFetcher, useSearchParams } from "@remix-run/react";
 import { getFormData } from "remix-params-helper";
 import { z } from "zod";
 
@@ -88,7 +88,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function LoginCallback() {
   const error = useActionData() as ActionData;
-  const submit = useSubmit();
+  const fetcher = useFetcher();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? "/notes";
 
@@ -115,7 +115,7 @@ export default function LoginCallback() {
 
           formData.append("redirectTo", redirectTo);
 
-          submit(formData, { method: "post", replace: true });
+          fetcher.submit(formData, { method: "post", replace: true });
         }
       }
     );
@@ -124,7 +124,7 @@ export default function LoginCallback() {
       // prevent memory leak. Listener stays alive 👨‍🎤
       authListener?.unsubscribe();
     };
-  }, [submit, redirectTo]);
+  }, [fetcher, redirectTo]);
 
   return error ? <div>{error.message}</div> : null;
 }
