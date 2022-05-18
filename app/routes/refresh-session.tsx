@@ -23,4 +23,5 @@ export const action: ActionFunction = async ({ request }) => {
   );
 };
 
-export const loader: LoaderFunction = async ({ request }) => refreshAuthSession(request);
+export const loader: LoaderFunction = async ({ request }) =>
+  refreshAuthSession(request);

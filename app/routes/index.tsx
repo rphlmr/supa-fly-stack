@@ -31,12 +31,19 @@ export default function Index() {
             </div>
             <div className="lg:pb-18 relative bg-black bg-opacity-50 px-4 pt-16 pb-8 sm:px-6 sm:pt-24 sm:pb-14 lg:px-8 lg:pt-32">
               <h1 className="space-x-8 text-center text-6xl font-extrabold tracking-tight sm:text-8xl lg:text-9xl">
-                <span className="uppercase text-green-500 drop-shadow-md">Supa</span>
-                <span className="uppercase text-purple-500 drop-shadow-md">Fly</span>
-                <span className="uppercase text-yellow-500 drop-shadow-md">Stack</span>
+                <span className="uppercase text-green-500 drop-shadow-md">
+                  Supa
+                </span>
+                <span className="uppercase text-purple-500 drop-shadow-md">
+                  Fly
+                </span>
+                <span className="uppercase text-yellow-500 drop-shadow-md">
+                  Stack
+                </span>
               </h1>
               <p className="mx-auto mt-6 max-w-lg text-center text-xl text-white sm:max-w-3xl">
-                Check the README.md file for instructions on how to get this project deployed.
+                Check the README.md file for instructions on how to get this
+                project deployed.
               </p>
               <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
                 {email ? (

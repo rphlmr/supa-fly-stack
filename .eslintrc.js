@@ -113,7 +113,12 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["./app/root.tsx", "./app/entry.client.tsx", "./app/entry.server.tsx", "./app/routes/**/*.tsx"],
+      files: [
+        "./app/root.tsx",
+        "./app/entry.client.tsx",
+        "./app/entry.server.tsx",
+        "./app/routes/**/*.tsx",
+      ],
       rules: {
         "import/no-default-export": "off",
       },

@@ -5,6 +5,9 @@ on:
       - main
       - dev
   pull_request: {}
+permissions:
+  actions: write
+  contents: read
 
 jobs:
   lint:
@@ -24,6 +27,8 @@ jobs:
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
+        with:
+          useLockFile: false
 
       - name: ⚙️ Build CSS
         run: npm run generate:css
@@ -48,6 +53,8 @@ jobs:
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
+        with:
+          useLockFile: false
 
       - name: 🔎 Type check
         run: npm run typecheck --if-present
@@ -69,6 +76,8 @@ jobs:
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
+        with:
+          useLockFile: false
 
       - name: ⚡ Run vitest
         run: npm run test -- --coverage
@@ -102,13 +111,8 @@ jobs:
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
-
-      # uncomment if you really want to reset your testing database
-      # - name: 🛠 Setup Database
-      #   run: npx prisma migrate reset --force
-
-      # - name: 🌱 Seed the Database
-      #   run: npx prisma db seed
+        with:
+          useLockFile: false
 
       - name: ⚙️ Build
         run: npm run build
