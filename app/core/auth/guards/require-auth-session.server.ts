@@ -8,7 +8,9 @@ import type { AuthSession } from "../session.server";
 import { assertAuthSession } from "./assert-auth-session.server";
 
 async function verifyAuthSession(authSession: AuthSession) {
-  const authAccount = await getAuthAccountByAccessToken(authSession.accessToken);
+  const authAccount = await getAuthAccountByAccessToken(
+    authSession.accessToken
+  );
 
   return Boolean(authAccount);
 }

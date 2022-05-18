@@ -30,10 +30,14 @@ let supabaseAdmin: SupabaseClient;
 // Use Remix fetch polyfill for node (See https://remix.run/docs/en/v1/other-api/node)
 
 function getSupabaseAdmin() {
-  return createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, {
-    autoRefreshToken: false,
-    persistSession: false,
-  });
+  return createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE,
+    {
+      autoRefreshToken: false,
+      persistSession: false,
+    }
+  );
 }
 
 // this is needed because in development we don't want to restart

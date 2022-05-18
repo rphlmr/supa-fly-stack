@@ -1,6 +1,10 @@
 import { matchRequestUrl } from "msw";
 
-import { SUPABASE_URL, SUPABASE_AUTH_TOKEN_API, authSession } from "mocks/handlers";
+import {
+  SUPABASE_URL,
+  SUPABASE_AUTH_TOKEN_API,
+  authSession,
+} from "mocks/handlers";
 import { server } from "mocks/start";
 import { USER_EMAIL, USER_PASSWORD } from "mocks/user";
 import { signInWithEmail } from "~/core/auth/mutations/sign-in.server";
@@ -17,7 +21,11 @@ describe(signInWithEmail.name, () => {
 
     server.events.on("request:start", (req) => {
       const matchesMethod = req.method === "POST";
-      const matchesUrl = matchRequestUrl(req.url, SUPABASE_AUTH_TOKEN_API, SUPABASE_URL).matches;
+      const matchesUrl = matchRequestUrl(
+        req.url,
+        SUPABASE_AUTH_TOKEN_API,
+        SUPABASE_URL
+      ).matches;
 
       if (matchesMethod && matchesUrl) fetchAuthTokenAPI.set(req.id, req);
     });
@@ -29,6 +37,8 @@ describe(signInWithEmail.name, () => {
     expect(result).toEqual(authSession);
     expect(fetchAuthTokenAPI.size).toEqual(1);
     const [signInRequest] = fetchAuthTokenAPI.values();
-    expect(signInRequest.body).toEqual(JSON.stringify({ email: USER_EMAIL, password: USER_PASSWORD }));
+    expect(signInRequest.body).toEqual(
+      JSON.stringify({ email: USER_EMAIL, password: USER_PASSWORD })
+    );
   });
 });
