@@ -5,7 +5,10 @@
   "include": [
     "remix.env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "mocks/handlers.js",
+    "mocks/index.js",
+    "mocks/user.js"
   ],
   "compilerOptions": {
     "lib": [

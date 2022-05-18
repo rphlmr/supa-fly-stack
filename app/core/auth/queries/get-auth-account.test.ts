@@ -14,7 +14,11 @@ describe(getAuthAccountByAccessToken.name, () => {
 
     server.events.on("request:start", (req) => {
       const matchesMethod = req.method === "GET";
-      const matchesUrl = matchRequestUrl(req.url, SUPABASE_AUTH_USER_API, SUPABASE_URL).matches;
+      const matchesUrl = matchRequestUrl(
+        req.url,
+        SUPABASE_AUTH_USER_API,
+        SUPABASE_URL
+      ).matches;
 
       if (matchesMethod && matchesUrl) fetchAuthUserAPI.set(req.id, req);
     });
