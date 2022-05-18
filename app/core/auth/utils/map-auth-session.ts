@@ -2,7 +2,9 @@ import type { SupabaseAuthSession } from "~/core/integrations/supabase/types";
 
 import type { AuthSession } from "../session.server";
 
-export function mapAuthSession(supabaseAuthSession: SupabaseAuthSession | null): AuthSession | null {
+export function mapAuthSession(
+  supabaseAuthSession: SupabaseAuthSession | null
+): AuthSession | null {
   if (!supabaseAuthSession) return null;
 
   return {
