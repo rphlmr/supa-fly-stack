@@ -1,14 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
 
-declare global {
-  interface Window {
-    ENV: {
-      SUPABASE_URL: string;
-      SUPABASE_ANON_PUBLIC: string;
-    };
-  }
-}
-
 if (!window.ENV.SUPABASE_URL) throw new Error("SUPABASE_URL is not set");
 
 if (!window.ENV.SUPABASE_ANON_PUBLIC)
