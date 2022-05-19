@@ -19,7 +19,7 @@
     "setup": "run-s shadow-db:start setup:wait-shadow-db setup:db setup:seed shadow-db:stop",
     "setup:db": "prisma migrate dev",
     "setup:seed": "prisma db seed",
-    "setup:wait-shadow-db": "dotenv -- node ./setup-shadow-db.js",
+    "setup:wait-shadow-db": "dotenv -- node ./wait-shadow-db-setup.js",
     "start": "remix-serve build",
     "start:mocks": "dotenv -- binode --require ./mocks -- @remix-run/serve:remix-serve build",
     "test": "vitest",
