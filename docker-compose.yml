@@ -5,6 +5,7 @@ services:
   supabase-shadow:
     image: supabase/postgres
     command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    container_name: supabase-shadow-db
     restart: unless-stopped
     ports:
       - "12345:5432"

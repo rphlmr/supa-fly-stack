@@ -61,16 +61,6 @@ SESSION_SECRET="super-duper-s3cret"
 SERVER_URL="http://localhost:3000"
 ```
 
-- Start Shadow database (Docker needs some time at initial run)
-
-  ```sh
-  npm run shadow-db:setup
-  ```
-
-- Wait until you see `supabase-shadow_1 | PostgreSQL init process complete; ready for start up.` in console output
-
-- You can now `ctrl` + `c` to kill process
-
 - Initial setup:
 
   ```sh
