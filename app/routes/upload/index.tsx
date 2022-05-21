@@ -12,10 +12,6 @@ import { requireAuthSession } from "~/core/auth/guards";
 import { commitAuthSession } from "~/core/auth/session.server";
 import { uploadFile } from "~/core/utils/upload-file.server";
 
-export const handle = {
-  hideNavbar: true,
-};
-
 export const loader: LoaderFunction = ({ request }) =>
   requireAuthSession(request);
 
