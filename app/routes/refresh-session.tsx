@@ -1,4 +1,4 @@
-import type { LoaderFunction, ActionFunction } from "@remix-run/node";
+import type { ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 
 import { refreshAuthSession } from "~/core/auth/mutations";
@@ -22,6 +22,3 @@ export const action: ActionFunction = async ({ request }) => {
     }
   );
 };
-
-export const loader: LoaderFunction = async ({ request }) =>
-  refreshAuthSession(request);

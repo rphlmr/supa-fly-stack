@@ -1,6 +1,4 @@
-import { redirect } from "@remix-run/node";
-
-import { isGet, makeRedirectToFromHere } from "~/core/utils/http.server";
+import { isGet } from "~/core/utils/http.server";
 
 import { refreshAuthSession } from "../mutations/refresh-auth-session.server";
 import { getAuthAccountByAccessToken } from "../queries/get-auth-account.server";
@@ -42,7 +40,8 @@ export async function requireAuthSession(
 
   // damn, access token expires but we can redirect. Let's go!
   if (!isValidSession && isGet(request)) {
-    throw redirect(`/refresh-session?${makeRedirectToFromHere(request)}`);
+    console.log("refresh get");
+    return refreshAuthSession(request);
   }
 
   // so, maybe we are in a POST / PUT / PATCH / DELETE method
