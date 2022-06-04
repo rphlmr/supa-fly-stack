@@ -3,18 +3,18 @@ import { redirect } from "@remix-run/node";
 import { supabaseAdmin } from "~/core/integrations/supabase/supabase.server";
 import {
   getCurrentPath,
-  getRedirectTo,
   isGet,
   makeRedirectToFromHere,
 } from "~/core/utils/http.server";
 
 import { LOGIN_URL } from "../const";
-import { assertAuthSession } from "../guards/assert-auth-session.server";
 import type { AuthSession } from "../session.server";
-import { commitAuthSession } from "../session.server";
+import { getAuthSession, commitAuthSession } from "../session.server";
 import { mapAuthSession } from "../utils/map-auth-session";
 
-async function refreshAccessToken(refreshToken: string) {
+async function refreshAccessToken(refreshToken?: string) {
+  if (!refreshToken) return null;
+
   const { data, error } = await supabaseAdmin.auth.api.refreshAccessToken(
     refreshToken
   );
@@ -24,27 +24,21 @@ async function refreshAccessToken(refreshToken: string) {
   return mapAuthSession(data);
 }
 
-// used in /refresh-session's loader
 export async function refreshAuthSession(
   request: Request
 ): Promise<AuthSession> {
-  const authSession = await assertAuthSession(request);
+  const authSession = await getAuthSession(request);
 
   const refreshedAuthSession = await refreshAccessToken(
-    authSession.refreshToken
+    authSession?.refreshToken
   );
 
   // 👾 game over, log in again
   // yes, arbitrary, but it's a good way to don't let an illegal user here with an expired token
   if (!refreshedAuthSession) {
-    const currentPath = getCurrentPath(request);
-    const redirectUrl =
-      // if user access /refresh-session by typing url, don't loop
-      currentPath === "/refresh-session"
-        ? LOGIN_URL
-        : `${LOGIN_URL}?${makeRedirectToFromHere(request)}`;
+    const redirectUrl = `${LOGIN_URL}?${makeRedirectToFromHere(request)}`;
 
-    // here we throw instead of return because this function promise a UserSession and not a response object
+    // here we throw instead of return because this function promise a AuthSession and not a response object
     // https://remix.run/docs/en/v1/guides/constraints#higher-order-functions
     throw redirect(redirectUrl, {
       headers: {
@@ -60,7 +54,7 @@ export async function refreshAuthSession(
   if (isGet(request)) {
     // here we throw instead of return because this function promise a UserSession and not a response object
     // https://remix.run/docs/en/v1/guides/constraints#higher-order-functions
-    throw redirect(getRedirectTo(request), {
+    throw redirect(getCurrentPath(request), {
       headers: {
         "Set-Cookie": await commitAuthSession(request, {
           authSession: refreshedAuthSession,
