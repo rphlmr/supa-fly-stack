@@ -114,8 +114,8 @@ Prior to your first deployment, you'll need to do a few things:
 - Create two apps on Fly, one for staging and one for production:
 
   ```sh
-  fly create supa-fly-stack-template
-  fly create supa-fly-stack-template-staging
+  fly apps create supa-fly-stack-template
+  fly apps create supa-fly-stack-template-staging
   ```
 
   > **Note:** Make sure this name matches the `app` set in your `fly.toml` file. Otherwise, you will not be able to deploy.
