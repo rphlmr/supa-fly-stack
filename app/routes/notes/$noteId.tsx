@@ -5,13 +5,12 @@ import invariant from "tiny-invariant";
 
 import { requireAuthSession } from "~/core/auth/guards";
 import { commitAuthSession } from "~/core/auth/session.server";
-import type { Note } from "~/core/database";
 import { assertIsDelete } from "~/core/utils/http.server";
 import { deleteNote } from "~/modules/note/mutations";
 import { getNote } from "~/modules/note/queries";
 
 type LoaderData = {
-  note: Note;
+  note: NonNullable<Awaited<ReturnType<typeof getNote>>>;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
