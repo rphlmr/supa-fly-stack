@@ -74,12 +74,13 @@ async function main({ rootDirectory }) {
     ),
   ]);
 
-  await setup({ rootDirectory });
-}
+  execSync(`npm run setup`, { stdio: "inherit", cwd: rootDirectory });
 
-async function setup({ rootDirectory }) {
   console.log(
-    `✅  Sounds good 🥳. Check the README.md for setup instructions.`
+    `Setup is complete. You're now ready to rock and roll 🤘
+
+Start development with \`npm run dev\`
+`.trim()
   );
 }
 
