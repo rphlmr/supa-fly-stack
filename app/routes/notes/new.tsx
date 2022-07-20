@@ -1,7 +1,7 @@
 import * as React from "react";
 
+import type { LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import type { ActionFunction } from "@remix-run/node";
 import { Form, useActionData, useTransition } from "@remix-run/react";
 import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
@@ -16,23 +16,19 @@ export const NewNoteFormSchema = z.object({
   body: z.string().min(1, "require-body"),
 });
 
-type ActionData = {
-  errors?: {
-    title?: string;
-    body?: string;
-  };
-};
-
-export const action: ActionFunction = async ({ request }) => {
+export async function action({ request }: LoaderArgs) {
   assertIsPost(request);
 
   const authSession = await requireAuthSession(request);
   const formValidation = await getFormData(request, NewNoteFormSchema);
 
   if (!formValidation.success) {
-    return json<ActionData>(
+    return json(
       {
-        errors: formValidation.errors,
+        errors: {
+          title: formValidation.errors.title,
+          body: formValidation.errors.body,
+        },
       },
       {
         status: 400,
@@ -52,10 +48,10 @@ export const action: ActionFunction = async ({ request }) => {
       "Set-Cookie": await commitAuthSession(request, { authSession }),
     },
   });
-};
+}
 
 export default function NewNotePage() {
-  const actionData = useActionData() as ActionData;
+  const actionData = useActionData<typeof action>();
   const titleRef = React.useRef<HTMLInputElement>(null);
   const bodyRef = React.useRef<HTMLTextAreaElement>(null);
   const inputProps = useFormInputProps(NewNoteFormSchema);

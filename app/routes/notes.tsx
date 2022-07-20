@@ -1,5 +1,5 @@
+import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import type { LoaderFunction } from "@remix-run/node";
 import { useLoaderData, Outlet, Link, NavLink } from "@remix-run/react";
 
 import { requireAuthSession } from "~/core/auth/guards";
@@ -7,12 +7,7 @@ import { LogoutButton } from "~/core/components";
 import { notFound } from "~/core/utils/http.server";
 import { getNotes } from "~/modules/note/queries";
 
-type LoaderData = {
-  email: string;
-  notes: Awaited<ReturnType<typeof getNotes>>;
-};
-
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: LoaderArgs) {
   const { userId, email } = await requireAuthSession(request);
 
   const notes = await getNotes({ userId });
@@ -21,11 +16,11 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw notFound(`No user with id ${userId}`);
   }
 
-  return json<LoaderData>({ email, notes });
-};
+  return json({ email, notes });
+}
 
 export default function NotesPage() {
-  const data = useLoaderData() as LoaderData;
+  const data = useLoaderData<typeof loader>();
 
   return (
     <div className="flex h-full min-h-screen flex-col">

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { json, redirect } from "@remix-run/node";
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { LoaderArgs, ActionArgs } from "@remix-run/node";
 import { useActionData, useFetcher, useSearchParams } from "@remix-run/react";
 import { getFormData } from "remix-params-helper";
 import { z } from "zod";
@@ -15,19 +15,15 @@ import { getUserByEmail } from "~/modules/user/queries";
 
 // imagine a user go back after OAuth login success or type this URL
 // we don't want him to fall in a black hole 👽
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: LoaderArgs) {
   const authSession = await getAuthSession(request);
 
   if (authSession) return redirect("/notes");
 
   return json({});
-};
-
-interface ActionData {
-  message?: string;
 }
 
-export const action: ActionFunction = async ({ request }) => {
+export async function action({ request }: ActionArgs) {
   assertIsPost(request);
 
   const schema = z.object({
@@ -43,7 +39,7 @@ export const action: ActionFunction = async ({ request }) => {
   const form = await getFormData(request, schema);
 
   if (!form.success) {
-    return json<ActionData>(
+    return json(
       {
         message: "invalid-token",
       },
@@ -69,7 +65,7 @@ export const action: ActionFunction = async ({ request }) => {
   const user = await tryCreateUser(authSession);
 
   if (!user) {
-    return json<ActionData>(
+    return json(
       {
         message: "create-user-error",
       },
@@ -84,10 +80,10 @@ export const action: ActionFunction = async ({ request }) => {
       }),
     },
   });
-};
+}
 
 export default function LoginCallback() {
-  const error = useActionData() as ActionData;
+  const error = useActionData<typeof action>();
   const fetcher = useFetcher();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? "/notes";

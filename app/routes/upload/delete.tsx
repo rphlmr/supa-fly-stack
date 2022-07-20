@@ -1,11 +1,11 @@
-import type { ActionFunction } from "@remix-run/node";
+import type { ActionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 
 import { requireAuthSession } from "~/core/auth/guards";
 import { commitAuthSession } from "~/core/auth/session.server";
 import { supabaseAdmin } from "~/core/integrations/supabase/supabase.server";
 
-export const action: ActionFunction = async ({ request }) => {
+export async function action({ request }: ActionArgs) {
   const authSession = await requireAuthSession(request);
 
   const { data: files } = await supabaseAdmin.storage
@@ -35,4 +35,4 @@ export const action: ActionFunction = async ({ request }) => {
       },
     }
   );
-};
+}

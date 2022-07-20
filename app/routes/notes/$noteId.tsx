@@ -1,4 +1,4 @@
-import type { LoaderFunction, ActionFunction } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
 import { Form, useCatch, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
@@ -9,11 +9,7 @@ import { assertIsDelete } from "~/core/utils/http.server";
 import { deleteNote } from "~/modules/note/mutations";
 import { getNote } from "~/modules/note/queries";
 
-type LoaderData = {
-  note: NonNullable<Awaited<ReturnType<typeof getNote>>>;
-};
-
-export const loader: LoaderFunction = async ({ request, params }) => {
+export async function loader({ request, params }: LoaderArgs) {
   const { userId } = await requireAuthSession(request);
   invariant(params.noteId, "noteId not found");
 
@@ -21,10 +17,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (!note) {
     throw new Response("Not Found", { status: 404 });
   }
-  return json<LoaderData>({ note });
-};
+  return json({ note });
+}
 
-export const action: ActionFunction = async ({ request, params }) => {
+export async function action({ request, params }: ActionArgs) {
   assertIsDelete(request);
 
   const authSession = await requireAuthSession(request);
@@ -37,10 +33,10 @@ export const action: ActionFunction = async ({ request, params }) => {
       "Set-Cookie": await commitAuthSession(request, { authSession }),
     },
   });
-};
+}
 
 export default function NoteDetailsPage() {
-  const data = useLoaderData() as LoaderData;
+  const data = useLoaderData<typeof loader>();
 
   return (
     <div>
