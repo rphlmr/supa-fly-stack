@@ -61,7 +61,13 @@ SESSION_SECRET="super-duper-s3cret"
 SERVER_URL="http://localhost:3000"
 ```
 
-- Initial setup:
+- This step only applies if you've opted out of having the CLI install dependencies for you:
+
+  ```sh
+  npx remix init
+  ```
+
+- Initial setup: _If you just generated this project, this step has been done for you._
 
   ```sh
   npm run setup
