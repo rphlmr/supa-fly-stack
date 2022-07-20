@@ -39,6 +39,7 @@
     "@remix-run/react": "*",
     "@remix-run/serve": "*",
     "@supabase/supabase-js": "^1.35.4",
+    "isbot": "^3.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "remix-params-helper": "^0.4.10",
