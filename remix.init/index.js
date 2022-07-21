@@ -1,3 +1,4 @@
+const { execSync } = require("child_process");
 const crypto = require("crypto");
 const fs = require("fs/promises");
 const path = require("path");
@@ -69,7 +70,7 @@ async function main({ rootDirectory, packageManager, isTypeScript }) {
   if (!isTypeScript) {
     delete packageJson.scripts.typecheck;
     packageJson.scripts.validate = packageJson.scripts.validate.replace(
-      " typecheck",
+      "typecheck",
       ""
     );
 
@@ -109,6 +110,8 @@ async function main({ rootDirectory, packageManager, isTypeScript }) {
       path.join(rootDirectory, ".gitignore")
     ),
   ]);
+
+  execSync(`npm run setup`, { stdio: "inherit", cwd: rootDirectory });
 
   execSync("npm run format -- --loglevel warn", {
     stdio: "inherit",
