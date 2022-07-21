@@ -93,7 +93,7 @@ module.exports = {
       },
     ],
     "import/no-restricted-paths": [
-      "error",
+      "warn",
       {
         zones: [
           {
@@ -119,6 +119,7 @@ module.exports = {
         "./app/entry.client.tsx",
         "./app/entry.server.tsx",
         "./app/routes/**/*.tsx",
+        "./cypress.config.ts",
       ],
       rules: {
         "import/no-default-export": "off",

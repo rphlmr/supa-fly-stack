@@ -9,7 +9,7 @@ import {
 
 import { requireAuthSession } from "~/core/auth/guards";
 import { commitAuthSession } from "~/core/auth/session.server";
-import { useFetcher } from "~/core/hooks/use-fetcher";
+import { useTypedFetcher } from "~/core/hooks/use-fetcher";
 import { uploadFile } from "~/core/utils/upload-file.server";
 
 import type { action as deleteAction } from "./delete";
@@ -54,8 +54,8 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function Upload() {
-  const upload = useFetcher<typeof action>();
-  const remove = useFetcher<typeof deleteAction>();
+  const upload = useTypedFetcher<typeof action>();
+  const remove = useTypedFetcher<typeof deleteAction>();
   const formRef = useRef<HTMLFormElement>(null);
   const showPreview = useRef(false);
 

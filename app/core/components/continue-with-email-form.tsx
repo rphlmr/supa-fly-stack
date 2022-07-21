@@ -1,13 +1,12 @@
 import React from "react";
 
-// eslint-disable-next-line import/no-restricted-paths
 import type { action } from "~/routes/send-magic-link";
 
-import { useFetcher } from "../hooks/use-fetcher";
+import { useTypedFetcher } from "../hooks/use-fetcher";
 
 export function ContinueWithEmailForm() {
   const ref = React.useRef<HTMLFormElement>(null);
-  const sendMagicLink = useFetcher<typeof action>();
+  const sendMagicLink = useTypedFetcher<typeof action>();
   const { data, state, type } = sendMagicLink;
   const isSuccessFull = type === "done" && !data?.error;
   const isLoading = state === "submitting" || state === "loading";

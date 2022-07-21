@@ -83,7 +83,7 @@ export default function Index() {
           <div className="mt-6 flex flex-wrap justify-center gap-8">
             {[
               {
-                src: "https://supabase.com/brand-assets/supabase-logo-wordmark--dark.svg",
+                src: "https://raw.githubusercontent.com/supabase/supabase/master/packages/common/assets/images/supabase-logo-wordmark--dark.svg#gh-dark-mode-only",
                 alt: "Supabase",
                 href: "https://supabase.com",
               },
