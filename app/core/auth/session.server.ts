@@ -32,6 +32,7 @@ const sessionStorage = createCookieSessionStorage({
     httpOnly: true,
     path: "/",
     sameSite: "lax",
+    maxAge: 0,
     secrets: [SESSION_SECRET],
     secure: NODE_ENV === "production",
   },
