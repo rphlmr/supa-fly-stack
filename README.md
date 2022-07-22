@@ -1,5 +1,7 @@
 # Remix Supa Fly Stack
 
+> This Readme will be re-write soon
+
 ![The Remix Indie Stack](https://raw.githubusercontent.com/rphlmr/supa-fly-stack/main/doc/supa-fly-stak.png)
 
 Learn more about [Remix Stacks](https://remix.run/stacks).
@@ -109,7 +111,7 @@ Prior to your first deployment, you'll need to do a few things:
 
   ```sh
   fly apps create supa-fly-stack-template
-  fly apps create supa-fly-stack-template-staging
+  fly apps create supa-fly-stack-template-staging  # ** not mandatory if you don't want a staging environnement **
   ```
 
   > **Note:** For production app, make sure this name matches the `app` set in your `fly.toml` file. Otherwise, you will not be able to deploy.
@@ -130,17 +132,11 @@ Prior to your first deployment, you'll need to do a few things:
 
 - Add a `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE`,`SUPABASE_ANON_PUBLIC`, `SERVER_URL` and `DATABASE_URL` to your fly app secrets
 
+  > **Note:** To find your `SERVER_URL`, go to [you fly.io dashboard](https://fly.io/apps/supa-fly-stack-template-3a36)
+
   To do this you can run the following commands:
 
   ```sh
-  # staging (specify --app name)
-  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app supa-fly-stack-template-staging
-  fly secrets set SUPABASE_URL="https://{YOUR_STAGING_INSTANCE_NAME}.supabase.co" --app supa-fly-stack-template-staging
-  fly secrets set SUPABASE_SERVICE_ROLE="{STAGING_SUPABASE_SERVICE_ROLE}" --app supa-fly-stack-template-staging
-  fly secrets set SUPABASE_ANON_PUBLIC="{STAGING_SUPABASE_ANON_PUBLIC}" --app supa-fly-stack-template-staging
-  fly secrets set DATABASE_URL="postgres://postgres:{STAGING_POSTGRES_PASSWORD}@db.{STAGING_YOUR_INSTANCE_NAME}.supabase.co:5432/postgres" --app supa-fly-stack-template-staging
-  fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}" --app supa-fly-stack-template-staging
-
   # production (--app name is resolved from fly.toml)
   fly secrets set SESSION_SECRET=$(openssl rand -hex 32)
   fly secrets set SUPABASE_URL="https://{YOUR_INSTANCE_NAME}.supabase.co"
@@ -148,11 +144,22 @@ Prior to your first deployment, you'll need to do a few things:
   fly secrets set SUPABASE_ANON_PUBLIC="{SUPABASE_ANON_PUBLIC}"
   fly secrets set DATABASE_URL="postgres://postgres:{POSTGRES_PASSWORD}@db.{YOUR_INSTANCE_NAME}.supabase.co:5432/postgres"
   fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}"
+
+  # staging (specify --app name) ** not mandatory if you don't want a staging environnement **
+  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app supa-fly-stack-template-staging
+  fly secrets set SUPABASE_URL="https://{YOUR_STAGING_INSTANCE_NAME}.supabase.co" --app supa-fly-stack-template-staging
+  fly secrets set SUPABASE_SERVICE_ROLE="{STAGING_SUPABASE_SERVICE_ROLE}" --app supa-fly-stack-template-staging
+  fly secrets set SUPABASE_ANON_PUBLIC="{STAGING_SUPABASE_ANON_PUBLIC}" --app supa-fly-stack-template-staging
+  fly secrets set DATABASE_URL="postgres://postgres:{STAGING_POSTGRES_PASSWORD}@db.{STAGING_YOUR_INSTANCE_NAME}.supabase.co:5432/postgres" --app supa-fly-stack-template-staging
+  fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}" --app supa-fly-stack-template-staging
+
   ```
 
   If you don't have openssl installed, you can also use [1password](https://1password.com/generate-password) to generate a random secret, just replace `$(openssl rand -hex 32)` with the generated secret.
 
 Now that everything is set up you can commit and push your changes to your repo. Every commit to your `main` branch will trigger a deployment to your production environment, and every commit to your `dev` branch will trigger a deployment to your staging environment.
+
+> **Note:** To deploy manually, just run `fly deploy` (It'll deploy app defined in fly.toml)
 
 ## GitHub Actions
 
@@ -212,26 +219,20 @@ To extend your prisma schema and apply changes on your supabase database :
 
   > **Note:** Shadow database is local and run by `docker-compose.yml`
 
-- Start your shadow database
+- Make your changes in [./app/core/database/schema.prisma](./app/core/database/schema.prisma)
+- Prepare your schema migration
 
   > **Note:** First time take a long moment 😅
 
   ```sh
-  npm run shadow-db:start
-  ```
-
-- Make your changes in [./app/core/database/schema.prisma](./app/core/database/schema.prisma)
-- Prepare your schema migration
-
-  ```sh
-  npm run db:prepare
+  npm run db:prepare-migration
   ```
 
 - Check your migration in [./app/core/database/migrations](./app/core/database/migrations)
 - Apply this migration in production
 
   ```sh
-  npm run db:deploy
+  npm run db:deploy-migration
   ```
 
 CC BY-NC-SA 4.0
