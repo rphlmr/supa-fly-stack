@@ -4,7 +4,6 @@ const fs = require("fs/promises");
 const path = require("path");
 
 const toml = require("@iarna/toml");
-const YAML = require("yaml");
 const sort = require("sort-package-json");
 
 function escapeRegExp(string) {
@@ -19,6 +18,10 @@ function getRandomString(length) {
 async function main({ rootDirectory, packageManager, isTypeScript }) {
   console.log(`🚀  Making something cool with this template ...`);
 
+  if (!isTypeScript) {
+    throw new Error("😌  Sorry, this template only supports TypeScript");
+  }
+
   const README_PATH = path.join(rootDirectory, "README.md");
   const FLY_TOML_PATH = path.join(rootDirectory, "fly.toml");
   const EXAMPLE_ENV_PATH = path.join(rootDirectory, ".env.example");
@@ -27,10 +30,6 @@ async function main({ rootDirectory, packageManager, isTypeScript }) {
   const STACK_GITHUB_ACTION = path.join(
     rootDirectory,
     ".github/workflows/for-this-stack-repo-only.yml"
-  );
-  const DEPLOY_YAML_PATH = path.join(
-    rootDirectory,
-    ".github/workflows/deploy.yml"
   );
   const DOCKERFILE_PATH = path.join(rootDirectory, "Dockerfile");
 
@@ -42,16 +41,16 @@ async function main({ rootDirectory, packageManager, isTypeScript }) {
     // get rid of anything that's not allowed in an app name
     .replace(/[^a-zA-Z0-9-_]/g, "-");
 
-  const [prodContent, readme, env, packageJson, deployConfig, dockerfile] =
-    await Promise.all([
+  const [prodContent, readme, env, packageJson, dockerfile] = await Promise.all(
+    [
       fs.readFile(FLY_TOML_PATH, "utf-8"),
       fs.readFile(README_PATH, "utf-8"),
       fs.readFile(EXAMPLE_ENV_PATH, "utf-8"),
       fs.readFile(PACKAGE_JSON_PATH, "utf-8").then((s) => JSON.parse(s)),
-      fs.readFile(DEPLOY_YAML_PATH, "utf-8").then((s) => YAML.parse(s)),
       fs.readFile(DOCKERFILE_PATH, "utf-8"),
       fs.rm(STACK_GITHUB_ACTION),
-    ]);
+    ]
+  );
 
   const newEnv = env.replace(
     /^SESSION_SECRET=.*$/m,
@@ -65,22 +64,6 @@ async function main({ rootDirectory, packageManager, isTypeScript }) {
     new RegExp(escapeRegExp(REPLACER), "g"),
     APP_NAME
   );
-
-  let saveDeploy = null;
-  if (!isTypeScript) {
-    delete packageJson.scripts.typecheck;
-    packageJson.scripts.validate = packageJson.scripts.validate.replace(
-      "typecheck",
-      ""
-    );
-
-    delete deployConfig.jobs.typecheck;
-    deployConfig.jobs.deploy.needs = deployConfig.jobs.deploy.needs.filter(
-      (n) => n !== "typecheck"
-    );
-    // only write the deploy config if it's changed
-    saveDeploy = fs.writeFile(DEPLOY_YAML_PATH, YAML.stringify(deployConfig));
-  }
 
   const newPackageJson =
     JSON.stringify(sort({ ...packageJson, name: APP_NAME }), null, 2) + "\n";
@@ -104,7 +87,6 @@ async function main({ rootDirectory, packageManager, isTypeScript }) {
     fs.writeFile(ENV_PATH, newEnv),
     fs.writeFile(PACKAGE_JSON_PATH, newPackageJson),
     fs.writeFile(DOCKERFILE_PATH, newDockerfile),
-    saveDeploy,
     fs.copyFile(
       path.join(rootDirectory, "remix.init", "gitignore"),
       path.join(rootDirectory, ".gitignore")
