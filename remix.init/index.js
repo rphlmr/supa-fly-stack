@@ -27,6 +27,10 @@ async function main({ rootDirectory, packageManager, isTypeScript }) {
   const EXAMPLE_ENV_PATH = path.join(rootDirectory, ".env.example");
   const ENV_PATH = path.join(rootDirectory, ".env");
   const PACKAGE_JSON_PATH = path.join(rootDirectory, "package.json");
+  const PACKAGE_LOCK_PATH = path.join(rootDirectory, "package-lock.json");
+  const YARN_LOCK_PATH = path.join(rootDirectory, "yarn.lock");
+  const PNPM_LOCK_PATH = path.join(rootDirectory, "pnpm-lock.yaml");
+  const PNPM_LOCK_ALT_PATH = path.join(rootDirectory, "pnpm-lock.yml");
   const STACK_GITHUB_ACTION = path.join(
     rootDirectory,
     ".github/workflows/for-this-stack-repo-only.yml"
@@ -49,6 +53,10 @@ async function main({ rootDirectory, packageManager, isTypeScript }) {
       fs.readFile(PACKAGE_JSON_PATH, "utf-8").then((s) => JSON.parse(s)),
       fs.readFile(DOCKERFILE_PATH, "utf-8"),
       fs.rm(STACK_GITHUB_ACTION),
+      fs.rm(PACKAGE_LOCK_PATH).catch(() => {}),
+      fs.rm(YARN_LOCK_PATH).catch(() => {}),
+      fs.rm(PNPM_LOCK_PATH).catch(() => {}),
+      fs.rm(PNPM_LOCK_ALT_PATH).catch(() => {}),
     ]
   );
 
