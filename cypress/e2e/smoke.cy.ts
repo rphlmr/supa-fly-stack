@@ -21,7 +21,7 @@ describe("smoke tests", () => {
     cy.findByLabelText(/password/i).type(loginForm.password);
     cy.findByRole("button", { name: /create account/i }).click();
 
-    cy.findByText("No notes yet");
+    cy.findByText(/No notes yet/i);
 
     cy.findByRole("button", { name: /logout/i }).click();
     cy.findByRole("link", { name: /log in/i });
@@ -48,7 +48,7 @@ describe("smoke tests", () => {
     cy.findByLabelText(/password/i).type(credentials.password);
     cy.findByRole("button", { name: /Log in/i }).click();
 
-    cy.findByText("No notes yet");
+    cy.findByText(/No notes yet/i);
 
     cy.findByRole("link", { name: /\+ new note/i }).click();
 
