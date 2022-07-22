@@ -46,12 +46,9 @@ describe("smoke tests", () => {
 
     cy.findByRole("textbox", { name: /email/i }).type(credentials.email);
     cy.findByLabelText(/password/i).type(credentials.password);
-    cy.findByRole("button", { name: /Log in/i })
-      .click()
-      .intercept("/notes?_data=routes%2Fnotes")
-      .as("redirect");
+    cy.findByRole("button", { name: /Log in/i }).click();
 
-    cy.findByText("No notes yet").wait("@redirect");
+    cy.findByText("No notes yet");
 
     cy.findByRole("link", { name: /\+ new note/i }).click();
 
