@@ -30,12 +30,6 @@ Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --
 
 ## Development
 
-- Download and run [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-
-  > **Note:** Needed to create a [shadow database for prisma](https://www.prisma.io/docs/concepts/components/prisma-migrate/shadow-database)
-
-  > **Note:** Shadow database is local and run by `docker-compose.yml`
-
 - Create a [Supabase Database](https://supabase.com/) (Free tiers gives you 2 databases)
 
   > **Note:** Only one for playing around with Supabase or 2 for `staging` and `production`
@@ -67,7 +61,7 @@ SERVER_URL="http://localhost:3000"
   npx remix init
   ```
 
-- Initial setup: _If you just generated this project, this step has been done for you._
+- Initial setup:
 
   ```sh
   npm run setup
@@ -206,8 +200,38 @@ This project uses ESLint for linting. That is configured in `.eslintrc.js`.
 
 We use [Prettier](https://prettier.io/) for auto-formatting in this project. It's recommended to install an editor plugin (like the [VSCode Prettier plugin](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)) to get auto-formatting on save. There's also a `npm run format` script you can run to format all files in the project.
 
+## Start working with Supabase
+
+Your are now ready to go further, congrats !
+
+To extend your prisma schema and apply changes on your supabase database :
+
+- Download and run [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+  > **Note:** Needed to create a [shadow database for prisma](https://www.prisma.io/docs/concepts/components/prisma-migrate/shadow-database)
+
+  > **Note:** Shadow database is local and run by `docker-compose.yml`
+
+- Start your shadow database
+
+  > **Note:** First time take a long moment 😅
+
+  ```sh
+  npm run shadow-db:start
+  ```
+
+- Make your changes in [./app/core/database/schema.prisma](./app/core/database/schema.prisma)
+- Prepare your schema migration
+
+  ```sh
+  npm run db:prepare
+  ```
+
+- Check your migration in [./app/core/database/migrations](./app/core/database/migrations)
+- Apply this migration in production
+
+  ```sh
+  npm run db:deploy
+  ```
+
 CC BY-NC-SA 4.0
-
-```
-
-```

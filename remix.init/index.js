@@ -47,7 +47,7 @@ async function main({ rootDirectory, packageManager, isTypeScript }) {
       fs.readFile(FLY_TOML_PATH, "utf-8"),
       fs.readFile(README_PATH, "utf-8"),
       fs.readFile(EXAMPLE_ENV_PATH, "utf-8"),
-      fs.readFile(PACKAGE_JSON_PATH, "utf-8"),
+      fs.readFile(PACKAGE_JSON_PATH, "utf-8").then((s) => JSON.parse(s)),
       fs.readFile(DEPLOY_YAML_PATH, "utf-8").then((s) => YAML.parse(s)),
       fs.readFile(DOCKERFILE_PATH, "utf-8"),
       fs.rm(STACK_GITHUB_ACTION),
@@ -110,8 +110,6 @@ async function main({ rootDirectory, packageManager, isTypeScript }) {
       path.join(rootDirectory, ".gitignore")
     ),
   ]);
-
-  execSync(`npm run setup`, { stdio: "inherit", cwd: rootDirectory });
 
   execSync("npm run format -- --loglevel warn", {
     stdio: "inherit",
