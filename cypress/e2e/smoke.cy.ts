@@ -15,21 +15,13 @@ describe("smoke tests", () => {
     cy.then(() => ({ email: loginForm.email })).as("user");
 
     cy.visit("/");
-    cy.findByRole("link", { name: /sign up/i })
-      .click()
-      .intercept("/join")
-      .as("redirect-to-join");
+    cy.findByRole("link", { name: /sign up/i }).click();
 
-    cy.findByRole("textbox", { name: /email/i })
-      .type(loginForm.email)
-      .wait("@redirect-to-join");
+    cy.findByRole("textbox", { name: /email/i }).type(loginForm.email);
     cy.findByLabelText(/password/i).type(loginForm.password);
-    cy.findByRole("button", { name: /create account/i })
-      .click()
-      .intercept("/notes?_data=routes%2Fnotes")
-      .as("redirect-to-notes");
+    cy.findByRole("button", { name: /create account/i }).click();
 
-    cy.findByText("No notes yet").wait("@redirect-to-notes");
+    cy.findByText("No notes yet");
 
     cy.findByRole("button", { name: /logout/i }).click();
     cy.findByRole("link", { name: /log in/i });
