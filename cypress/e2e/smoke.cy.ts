@@ -14,10 +14,6 @@ describe("smoke tests", () => {
     };
     cy.then(() => ({ email: loginForm.email })).as("user");
 
-    cy.task("log", {
-      message: `Creating user ${loginForm.email} ${loginForm.password}`,
-    });
-
     cy.visit("/");
     cy.findByRole("link", { name: /sign up/i }).click();
 
@@ -42,10 +38,6 @@ describe("smoke tests", () => {
         .toLowerCase(),
       password: faker.internet.password(),
     };
-
-    cy.task("log", {
-      message: `Creating user ${credentials.email} ${credentials.password}`,
-    });
 
     cy.log("Create account with", credentials);
     cy.createAccount(credentials);
