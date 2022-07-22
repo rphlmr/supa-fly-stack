@@ -98,6 +98,7 @@ export default function LoginPage() {
         <Form
           method="post"
           className="space-y-6"
+          replace
         >
           <div>
             <label

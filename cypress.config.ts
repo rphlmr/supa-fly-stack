@@ -8,7 +8,7 @@ export default defineConfig({
       const configOverrides: Partial<Cypress.PluginConfigOptions> = {
         baseUrl: `http://localhost:${port}`,
         video: false,
-        screenshotOnRunFailure: true,
+        screenshotOnRunFailure: !process.env.CI,
       };
 
       // To use this:

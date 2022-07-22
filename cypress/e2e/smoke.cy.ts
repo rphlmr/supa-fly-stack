@@ -19,9 +19,12 @@ describe("smoke tests", () => {
 
     cy.findByRole("textbox", { name: /email/i }).type(loginForm.email);
     cy.findByLabelText(/password/i).type(loginForm.password);
-    cy.findByRole("button", { name: /create account/i }).click();
+    cy.findByRole("button", { name: /create account/i })
+      .click()
+      .intercept("/notes?_data=routes%2Fnotes")
+      .as("redirect");
 
-    cy.findByText("No notes yet");
+    cy.findByText("No notes yet").wait("@redirect");
 
     cy.findByRole("button", { name: /logout/i }).click();
     cy.findByRole("link", { name: /log in/i });
@@ -46,9 +49,12 @@ describe("smoke tests", () => {
 
     cy.findByRole("textbox", { name: /email/i }).type(credentials.email);
     cy.findByLabelText(/password/i).type(credentials.password);
-    cy.findByRole("button", { name: /Log in/i }).click();
+    cy.findByRole("button", { name: /Log in/i })
+      .click()
+      .intercept("/notes?_data=routes%2Fnotes")
+      .as("redirect");
 
-    cy.findByText("No notes yet");
+    cy.findByText("No notes yet").wait("@redirect");
 
     cy.findByRole("link", { name: /\+ new note/i }).click();
 

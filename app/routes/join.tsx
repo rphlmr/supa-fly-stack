@@ -108,6 +108,7 @@ export default function Join() {
         <Form
           method="post"
           className="space-y-6"
+          replace
         >
           <div>
             <label
