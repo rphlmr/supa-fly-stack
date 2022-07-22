@@ -9,6 +9,7 @@ export default defineConfig({
         baseUrl: `http://localhost:${port}`,
         video: false,
         screenshotOnRunFailure: !process.env.CI,
+        defaultCommandTimeout: process.env.CI ? 30_000 : 4_000,
       };
 
       // To use this:
