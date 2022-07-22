@@ -132,7 +132,7 @@ Prior to your first deployment, you'll need to do a few things:
 
 - Add a `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE`,`SUPABASE_ANON_PUBLIC`, `SERVER_URL` and `DATABASE_URL` to your fly app secrets
 
-  > **Note:** To find your `SERVER_URL`, go to [you fly.io dashboard](https://fly.io/apps/supa-fly-stack-template-3a36)
+  > **Note:** To find your `SERVER_URL`, go to [your fly.io dashboard](https://fly.io/apps/supa-fly-stack-template-3a36)
 
   To do this you can run the following commands:
 
