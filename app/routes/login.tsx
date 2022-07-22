@@ -79,7 +79,6 @@ export default function LoginPage() {
   const actionData = useActionData<typeof action>();
   const emailRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
-  const formRef = React.useRef<HTMLFormElement>(null);
   const inputProps = useFormInputProps(LoginFormSchema);
   const transition = useTransition();
   const disabled =
@@ -99,7 +98,6 @@ export default function LoginPage() {
         <Form
           method="post"
           className="space-y-6"
-          ref={formRef}
           replace
         >
           <div>
