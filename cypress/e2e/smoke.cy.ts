@@ -14,6 +14,10 @@ describe("smoke tests", () => {
     };
     cy.then(() => ({ email: loginForm.email })).as("user");
 
+    cy.task("log", {
+      message: `Creating user ${loginForm.email} ${loginForm.password}`,
+    });
+
     cy.visit("/");
     cy.findByRole("link", { name: /sign up/i }).click();
 
@@ -21,7 +25,7 @@ describe("smoke tests", () => {
     cy.findByLabelText(/password/i).type(loginForm.password);
     cy.findByRole("button", { name: /create account/i }).click();
 
-    cy.findByText(/No notes yet/i);
+    cy.findByText("No notes yet");
 
     cy.findByRole("button", { name: /logout/i }).click();
     cy.findByRole("link", { name: /log in/i });
@@ -39,6 +43,10 @@ describe("smoke tests", () => {
       password: faker.internet.password(),
     };
 
+    cy.task("log", {
+      message: `Creating user ${credentials.email} ${credentials.password}`,
+    });
+
     cy.log("Create account with", credentials);
     cy.createAccount(credentials);
     cy.visit("/");
@@ -48,7 +56,7 @@ describe("smoke tests", () => {
     cy.findByLabelText(/password/i).type(credentials.password);
     cy.findByRole("button", { name: /Log in/i }).click();
 
-    cy.findByText(/No notes yet/i);
+    cy.findByText("No notes yet");
 
     cy.findByRole("link", { name: /\+ new note/i }).click();
 
