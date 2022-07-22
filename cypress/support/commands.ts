@@ -31,7 +31,9 @@ declare global {
 }
 
 function createAccount({
-  email = faker.internet.email(undefined, undefined, "example.com"),
+  email = faker.internet
+    .email(undefined, undefined, "example.com")
+    .toLowerCase(),
   password = faker.internet.password(),
 }: {
   email?: string;
