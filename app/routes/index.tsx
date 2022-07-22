@@ -1,21 +1,17 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
 import { getAuthSession } from "~/core/auth/session.server";
 
-type LoaderData = {
-  email?: string;
-};
-
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: LoaderArgs) {
   const { email } = (await getAuthSession(request)) || {};
 
   return json({ email });
-};
+}
 
 export default function Index() {
-  const { email } = useLoaderData() as LoaderData;
+  const { email } = useLoaderData<typeof loader>();
   return (
     <main className="relative min-h-screen bg-black sm:flex sm:items-center sm:justify-center">
       <div className="relative sm:pb-16 sm:pt-8">
@@ -87,7 +83,7 @@ export default function Index() {
           <div className="mt-6 flex flex-wrap justify-center gap-8">
             {[
               {
-                src: "https://supabase.com/brand-assets/supabase-logo-wordmark--dark.svg",
+                src: "https://raw.githubusercontent.com/supabase/supabase/master/packages/common/assets/images/supabase-logo-wordmark--dark.svg#gh-dark-mode-only",
                 alt: "Supabase",
                 href: "https://supabase.com",
               },

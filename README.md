@@ -1,5 +1,7 @@
 # Remix Supa Fly Stack
 
+> This Readme will be re-write soon
+
 ![The Remix Indie Stack](https://raw.githubusercontent.com/rphlmr/supa-fly-stack/main/doc/supa-fly-stak.png)
 
 Learn more about [Remix Stacks](https://remix.run/stacks).
@@ -30,12 +32,6 @@ Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --
 
 ## Development
 
-- Download and run [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-
-  > **Note:** Needed to create a [shadow database for prisma](https://www.prisma.io/docs/concepts/components/prisma-migrate/shadow-database)
-
-  > **Note:** Shadow database is local and run by `docker-compose.yml`
-
 - Create a [Supabase Database](https://supabase.com/) (Free tiers gives you 2 databases)
 
   > **Note:** Only one for playing around with Supabase or 2 for `staging` and `production`
@@ -60,6 +56,12 @@ SUPABASE_URL="https://{STAGING_YOUR_INSTANCE_NAME}.supabase.co"
 SESSION_SECRET="super-duper-s3cret"
 SERVER_URL="http://localhost:3000"
 ```
+
+- This step only applies if you've opted out of having the CLI install dependencies for you:
+
+  ```sh
+  npx remix init
+  ```
 
 - Initial setup:
 
@@ -108,9 +110,11 @@ Prior to your first deployment, you'll need to do a few things:
 - Create two apps on Fly, one for staging and one for production:
 
   ```sh
-  fly create supa-fly-stack-template
-  fly create supa-fly-stack-template-staging
+  fly apps create supa-fly-stack-template
+  fly apps create supa-fly-stack-template-staging  # ** not mandatory if you don't want a staging environnement **
   ```
+
+  > **Note:** For production app, make sure this name matches the `app` set in your `fly.toml` file. Otherwise, you will not be able to deploy.
 
   - Initialize Git.
 
@@ -128,10 +132,20 @@ Prior to your first deployment, you'll need to do a few things:
 
 - Add a `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE`,`SUPABASE_ANON_PUBLIC`, `SERVER_URL` and `DATABASE_URL` to your fly app secrets
 
+  > **Note:** To find your `SERVER_URL`, go to [your fly.io dashboard](https://fly.io/apps/supa-fly-stack-template-3a36)
+
   To do this you can run the following commands:
 
   ```sh
-  # staging
+  # production (--app name is resolved from fly.toml)
+  fly secrets set SESSION_SECRET=$(openssl rand -hex 32)
+  fly secrets set SUPABASE_URL="https://{YOUR_INSTANCE_NAME}.supabase.co"
+  fly secrets set SUPABASE_SERVICE_ROLE="{SUPABASE_SERVICE_ROLE}"
+  fly secrets set SUPABASE_ANON_PUBLIC="{SUPABASE_ANON_PUBLIC}"
+  fly secrets set DATABASE_URL="postgres://postgres:{POSTGRES_PASSWORD}@db.{YOUR_INSTANCE_NAME}.supabase.co:5432/postgres"
+  fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}"
+
+  # staging (specify --app name) ** not mandatory if you don't want a staging environnement **
   fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app supa-fly-stack-template-staging
   fly secrets set SUPABASE_URL="https://{YOUR_STAGING_INSTANCE_NAME}.supabase.co" --app supa-fly-stack-template-staging
   fly secrets set SUPABASE_SERVICE_ROLE="{STAGING_SUPABASE_SERVICE_ROLE}" --app supa-fly-stack-template-staging
@@ -139,18 +153,13 @@ Prior to your first deployment, you'll need to do a few things:
   fly secrets set DATABASE_URL="postgres://postgres:{STAGING_POSTGRES_PASSWORD}@db.{STAGING_YOUR_INSTANCE_NAME}.supabase.co:5432/postgres" --app supa-fly-stack-template-staging
   fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}" --app supa-fly-stack-template-staging
 
-  # production
-  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app supa-fly-stack-template
-  fly secrets set SUPABASE_URL="https://{YOUR_INSTANCE_NAME}.supabase.co" --app supa-fly-stack-template
-  fly secrets set SUPABASE_SERVICE_ROLE="{SUPABASE_SERVICE_ROLE}" --app supa-fly-stack-template
-  fly secrets set SUPABASE_ANON_PUBLIC="{SUPABASE_ANON_PUBLIC}" --app supa-fly-stack-template
-  fly secrets set DATABASE_URL="postgres://postgres:{POSTGRES_PASSWORD}@db.{YOUR_INSTANCE_NAME}.supabase.co:5432/postgres" --app supa-fly-stack-template
-  fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}" --app supa-fly-stack-template
   ```
 
   If you don't have openssl installed, you can also use [1password](https://1password.com/generate-password) to generate a random secret, just replace `$(openssl rand -hex 32)` with the generated secret.
 
 Now that everything is set up you can commit and push your changes to your repo. Every commit to your `main` branch will trigger a deployment to your production environment, and every commit to your `dev` branch will trigger a deployment to your staging environment.
+
+> **Note:** To deploy manually, just run `fly deploy` (It'll deploy app defined in fly.toml)
 
 ## GitHub Actions
 
@@ -198,8 +207,32 @@ This project uses ESLint for linting. That is configured in `.eslintrc.js`.
 
 We use [Prettier](https://prettier.io/) for auto-formatting in this project. It's recommended to install an editor plugin (like the [VSCode Prettier plugin](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)) to get auto-formatting on save. There's also a `npm run format` script you can run to format all files in the project.
 
+## Start working with Supabase
+
+Your are now ready to go further, congrats !
+
+To extend your prisma schema and apply changes on your supabase database :
+
+- Download and run [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+  > **Note:** Needed to create a [shadow database for prisma](https://www.prisma.io/docs/concepts/components/prisma-migrate/shadow-database)
+
+  > **Note:** Shadow database is local and run by `docker-compose.yml`
+
+- Make your changes in [./app/core/database/schema.prisma](./app/core/database/schema.prisma)
+- Prepare your schema migration
+
+  > **Note:** First time take a long moment 😅
+
+  ```sh
+  npm run db:prepare-migration
+  ```
+
+- Check your migration in [./app/core/database/migrations](./app/core/database/migrations)
+- Apply this migration in production
+
+  ```sh
+  npm run db:deploy-migration
+  ```
+
 CC BY-NC-SA 4.0
-
-```
-
-```

@@ -1,10 +1,6 @@
 import * as React from "react";
 
-import type {
-  ActionFunction,
-  LoaderFunction,
-  MetaFunction,
-} from "@remix-run/node";
+import type { ActionArgs, LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import {
   Form,
@@ -21,13 +17,13 @@ import { createAuthSession, getAuthSession } from "~/core/auth/session.server";
 import { ContinueWithEmailForm } from "~/core/components";
 import { assertIsPost } from "~/core/utils/http.server";
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: LoaderArgs) {
   const authSession = await getAuthSession(request);
 
   if (authSession) return redirect("/notes");
 
   return json({});
-};
+}
 
 const LoginFormSchema = z.object({
   email: z
@@ -38,22 +34,18 @@ const LoginFormSchema = z.object({
   redirectTo: z.string().optional(),
 });
 
-interface ActionData {
-  errors?: {
-    email?: string;
-    password?: string;
-  };
-}
-
-export const action: ActionFunction = async ({ request }) => {
+export async function action({ request }: ActionArgs) {
   assertIsPost(request);
 
   const formValidation = await getFormData(request, LoginFormSchema);
 
   if (!formValidation.success) {
-    return json<ActionData>(
+    return json(
       {
-        errors: formValidation.errors,
+        errors: {
+          email: formValidation.errors.email,
+          password: formValidation.errors.password,
+        },
       },
       { status: 400 }
     );
@@ -64,8 +56,8 @@ export const action: ActionFunction = async ({ request }) => {
   const authSession = await signInWithEmail(email, password);
 
   if (!authSession) {
-    return json<ActionData>(
-      { errors: { email: "invalid-email-password" } },
+    return json(
+      { errors: { email: "invalid-email-password", password: null } },
       { status: 400 }
     );
   }
@@ -75,7 +67,7 @@ export const action: ActionFunction = async ({ request }) => {
     authSession,
     redirectTo,
   });
-};
+}
 
 export const meta: MetaFunction = () => ({
   title: "Login",
@@ -84,7 +76,7 @@ export const meta: MetaFunction = () => ({
 export default function LoginPage() {
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? undefined;
-  const actionData = useActionData() as ActionData;
+  const actionData = useActionData<typeof action>();
   const emailRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
   const formRef = React.useRef<HTMLFormElement>(null);

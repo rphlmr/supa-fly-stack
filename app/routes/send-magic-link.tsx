@@ -1,4 +1,4 @@
-import type { ActionFunction } from "@remix-run/node";
+import type { ActionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { getFormData } from "remix-params-helper";
 import { z } from "zod";
@@ -13,17 +13,13 @@ const MagicLinkSchema = z.object({
     .transform((email) => email.toLowerCase()),
 });
 
-interface ActionData {
-  error?: string;
-}
-
-export const action: ActionFunction = async ({ request }) => {
+export async function action({ request }: ActionArgs) {
   assertIsPost(request);
 
   const form = await getFormData(request, MagicLinkSchema);
 
   if (!form.success) {
-    return json<ActionData>(
+    return json(
       {
         error: "invalid-email",
       },
@@ -34,7 +30,7 @@ export const action: ActionFunction = async ({ request }) => {
   const { error } = await sendMagicLink(form.data.email);
 
   if (error) {
-    return json<ActionData>(
+    return json(
       {
         error: "unable-to-send-magic-link",
       },
@@ -42,5 +38,5 @@ export const action: ActionFunction = async ({ request }) => {
     );
   }
 
-  return json({});
-};
+  return json({ error: null });
+}

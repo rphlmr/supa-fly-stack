@@ -1,4 +1,4 @@
-import faker from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
 
 describe("smoke tests", () => {
   afterEach(() => {
@@ -7,7 +7,9 @@ describe("smoke tests", () => {
 
   it("should allow you to register and login", () => {
     const loginForm = {
-      email: `${faker.internet.userName()}@example.com`,
+      email: faker.internet
+        .email(undefined, undefined, "example.com")
+        .toLowerCase(),
       password: faker.internet.password(),
     };
     cy.then(() => ({ email: loginForm.email })).as("user");
@@ -31,7 +33,9 @@ describe("smoke tests", () => {
       body: faker.lorem.sentences(1),
     };
     const credentials = {
-      email: faker.internet.email(undefined, undefined, "example.com"),
+      email: faker.internet
+        .email(undefined, undefined, "example.com")
+        .toLowerCase(),
       password: faker.internet.password(),
     };
 

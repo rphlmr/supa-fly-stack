@@ -8,6 +8,7 @@ export async function getNote({
   userId: User["id"];
 }) {
   return db.note.findFirst({
+    select: { id: true, body: true, title: true },
     where: { id, userId },
   });
 }

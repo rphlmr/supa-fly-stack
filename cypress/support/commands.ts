@@ -1,4 +1,4 @@
-import faker from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
 
 declare global {
   namespace Cypress {
@@ -31,7 +31,9 @@ declare global {
 }
 
 function createAccount({
-  email = faker.internet.email(undefined, undefined, "example.com"),
+  email = faker.internet
+    .email(undefined, undefined, "example.com")
+    .toLowerCase(),
   password = faker.internet.password(),
 }: {
   email?: string;

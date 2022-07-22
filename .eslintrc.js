@@ -38,6 +38,7 @@ module.exports = {
     "remix.init",
     "seed.server.ts",
     "wait-shadow-db-setup.js",
+    "cypress.config.ts",
   ],
   // we're using vitest which has a very similar API to jest
   // (so the linting plugins work nicely), but it we have to explicitly
@@ -93,7 +94,7 @@ module.exports = {
       },
     ],
     "import/no-restricted-paths": [
-      "error",
+      "warn",
       {
         zones: [
           {

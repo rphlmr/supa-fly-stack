@@ -27,7 +27,7 @@ const waitingMessages = {
   `,
 };
 
-const MAX_ATTEMPTS = 15; // 30 seconds, increase if your computer is slow 😅
+const MAX_ATTEMPTS = 60; // increase if your computer or Internet connection is slow 😅
 let attempt = 1;
 
 console.log(

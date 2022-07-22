@@ -1,10 +1,6 @@
 import * as React from "react";
 
-import type {
-  ActionFunction,
-  LoaderFunction,
-  MetaFunction,
-} from "@remix-run/node";
+import type { ActionArgs, LoaderArgs, MetaFunction } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
 import {
   Form,
@@ -22,13 +18,13 @@ import { assertIsPost } from "~/core/utils/http.server";
 import { createUserAccount } from "~/modules/user/mutations";
 import { getUserByEmail } from "~/modules/user/queries";
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: LoaderArgs) {
   const authSession = await getAuthSession(request);
 
   if (authSession) return redirect("/notes");
 
   return json({});
-};
+}
 
 const JoinFormSchema = z.object({
   email: z
@@ -39,22 +35,18 @@ const JoinFormSchema = z.object({
   redirectTo: z.string().optional(),
 });
 
-interface ActionData {
-  errors: {
-    email?: string;
-    password?: string;
-  };
-}
-
-export const action: ActionFunction = async ({ request }) => {
+export async function action({ request }: ActionArgs) {
   assertIsPost(request);
 
   const formValidation = await getFormData(request, JoinFormSchema);
 
   if (!formValidation.success) {
-    return json<ActionData>(
+    return json(
       {
-        errors: formValidation.errors,
+        errors: {
+          email: formValidation.errors.email,
+          password: formValidation.errors.password,
+        },
       },
       { status: 400 }
     );
@@ -65,8 +57,8 @@ export const action: ActionFunction = async ({ request }) => {
   const existingUser = await getUserByEmail(email);
 
   if (existingUser) {
-    return json<ActionData>(
-      { errors: { email: "user-already-exist" } },
+    return json(
+      { errors: { email: "user-already-exist", password: null } },
       { status: 400 }
     );
   }
@@ -74,8 +66,8 @@ export const action: ActionFunction = async ({ request }) => {
   const authSession = await createUserAccount(email, password);
 
   if (!authSession) {
-    return json<ActionData>(
-      { errors: { email: "unable-to-create-account" } },
+    return json(
+      { errors: { email: "unable-to-create-account", password: null } },
       { status: 500 }
     );
   }
@@ -85,7 +77,7 @@ export const action: ActionFunction = async ({ request }) => {
     authSession,
     redirectTo,
   });
-};
+}
 
 export const meta: MetaFunction = () => ({
   title: "Sign Up",
@@ -94,7 +86,7 @@ export const meta: MetaFunction = () => ({
 export default function Join() {
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? undefined;
-  const actionData = useActionData() as ActionData;
+  const actionData = useActionData<typeof action>();
   const emailRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
   const inputProps = useFormInputProps(JoinFormSchema);

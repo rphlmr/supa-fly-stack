@@ -1,10 +1,12 @@
 import React from "react";
 
-import { useFetcher } from "@remix-run/react";
+import type { action } from "~/routes/send-magic-link";
+
+import { useTypedFetcher } from "../hooks/use-fetcher";
 
 export function ContinueWithEmailForm() {
   const ref = React.useRef<HTMLFormElement>(null);
-  const sendMagicLink = useFetcher();
+  const sendMagicLink = useTypedFetcher<typeof action>();
   const { data, state, type } = sendMagicLink;
   const isSuccessFull = type === "done" && !data?.error;
   const isLoading = state === "submitting" || state === "loading";

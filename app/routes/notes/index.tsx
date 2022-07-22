@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
@@ -6,7 +6,7 @@ import { requireAuthSession } from "~/core/auth/guards";
 // import { useWatchNotes } from "~/modules/note/hooks";
 import { getNoteCount } from "~/modules/note/queries";
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: LoaderArgs) {
   await requireAuthSession(request);
 
   const nbOfNotes = await getNoteCount();
@@ -14,10 +14,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json({
     nbOfNotes,
   });
-};
+}
 
 export default function NoteIndexPage() {
-  const { nbOfNotes } = useLoaderData();
+  const { nbOfNotes } = useLoaderData<typeof loader>();
   // useWatchNotes();
 
   return (
