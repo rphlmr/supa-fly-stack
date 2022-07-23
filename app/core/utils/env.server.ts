@@ -13,6 +13,8 @@ declare global {
       SUPABASE_URL: string;
       SUPABASE_SERVICE_ROLE: string;
       SERVER_URL: string;
+      SUPABASE_ANON_PUBLIC: string;
+      SESSION_SECRET: string;
     }
   }
 }

@@ -235,4 +235,20 @@ To extend your prisma schema and apply changes on your supabase database :
   npm run db:deploy-migration
   ```
 
+## Use with Supabase RLS
+
+> To test this stack with RLS, you can find a demo in [./app/routes/rls](./app/routes/rls)
+
+> **Before playing, add some RLS rules for "Note" table**
+
+| Policy name                        | Target roles  |      WITH CHECK expression |
+| ---------------------------------- | :-----------: | -------------------------: |
+| Creator can see their own notes    | authenticated | ((uid())::text = "userId") |
+| Authenticated user can add notes   | authenticated |                       true |
+| Creator can delete their own posts | authenticated | ((uid())::text = "userId") |
+
+> Then, go to [http://localhost:3000/rls/notes](http://localhost:3000/rls/notes)
+
+---
+
 CC BY-NC-SA 4.0
