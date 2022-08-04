@@ -12,7 +12,7 @@ async function verifyAuthSession(authSession: AuthSession) {
   return Boolean(authAccount);
 }
 
-export function isExpiringSoon(expiresAt: number) {
+function isExpiringSoon(expiresAt: number) {
   return (expiresAt - REFRESH_THRESHOLD) * 1000 < Date.now();
 }
 
