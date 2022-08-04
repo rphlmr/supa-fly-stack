@@ -155,6 +155,7 @@ describe(createUserAccount.name, () => {
       if (matchesMethod && matchesUrl) fetchAuthAdminUserAPI.set(req.id, req);
     });
 
+    //@ts-expect-error missing vitest type
     db.user.create.mockResolvedValue(null);
 
     const result = await createUserAccount(USER_EMAIL, USER_PASSWORD);
@@ -200,6 +201,7 @@ describe(createUserAccount.name, () => {
       if (matchesMethod && matchesUrl) fetchAuthTokenAPI.set(req.id, req);
     });
 
+    //@ts-expect-error missing vitest type
     db.user.create.mockResolvedValue({ id: USER_ID, email: USER_EMAIL });
 
     const result = await createUserAccount(USER_EMAIL, USER_PASSWORD);
