@@ -38,7 +38,11 @@ describe(signInWithEmail.name, () => {
     expect(fetchAuthTokenAPI.size).toEqual(1);
     const [signInRequest] = fetchAuthTokenAPI.values();
     expect(signInRequest.body).toEqual(
-      JSON.stringify({ email: USER_EMAIL, password: USER_PASSWORD })
+      JSON.stringify({
+        email: USER_EMAIL,
+        password: USER_PASSWORD,
+        gotrue_meta_security: {},
+      })
     );
   });
 });

@@ -113,7 +113,11 @@ describe(createUserAccount.name, () => {
     expect(fetchAuthTokenAPI.size).toEqual(1);
     const [signInRequest] = fetchAuthTokenAPI.values();
     expect(signInRequest.body).toEqual(
-      JSON.stringify({ email: USER_EMAIL, password: USER_PASSWORD })
+      JSON.stringify({
+        email: USER_EMAIL,
+        password: USER_PASSWORD,
+        gotrue_meta_security: {},
+      })
     );
     expect(fetchAuthAdminUserAPI.size).toEqual(1);
     // expect call delete auth account with the expected user id
@@ -151,7 +155,6 @@ describe(createUserAccount.name, () => {
       if (matchesMethod && matchesUrl) fetchAuthAdminUserAPI.set(req.id, req);
     });
 
-    //@ts-expect-error missing vitest type
     db.user.create.mockResolvedValue(null);
 
     const result = await createUserAccount(USER_EMAIL, USER_PASSWORD);
@@ -197,7 +200,6 @@ describe(createUserAccount.name, () => {
       if (matchesMethod && matchesUrl) fetchAuthTokenAPI.set(req.id, req);
     });
 
-    //@ts-expect-error missing vitest type
     db.user.create.mockResolvedValue({ id: USER_ID, email: USER_EMAIL });
 
     const result = await createUserAccount(USER_EMAIL, USER_PASSWORD);
