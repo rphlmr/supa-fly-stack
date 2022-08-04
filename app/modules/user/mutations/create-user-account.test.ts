@@ -113,7 +113,11 @@ describe(createUserAccount.name, () => {
     expect(fetchAuthTokenAPI.size).toEqual(1);
     const [signInRequest] = fetchAuthTokenAPI.values();
     expect(signInRequest.body).toEqual(
-      JSON.stringify({ email: USER_EMAIL, password: USER_PASSWORD })
+      JSON.stringify({
+        email: USER_EMAIL,
+        password: USER_PASSWORD,
+        gotrue_meta_security: {},
+      })
     );
     expect(fetchAuthAdminUserAPI.size).toEqual(1);
     // expect call delete auth account with the expected user id
