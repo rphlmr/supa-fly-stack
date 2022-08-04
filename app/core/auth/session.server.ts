@@ -15,6 +15,7 @@ export interface AuthSession {
   email: string;
   expiresIn: number;
   expiresAt: number;
+  providerToken?: string | null;
 }
 
 export type RealtimeAuthSession = Pick<

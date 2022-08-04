@@ -1,5 +1,4 @@
-import { isGet } from "~/core/utils/http.server";
-
+import { REFRESH_THRESHOLD } from "../const";
 import { refreshAuthSession } from "../mutations/refresh-auth-session.server";
 import { getAuthAccountByAccessToken } from "../queries/get-auth-account.server";
 import type { AuthSession } from "../session.server";
@@ -11,6 +10,10 @@ async function verifyAuthSession(authSession: AuthSession) {
   );
 
   return Boolean(authAccount);
+}
+
+export function isExpiringSoon(expiresAt: number) {
+  return (expiresAt - REFRESH_THRESHOLD) * 1000 < Date.now();
 }
 
 /**
@@ -38,16 +41,9 @@ export async function requireAuthSession(
   // ok, let's challenge its access token
   const isValidSession = await verifyAuthSession(authSession);
 
-  // damn, access token expires
-  if (!isValidSession) {
-    return refreshAuthSession(request);
-  }
-
-  // so, maybe we are in a POST / PUT / PATCH / DELETE method
-  // user session is valid, but we don't know if it'll expire in a microsecond.
-  // it can be problematic if you use this access token to fetch one of your external api
-  // let's refresh session in case of 🧐
-  if (!isGet(request)) {
+  // damn, access token is not valid or expires soon
+  // let's try to refresh, in case of 🧐
+  if (!isValidSession || isExpiringSoon(authSession.expiresAt)) {
     return refreshAuthSession(request);
   }
 

@@ -249,6 +249,10 @@ To extend your prisma schema and apply changes on your supabase database :
 
 > Then, go to [http://localhost:3000/rls/notes](http://localhost:3000/rls/notes)
 
+## Your token expires in less than 1 hour (3600 seconds in Supabase Dashboard)
+
+If you have a lower token lifetime than me (1 hour), you should take a look at `REFRESH_THRESHOLD` in [./app/core/auth/const.ts](./app/core/auth/const.ts) and set what you think is the best value for your use case.
+
 ---
 
 CC BY-NC-SA 4.0
