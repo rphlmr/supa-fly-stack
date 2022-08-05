@@ -1,7 +1,7 @@
 import { matchRequestUrl } from "msw";
 
+import { server } from "mocks";
 import { SUPABASE_AUTH_USER_API, SUPABASE_URL } from "mocks/handlers";
-import { server } from "mocks/start";
 import { USER_ID } from "mocks/user";
 
 import { getAuthAccountByAccessToken } from "./get-auth-account.server";
