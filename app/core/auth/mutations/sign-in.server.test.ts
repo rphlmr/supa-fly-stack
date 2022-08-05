@@ -1,11 +1,11 @@
 import { matchRequestUrl } from "msw";
 
+import { server } from "mocks";
 import {
   SUPABASE_URL,
   SUPABASE_AUTH_TOKEN_API,
   authSession,
 } from "mocks/handlers";
-import { server } from "mocks/start";
 import { USER_EMAIL, USER_PASSWORD } from "mocks/user";
 import { signInWithEmail } from "~/core/auth/mutations/sign-in.server";
 

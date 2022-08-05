@@ -1,6 +1,6 @@
 import { installGlobals } from "@remix-run/node";
 import "@testing-library/jest-dom/extend-expect";
-import { server } from "mocks/start";
+import { server } from "mocks";
 
 process.env.SESSION_SECRET = "super-duper-s3cret";
 process.env.SUPABASE_SERVICE_ROLE = "{SERVICE_ROLE}";
