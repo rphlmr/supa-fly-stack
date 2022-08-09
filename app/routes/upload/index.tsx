@@ -7,10 +7,10 @@ import {
   unstable_parseMultipartFormData,
 } from "@remix-run/node";
 
-import { requireAuthSession } from "~/core/auth/guards";
-import { commitAuthSession } from "~/core/auth/session.server";
-import { useTypedFetcher } from "~/core/hooks/use-fetcher";
-import { uploadFile } from "~/core/utils/upload-file.server";
+import { useTypedFetcher } from "~/hooks/use-fetcher";
+import { requireAuthSession } from "~/modules/auth/guards";
+import { commitAuthSession } from "~/modules/auth/session.server";
+import { uploadFile } from "~/utils/upload-file.server";
 
 import type { action as deleteAction } from "./delete";
 

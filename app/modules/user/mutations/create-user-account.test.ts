@@ -8,12 +8,12 @@ import {
   authSession,
 } from "mocks/handlers";
 import { USER_EMAIL, USER_ID, USER_PASSWORD } from "mocks/user";
-import { db } from "~/core/database";
+import { db } from "~/database";
 
 import { createUserAccount } from "./create-user-account.server";
 
 // mock db
-vitest.mock("~/core/database/db.server", () => ({
+vitest.mock("~/database/db.server", () => ({
   db: {
     user: {
       create: vitest.fn().mockResolvedValue({}),

@@ -7,10 +7,10 @@ import cuid from "cuid";
 import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
 
-import { requireAuthSession } from "~/core/auth/guards";
-import { commitAuthSession } from "~/core/auth/session.server";
-import { supabase } from "~/core/integrations/supabase/supabase.server";
-import { assertIsPost } from "~/core/utils/http.server";
+import { supabase } from "~/integrations/supabase/supabase.server";
+import { requireAuthSession } from "~/modules/auth/guards";
+import { commitAuthSession } from "~/modules/auth/session.server";
+import { assertIsPost } from "~/utils/http.server";
 
 export const NewNoteFormSchema = z.object({
   title: z.string().min(2, "require-title"),

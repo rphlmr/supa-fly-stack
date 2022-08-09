@@ -1,5 +1,5 @@
-import { supabaseAdmin } from "~/core/integrations/supabase/supabase.server";
-import { SERVER_URL } from "~/core/utils/env.server";
+import { supabaseAdmin } from "~/integrations/supabase/supabase.server";
+import { SERVER_URL } from "~/utils/env.server";
 
 import { mapAuthSession } from "../utils/map-auth-session";
 

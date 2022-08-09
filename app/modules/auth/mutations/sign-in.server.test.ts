@@ -7,7 +7,7 @@ import {
   authSession,
 } from "mocks/handlers";
 import { USER_EMAIL, USER_PASSWORD } from "mocks/user";
-import { signInWithEmail } from "~/core/auth/mutations/sign-in.server";
+import { signInWithEmail } from "~/modules/auth/mutations/sign-in.server";
 
 vitest.mock("../models/user.server", () => ({
   createUser: vitest.fn().mockResolvedValue({}),

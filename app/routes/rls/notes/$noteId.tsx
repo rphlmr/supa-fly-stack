@@ -3,10 +3,10 @@ import { redirect, json } from "@remix-run/node";
 import { Form, useCatch, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
-import { requireAuthSession } from "~/core/auth/guards";
-import { commitAuthSession } from "~/core/auth/session.server";
-import { supabase } from "~/core/integrations/supabase/supabase.server";
-import { assertIsDelete } from "~/core/utils/http.server";
+import { supabase } from "~/integrations/supabase/supabase.server";
+import { requireAuthSession } from "~/modules/auth/guards";
+import { commitAuthSession } from "~/modules/auth/session.server";
+import { assertIsDelete } from "~/utils/http.server";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { accessToken } = await requireAuthSession(request);

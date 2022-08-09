@@ -2,7 +2,7 @@ import React from "react";
 
 import type { action } from "~/routes/send-magic-link";
 
-import { useTypedFetcher } from "../hooks/use-fetcher";
+import { useTypedFetcher } from "../../../hooks/use-fetcher";
 
 export function ContinueWithEmailForm() {
   const ref = React.useRef<HTMLFormElement>(null);

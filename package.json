@@ -33,11 +33,11 @@
     "singleAttributePerLine": true
   },
   "dependencies": {
-    "@prisma/client": "^4.1.0",
+    "@prisma/client": "^4.2.0",
     "@remix-run/node": "*",
     "@remix-run/react": "*",
     "@remix-run/serve": "*",
-    "@supabase/supabase-js": "^1.35.4",
+    "@supabase/supabase-js": "^1.35.6",
     "cookie": "^0.5.0",
     "cuid": "^2.1.8",
     "isbot": "^3.5.0",
@@ -48,48 +48,48 @@
     "zod": "^3.17.9"
   },
   "devDependencies": {
-    "@faker-js/faker": "^7.3.0",
+    "@faker-js/faker": "^7.4.0",
     "@remix-run/dev": "*",
     "@remix-run/eslint-config": "*",
     "@testing-library/cypress": "^8.0.3",
-    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
-    "@testing-library/user-event": "^14.3.0",
+    "@testing-library/user-event": "^14.4.2",
     "@types/eslint": "^8.4.5",
-    "@types/react": "^18.0.15",
+    "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
-    "@typescript-eslint/eslint-plugin": "^5.30.7",
-    "@typescript-eslint/parser": "^5.30.7",
+    "@typescript-eslint/eslint-plugin": "^5.33.0",
+    "@typescript-eslint/parser": "^5.33.0",
     "@vitejs/plugin-react": "^2.0.0",
     "binode": "^1.0.5",
     "c8": "^7.12.0",
     "cross-env": "^7.0.3",
-    "cypress": "^10.3.1",
+    "cypress": "^10.4.0",
     "dotenv-cli": "^6.0.0",
     "esbuild-register": "^3.3.3",
-    "eslint": "^8.20.0",
+    "eslint": "^8.21.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-import-resolver-typescript": "^3.3.0",
+    "eslint-import-resolver-typescript": "^3.4.0",
     "eslint-plugin-import": "^2.26.0",
     "happy-dom": "^6.0.4",
     "msw": "0.44.2",
     "npm-run-all": "^4.1.5",
     "prettier": "2.7.1",
-    "prettier-plugin-tailwindcss": "^0.1.12",
-    "prisma": "^4.1.0",
+    "prettier-plugin-tailwindcss": "^0.1.13",
+    "prisma": "^4.2.0",
     "start-server-and-test": "^1.14.0",
-    "tailwindcss": "^3.1.6",
+    "tailwindcss": "^3.1.8",
     "ts-node": "^10.9.1",
-    "tsconfig-paths": "^4.0.0",
+    "tsconfig-paths": "^4.1.0",
     "typescript": "^4.7.4",
     "vite-tsconfig-paths": "^3.5.0",
-    "vitest": "^0.18.1"
+    "vitest": "^0.21.1"
   },
   "engines": {
     "node": ">=14"
   },
   "prisma": {
-    "schema": "app/core/database/schema.prisma",
-    "seed": "ts-node --require tsconfig-paths/register app/core/database/seed.server.ts"
+    "schema": "app/database/schema.prisma",
+    "seed": "ts-node --require tsconfig-paths/register app/database/seed.server.ts"
   }
 }

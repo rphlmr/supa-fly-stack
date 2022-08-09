@@ -3,8 +3,8 @@ import { json } from "@remix-run/node";
 import { getFormData } from "remix-params-helper";
 import { z } from "zod";
 
-import { sendMagicLink } from "~/core/auth/mutations";
-import { assertIsPost } from "~/core/utils/http.server";
+import { sendMagicLink } from "~/modules/auth/mutations";
+import { assertIsPost } from "~/utils/http.server";
 
 const MagicLinkSchema = z.object({
   email: z

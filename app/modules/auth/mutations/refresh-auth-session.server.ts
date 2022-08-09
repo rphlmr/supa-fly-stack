@@ -1,11 +1,11 @@
 import { redirect } from "@remix-run/node";
 
-import { supabaseAdmin } from "~/core/integrations/supabase/supabase.server";
+import { supabaseAdmin } from "~/integrations/supabase/supabase.server";
 import {
   getCurrentPath,
   isGet,
   makeRedirectToFromHere,
-} from "~/core/utils/http.server";
+} from "~/utils/http.server";
 
 import { LOGIN_URL } from "../const";
 import type { AuthSession } from "../session.server";

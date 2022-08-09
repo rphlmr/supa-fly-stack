@@ -1,9 +1,9 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 
-import { refreshAuthSession } from "~/core/auth/mutations";
-import { commitAuthSession } from "~/core/auth/session.server";
-import { assertIsPost } from "~/core/utils/http.server";
+import { refreshAuthSession } from "~/modules/auth/mutations";
+import { commitAuthSession } from "~/modules/auth/session.server";
+import { assertIsPost } from "~/utils/http.server";
 
 // this is just for supabase realtime session refresh
 export async function action({ request }: ActionArgs) {

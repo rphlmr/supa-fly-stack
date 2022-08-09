@@ -1,6 +1,6 @@
 import { redirect } from "@remix-run/node";
 
-import { makeRedirectToFromHere } from "~/core/utils/http.server";
+import { makeRedirectToFromHere } from "~/utils/http.server";
 
 import { LOGIN_URL } from "../const";
 import { commitAuthSession, getAuthSession } from "../session.server";

@@ -31,7 +31,7 @@ WORKDIR /myapp
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
 
-ADD /app/core/database/schema.prisma .
+ADD /app/database/schema.prisma .
 RUN npx prisma generate
 
 ADD . .

@@ -2,8 +2,8 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
-import { requireAuthSession } from "~/core/auth/guards";
-import { supabaseAdmin } from "~/core/integrations/supabase/supabase.server";
+import { supabaseAdmin } from "~/integrations/supabase/supabase.server";
+import { requireAuthSession } from "~/modules/auth/guards";
 // import { useWatchNotes } from "~/modules/note/hooks";
 
 export async function loader({ request }: LoaderArgs) {

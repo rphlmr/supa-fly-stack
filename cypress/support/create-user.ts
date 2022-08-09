@@ -5,8 +5,8 @@
 // as that new user.
 
 import { installGlobals } from "@remix-run/node";
-import { createAuthAccount } from "~/core/auth/mutations";
-import { db } from "~/core/database";
+import { createAuthAccount } from "~/modules/auth/mutations";
+import { db } from "~/database";
 
 installGlobals();
 

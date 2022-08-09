@@ -3,9 +3,9 @@ import { createContext, useContext, useState } from "react";
 
 import { useFetcher } from "@remix-run/react";
 
-import type { RealtimeAuthSession } from "~/core/auth/session.server";
-import { useInterval, useMatchesData } from "~/core/hooks";
-import { isBrowser } from "~/core/utils/is-browser";
+import { useInterval, useMatchesData } from "~/hooks";
+import type { RealtimeAuthSession } from "~/modules/auth/session.server";
+import { isBrowser } from "~/utils/is-browser";
 
 import { getSupabaseClient } from "./supabase.client";
 import type { SupabaseClient } from "./types";

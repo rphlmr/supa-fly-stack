@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "~/core/integrations/supabase/supabase.server";
+import { supabaseAdmin } from "~/integrations/supabase/supabase.server";
 
 export async function createAuthAccount(email: string, password: string) {
   const { data, error } = await supabaseAdmin.auth.api.createUser({
