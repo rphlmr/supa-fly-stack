@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { useSubmit } from "@remix-run/react";
 
-import { useSupabaseRealtime } from "~/core/integrations/supabase/realtime-context";
+import { useSupabaseRealtime } from "~/integrations/supabase/realtime-context";
 
 export function useWatchNotes() {
   const supabase = useSupabaseRealtime();

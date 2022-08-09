@@ -1,5 +1,5 @@
-import type { User } from "~/core/database";
-import { db } from "~/core/database";
+import type { User } from "~/database";
+import { db } from "~/database";
 
 export async function getNotes({ userId }: { userId: User["id"] }) {
   return db.note.findMany({

@@ -6,12 +6,15 @@ import { useActionData, useFetcher, useSearchParams } from "@remix-run/react";
 import { getFormData } from "remix-params-helper";
 import { z } from "zod";
 
-import { commitAuthSession, getAuthSession } from "~/core/auth/session.server";
-import { mapAuthSession } from "~/core/auth/utils/map-auth-session";
-import { getSupabaseClient } from "~/core/integrations/supabase/supabase.client";
-import { assertIsPost, safeRedirect } from "~/core/utils/http.server";
+import { getSupabaseClient } from "~/integrations/supabase/supabase.client";
+import {
+  commitAuthSession,
+  getAuthSession,
+} from "~/modules/auth/session.server";
+import { mapAuthSession } from "~/modules/auth/utils/map-auth-session";
 import { tryCreateUser } from "~/modules/user/mutations";
 import { getUserByEmail } from "~/modules/user/queries";
+import { assertIsPost, safeRedirect } from "~/utils/http.server";
 
 // imagine a user go back after OAuth login success or type this URL
 // we don't want him to fall in a black hole 👽

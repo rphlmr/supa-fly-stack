@@ -93,25 +93,6 @@ module.exports = {
         },
       },
     ],
-    "import/no-restricted-paths": [
-      "warn",
-      {
-        zones: [
-          {
-            target: "./app/core",
-            from: "./app/modules",
-          },
-          {
-            target: "./app/core",
-            from: "./app/routes",
-          },
-          {
-            target: "./app/modules",
-            from: "./app/routes",
-          },
-        ],
-      },
-    ],
   },
   overrides: [
     {

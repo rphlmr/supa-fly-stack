@@ -12,10 +12,13 @@ import {
 import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
 
-import { signInWithEmail } from "~/core/auth/mutations";
-import { createAuthSession, getAuthSession } from "~/core/auth/session.server";
-import { ContinueWithEmailForm } from "~/core/components";
-import { assertIsPost } from "~/core/utils/http.server";
+import { ContinueWithEmailForm } from "~/modules/auth/components";
+import { signInWithEmail } from "~/modules/auth/mutations";
+import {
+  createAuthSession,
+  getAuthSession,
+} from "~/modules/auth/session.server";
+import { assertIsPost } from "~/utils/http.server";
 
 export async function loader({ request }: LoaderArgs) {
   const authSession = await getAuthSession(request);

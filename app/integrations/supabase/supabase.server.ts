@@ -6,7 +6,7 @@ import {
   SUPABASE_SERVICE_ROLE,
   SUPABASE_URL,
   SUPABASE_ANON_PUBLIC,
-} from "~/core/utils/env.server";
+} from "~/utils/env.server";
 
 import type { SupabaseClient } from "./types";
 

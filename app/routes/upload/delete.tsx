@@ -1,9 +1,9 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 
-import { requireAuthSession } from "~/core/auth/guards";
-import { commitAuthSession } from "~/core/auth/session.server";
-import { supabaseAdmin } from "~/core/integrations/supabase/supabase.server";
+import { supabaseAdmin } from "~/integrations/supabase/supabase.server";
+import { requireAuthSession } from "~/modules/auth/guards";
+import { commitAuthSession } from "~/modules/auth/session.server";
 
 export async function action({ request }: ActionArgs) {
   const authSession = await requireAuthSession(request);

@@ -6,10 +6,10 @@ import { Form, useActionData, useTransition } from "@remix-run/react";
 import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
 
-import { requireAuthSession } from "~/core/auth/guards";
-import { commitAuthSession } from "~/core/auth/session.server";
-import { assertIsPost } from "~/core/utils/http.server";
+import { requireAuthSession } from "~/modules/auth/guards";
+import { commitAuthSession } from "~/modules/auth/session.server";
 import { createNote } from "~/modules/note/mutations";
+import { assertIsPost } from "~/utils/http.server";
 
 export const NewNoteFormSchema = z.object({
   title: z.string().min(2, "require-title"),

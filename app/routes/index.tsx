@@ -2,7 +2,7 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
-import { getAuthSession } from "~/core/auth/session.server";
+import { getAuthSession } from "~/modules/auth/session.server";
 
 export async function loader({ request }: LoaderArgs) {
   const { email } = (await getAuthSession(request)) || {};

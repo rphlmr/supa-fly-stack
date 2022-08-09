@@ -1,4 +1,4 @@
-import { db } from "~/core/database";
+import { db } from "~/database";
 
 export async function getNoteCount() {
   return db.note.count();

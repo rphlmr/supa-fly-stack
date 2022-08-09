@@ -10,8 +10,8 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 
-import { SUPABASE_ANON_PUBLIC, SUPABASE_URL } from "./core/utils/env.server";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
+import { SUPABASE_ANON_PUBLIC, SUPABASE_URL } from "./utils/env.server";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwindStylesheetUrl },

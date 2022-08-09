@@ -1,10 +1,10 @@
+import { db } from "~/database";
 import {
   createAuthAccount,
   deleteAuthAccount,
   signInWithEmail,
-} from "~/core/auth/mutations";
-import type { AuthSession } from "~/core/auth/session.server";
-import { db } from "~/core/database";
+} from "~/modules/auth/mutations";
+import type { AuthSession } from "~/modules/auth/session.server";
 
 async function createUser({
   email,

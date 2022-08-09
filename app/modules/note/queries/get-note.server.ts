@@ -1,5 +1,5 @@
-import type { Note, User } from "~/core/database";
-import { db } from "~/core/database";
+import type { Note, User } from "~/database";
+import { db } from "~/database";
 
 export async function getNote({
   userId,

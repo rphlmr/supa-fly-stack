@@ -2,7 +2,7 @@
 
 > This Readme will be re-write soon
 
-![The Remix Indie Stack](https://raw.githubusercontent.com/rphlmr/supa-fly-stack/main/doc/supa-fly-stak.png)
+![The Remix Indie Stack](https://user-images.githubusercontent.com/20722140/183644602-4913ad6d-aee1-4233-ba49-71716099a4df.png)
 
 Learn more about [Remix Stacks](https://remix.run/stacks).
 
@@ -86,7 +86,7 @@ The database seed script creates a new user with some data you can use to get st
 
 This is a pretty simple note-taking app, but it's a good example of how you can build a full stack app with Prisma, Supabase and Remix. The main functionality is creating users, logging in and out (handling access and refresh tokens + refresh on expire), and creating and deleting notes.
 
-- auth / session [./app/core/auth](./app/core/auth)
+- auth / session [./app/modules/auth](./app/modules/auth)
 - creating, and deleting notes [./app/modules/note](./app/modules/note)
 
 ## Deployment
@@ -219,7 +219,7 @@ To extend your prisma schema and apply changes on your supabase database :
 
   > **Note:** Shadow database is local and run by `docker-compose.yml`
 
-- Make your changes in [./app/core/database/schema.prisma](./app/core/database/schema.prisma)
+- Make your changes in [./app/database/schema.prisma](./app/database/schema.prisma)
 - Prepare your schema migration
 
   > **Note:** First time take a long moment 😅
@@ -228,7 +228,7 @@ To extend your prisma schema and apply changes on your supabase database :
   npm run db:prepare-migration
   ```
 
-- Check your migration in [./app/core/database/migrations](./app/core/database/migrations)
+- Check your migration in [./app/database/migrations](./app/database/migrations)
 - Apply this migration in production
 
   ```sh
@@ -251,7 +251,7 @@ To extend your prisma schema and apply changes on your supabase database :
 
 ## Your token expires in less than 1 hour (3600 seconds in Supabase Dashboard)
 
-If you have a lower token lifetime than me (1 hour), you should take a look at `REFRESH_THRESHOLD` in [./app/core/auth/const.ts](./app/core/auth/const.ts) and set what you think is the best value for your use case.
+If you have a lower token lifetime than me (1 hour), you should take a look at `REFRESH_THRESHOLD` in [./app/modules/auth/const.ts](./app/modules/auth/const.ts) and set what you think is the best value for your use case.
 
 ---
 

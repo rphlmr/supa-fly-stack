@@ -1,5 +1,5 @@
-import { supabaseAdmin } from "~/core/integrations/supabase/supabase.server";
-import type { SupabaseAuthSession } from "~/core/integrations/supabase/types";
+import { supabaseAdmin } from "~/integrations/supabase/supabase.server";
+import type { SupabaseAuthSession } from "~/integrations/supabase/types";
 
 export async function getAuthAccountByAccessToken(
   accessToken: SupabaseAuthSession["access_token"]
