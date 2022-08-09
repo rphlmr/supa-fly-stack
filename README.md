@@ -2,7 +2,7 @@
 
 > This Readme will be re-write soon
 
-![The Remix Indie Stack](https://raw.githubusercontent.com/rphlmr/supa-fly-stack/main/doc/supa-fly-stak.png)
+![The Remix Indie Stack](https://user-images.githubusercontent.com/20722140/183644602-4913ad6d-aee1-4233-ba49-71716099a4df.png)
 
 Learn more about [Remix Stacks](https://remix.run/stacks).
 
