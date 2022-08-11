@@ -35,12 +35,19 @@ function getEnv(name: string, isSecret = true) {
   return value;
 }
 
+/**
+ * Private env
+ */
 export const NODE_ENV = getEnv("NODE_ENV");
 export const SERVER_URL = getEnv("SERVER_URL");
-export const SUPABASE_URL = getEnv("SUPABASE_URL", false);
-export const SUPABASE_ANON_PUBLIC = getEnv("SUPABASE_ANON_PUBLIC", false);
 export const SUPABASE_SERVICE_ROLE = getEnv("SUPABASE_SERVICE_ROLE");
 export const SESSION_SECRET = getEnv("SESSION_SECRET");
+
+/**
+ * Public envs
+ */
+export const SUPABASE_URL = getEnv("SUPABASE_URL", false);
+export const SUPABASE_ANON_PUBLIC = getEnv("SUPABASE_ANON_PUBLIC", false);
 
 export function getBrowserEnv() {
   return {
