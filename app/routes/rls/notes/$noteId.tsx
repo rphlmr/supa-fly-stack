@@ -3,7 +3,7 @@ import { redirect, json } from "@remix-run/node";
 import { Form, useCatch, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
-import { supabase } from "~/integrations/supabase/supabase.server";
+import { getSupabase } from "~/integrations/supabase";
 import { requireAuthSession } from "~/modules/auth/guards";
 import { commitAuthSession } from "~/modules/auth/session.server";
 import { assertIsDelete } from "~/utils/http.server";
@@ -12,7 +12,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const { accessToken } = await requireAuthSession(request);
   invariant(params.noteId, "noteId not found");
 
-  const { data: note } = await supabase(accessToken)
+  const { data: note } = await getSupabase(accessToken)
     .from("Note")
     .select("title, body")
     .eq("id", params.noteId)
@@ -30,7 +30,7 @@ export async function action({ request, params }: ActionArgs) {
   const authSession = await requireAuthSession(request);
   invariant(params.noteId, "noteId not found");
 
-  const { error } = await supabase(authSession.accessToken)
+  const { error } = await getSupabase(authSession.accessToken)
     .from("Note")
     .delete({ returning: "minimal" })
     .match({ id: params.noteId });

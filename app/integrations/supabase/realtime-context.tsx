@@ -7,7 +7,7 @@ import { useInterval, useMatchesData } from "~/hooks";
 import type { RealtimeAuthSession } from "~/modules/auth/session.server";
 import { isBrowser } from "~/utils/is-browser";
 
-import { getSupabaseClient } from "./supabase.client";
+import { getSupabase } from ".";
 import type { SupabaseClient } from "./types";
 
 // Remix feature here, we can "watch" root loader data
@@ -36,7 +36,7 @@ export const SupabaseRealtimeProvider = ({
     SupabaseClient | undefined
   >(() => {
     // prevents server side initial state
-    if (isBrowser) return getSupabaseClient(); // init a default client in browser. Needed for oauth callback
+    if (isBrowser) return getSupabase(); // init a default client in browser. Needed for oauth callback
   });
   const refresh = useFetcher();
 
@@ -55,10 +55,7 @@ export const SupabaseRealtimeProvider = ({
   // after root loader fetch, if user session is refresh, it's time to create a new supabase client
   if (isBrowser && expiresAt !== currentExpiresAt) {
     // recreate a supabase client to force provider's consumer to rerender
-    const client = getSupabaseClient();
-
-    // if user is authenticated, set credential
-    if (accessToken) client.auth.setAuth(accessToken);
+    const client = getSupabase(accessToken);
 
     // refresh provider's state
     setCurrentExpiresAt(expiresAt);

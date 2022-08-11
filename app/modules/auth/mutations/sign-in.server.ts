@@ -1,10 +1,10 @@
-import { supabaseAdmin } from "~/integrations/supabase/supabase.server";
-import { SERVER_URL } from "~/utils/env.server";
+import { getSupabaseAdmin } from "~/integrations/supabase";
+import { SERVER_URL } from "~/utils/env";
 
 import { mapAuthSession } from "../utils/map-auth-session";
 
 export async function signInWithEmail(email: string, password: string) {
-  const { data, error } = await supabaseAdmin.auth.api.signInWithEmail(
+  const { data, error } = await getSupabaseAdmin().auth.api.signInWithEmail(
     email,
     password
   );
@@ -15,7 +15,7 @@ export async function signInWithEmail(email: string, password: string) {
 }
 
 export async function sendMagicLink(email: string) {
-  return supabaseAdmin.auth.api.sendMagicLinkEmail(email, {
+  return getSupabaseAdmin().auth.api.sendMagicLinkEmail(email, {
     redirectTo: `${SERVER_URL}/oauth/callback`,
   });
 }

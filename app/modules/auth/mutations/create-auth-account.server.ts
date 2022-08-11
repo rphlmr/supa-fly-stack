@@ -1,7 +1,7 @@
-import { supabaseAdmin } from "~/integrations/supabase/supabase.server";
+import { getSupabaseAdmin } from "~/integrations/supabase";
 
 export async function createAuthAccount(email: string, password: string) {
-  const { data, error } = await supabaseAdmin.auth.api.createUser({
+  const { data, error } = await getSupabaseAdmin().auth.api.createUser({
     email,
     password,
     email_confirm: true, // demo purpose, assert that email is confirmed. For production, check email confirmation

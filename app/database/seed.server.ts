@@ -1,14 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { createClient } from "@supabase/supabase-js";
-import { SUPABASE_SERVICE_ROLE, SUPABASE_URL } from "../utils/env.server";
-
-if (!SUPABASE_URL) {
-  throw new Error("SUPABASE_URL is not set");
-}
-
-if (!SUPABASE_SERVICE_ROLE) {
-  throw new Error("SUPABASE_SERVICE_ROLE is not set");
-}
+import { SUPABASE_SERVICE_ROLE, SUPABASE_URL } from "../utils/env";
 
 const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, {
   autoRefreshToken: false,

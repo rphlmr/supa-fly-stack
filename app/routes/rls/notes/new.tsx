@@ -7,7 +7,7 @@ import cuid from "cuid";
 import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
 
-import { supabase } from "~/integrations/supabase/supabase.server";
+import { getSupabase } from "~/integrations/supabase";
 import { requireAuthSession } from "~/modules/auth/guards";
 import { commitAuthSession } from "~/modules/auth/session.server";
 import { assertIsPost } from "~/utils/http.server";
@@ -42,7 +42,7 @@ export async function action({ request }: LoaderArgs) {
 
   const { title, body } = formValidation.data;
 
-  const { data, error } = await supabase(authSession.accessToken)
+  const { data, error } = await getSupabase(authSession.accessToken)
     .from("Note")
     .insert([
       {
