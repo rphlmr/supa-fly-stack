@@ -20,6 +20,8 @@ function getSupabaseClient(supabaseKey: string) {
  * Provides a Supabase Client for the logged in user or get back a public and safe client without admin privileges
  *
  * It's a per request scoped client to prevent access token leaking over multiple concurrent requests and from different users.
+ *
+ * Reason : https://github.com/rphlmr/supa-fly-stack/pull/43#issue-1336412790
  */
 function getSupabase(accessToken?: string) {
   const supabase = getSupabaseClient(SUPABASE_ANON_PUBLIC);
@@ -34,11 +36,7 @@ function getSupabase(accessToken?: string) {
  *
  * It's a per request scoped client, to prevent access token leaking if you don't use it like `getSupabaseAdmin().auth.api`.
  *
- * example:
- * ```js
- * getSupabaseAdmin().auth.api.signInWithEmail() // safe, no user session is stored in client instance
- * getSupabaseAdmin().auth.signIn() // safe, user session is stored in client instance but client instance is unique for each request
- * ```
+ * Reason : https://github.com/rphlmr/supa-fly-stack/pull/43#issue-1336412790
  */
 function getSupabaseAdmin() {
   if (isBrowser)
@@ -46,7 +44,7 @@ function getSupabaseAdmin() {
       "getSupabaseAdmin is not available in browser and should NOT be used in insecure environments"
     );
 
-  return getSupabaseClient(SUPABASE_SERVICE_ROLE!);
+  return getSupabaseClient(SUPABASE_SERVICE_ROLE);
 }
 
 export { getSupabaseAdmin, getSupabase };
