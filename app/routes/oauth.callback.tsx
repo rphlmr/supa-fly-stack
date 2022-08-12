@@ -6,7 +6,7 @@ import { useActionData, useFetcher, useSearchParams } from "@remix-run/react";
 import { getFormData } from "remix-params-helper";
 import { z } from "zod";
 
-import { getSupabaseClient } from "~/integrations/supabase/supabase.client";
+import { getSupabase } from "~/integrations/supabase";
 import {
   commitAuthSession,
   getAuthSession,
@@ -92,7 +92,7 @@ export default function LoginCallback() {
   const redirectTo = searchParams.get("redirectTo") ?? "/notes";
 
   useEffect(() => {
-    const supabase = getSupabaseClient();
+    const supabase = getSupabase();
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, supabaseSession) => {

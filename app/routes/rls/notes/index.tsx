@@ -2,7 +2,7 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
-import { supabaseAdmin } from "~/integrations/supabase/supabase.server";
+import { getSupabaseAdmin } from "~/integrations/supabase";
 import { requireAuthSession } from "~/modules/auth/guards";
 // import { useWatchNotes } from "~/modules/note/hooks";
 
@@ -10,7 +10,7 @@ export async function loader({ request }: LoaderArgs) {
   await requireAuthSession(request);
 
   // use "supabaseAdmin" to override rls for this request only, to get all notes count
-  const { count: nbOfNotes } = await supabaseAdmin
+  const { count: nbOfNotes } = await getSupabaseAdmin()
     .from("Note")
     .select("id", { count: "exact", head: true });
 

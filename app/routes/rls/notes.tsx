@@ -2,7 +2,7 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, Outlet, Link, NavLink } from "@remix-run/react";
 
-import { supabase } from "~/integrations/supabase/supabase.server";
+import { getSupabase } from "~/integrations/supabase";
 import { LogoutButton } from "~/modules/auth/components";
 import { requireAuthSession } from "~/modules/auth/guards";
 import { notFound } from "~/utils/http.server";
@@ -10,7 +10,7 @@ import { notFound } from "~/utils/http.server";
 export async function loader({ request }: LoaderArgs) {
   const { userId, email, accessToken } = await requireAuthSession(request);
 
-  const { data: notes, error } = await supabase(accessToken)
+  const { data: notes, error } = await getSupabase(accessToken)
     .from("Note")
     .select("id, title");
 

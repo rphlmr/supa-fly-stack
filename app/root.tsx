@@ -11,7 +11,7 @@ import {
 } from "@remix-run/react";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
-import { SUPABASE_ANON_PUBLIC, SUPABASE_URL } from "./utils/env.server";
+import { getBrowserEnv } from "./utils/env";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwindStylesheetUrl },
@@ -25,15 +25,12 @@ export const meta: MetaFunction = () => ({
 
 export async function loader() {
   return json({
-    ENV: {
-      SUPABASE_URL,
-      SUPABASE_ANON_PUBLIC,
-    },
+    env: getBrowserEnv(),
   });
 }
 
 export default function App() {
-  const { ENV } = useLoaderData<typeof loader>();
+  const { env } = useLoaderData<typeof loader>();
 
   return (
     <html
@@ -49,7 +46,7 @@ export default function App() {
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.ENV = ${JSON.stringify(ENV)}`,
+            __html: `window.env = ${JSON.stringify(env)}`,
           }}
         />
         <Scripts />

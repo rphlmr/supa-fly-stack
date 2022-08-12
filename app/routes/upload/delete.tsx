@@ -1,12 +1,13 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 
-import { supabaseAdmin } from "~/integrations/supabase/supabase.server";
+import { getSupabaseAdmin } from "~/integrations/supabase";
 import { requireAuthSession } from "~/modules/auth/guards";
 import { commitAuthSession } from "~/modules/auth/session.server";
 
 export async function action({ request }: ActionArgs) {
   const authSession = await requireAuthSession(request);
+  const supabaseAdmin = getSupabaseAdmin();
 
   const { data: files } = await supabaseAdmin.storage
     .from("public")
