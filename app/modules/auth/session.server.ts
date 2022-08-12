@@ -4,10 +4,6 @@ import { NODE_ENV, SESSION_SECRET } from "../../utils/env";
 import { safeRedirect } from "../../utils/http.server";
 import { SESSION_ERROR_KEY, SESSION_KEY, SESSION_MAX_AGE } from "./const";
 
-if (!SESSION_SECRET) {
-  throw new Error("SESSION_SECRET is not set");
-}
-
 export interface AuthSession {
   accessToken: string;
   refreshToken: string;

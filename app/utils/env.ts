@@ -43,14 +43,14 @@ function getEnv(
 }
 
 /**
- * Private env
+ * Server env
  */
 export const SERVER_URL = getEnv("SERVER_URL");
 export const SUPABASE_SERVICE_ROLE = getEnv("SUPABASE_SERVICE_ROLE");
 export const SESSION_SECRET = getEnv("SESSION_SECRET");
 
 /**
- * Public envs
+ * Shared envs
  */
 export const NODE_ENV = getEnv("NODE_ENV", {
   isSecret: false,
