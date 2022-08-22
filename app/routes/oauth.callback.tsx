@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 import { json, redirect } from "@remix-run/node";
 import type { LoaderArgs, ActionArgs } from "@remix-run/node";
@@ -90,10 +90,9 @@ export default function LoginCallback() {
   const fetcher = useFetcher();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? "/notes";
+  const supabase = useMemo(() => getSupabase(), []);
 
   useEffect(() => {
-    const supabase = getSupabase();
-
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, supabaseSession) => {
         if (event === "SIGNED_IN") {
@@ -123,7 +122,7 @@ export default function LoginCallback() {
       // prevent memory leak. Listener stays alive 👨‍🎤
       authListener?.unsubscribe();
     };
-  }, [fetcher, redirectTo]);
+  }, [fetcher, redirectTo, supabase.auth]);
 
   return error ? <div>{error.message}</div> : null;
 }
