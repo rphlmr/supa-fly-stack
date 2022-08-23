@@ -1,6 +1,6 @@
 # Remix Supa Fly Stack
 
-> This Readme will be re-write soon
+> This Readme will be re-written soon
 
 ![The Remix Indie Stack](https://user-images.githubusercontent.com/20722140/183644602-4913ad6d-aee1-4233-ba49-71716099a4df.png)
 
