@@ -78,7 +78,7 @@ export async function commitAuthSession(
   const session = await getSession(request);
 
   // allow user session to be null.
-  // useful you want to clear session and display a message explaining why
+  // useful if you want to clear session and display a message explaining why
   if (authSession !== undefined) {
     session.set(SESSION_KEY, authSession);
   }
