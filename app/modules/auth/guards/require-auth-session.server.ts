@@ -9,7 +9,15 @@ async function verifyAuthSession(authSession: AuthSession) {
     authSession.accessToken
   );
 
-  return Boolean(authAccount);
+  if (!authAccount) return false;
+
+  // Here we verify that what we have in the session is the same as what we have in the auth database.
+  // It's a guard against a session cookie secret leak.
+  if (authAccount.id !== authSession.userId) {
+    return false;
+  }
+
+  return true;
 }
 
 function isExpiringSoon(expiresAt: number) {

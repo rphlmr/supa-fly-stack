@@ -1,7 +1,7 @@
 import { getSupabaseAdmin } from "~/integrations/supabase";
 import { SERVER_URL } from "~/utils/env";
 
-import { mapAuthSession } from "../utils/map-auth-session";
+import { mapAuthSession } from "../utils/map-auth-session.server";
 
 export async function signInWithEmail(email: string, password: string) {
   const { data, error } = await getSupabaseAdmin().auth.api.signInWithEmail(

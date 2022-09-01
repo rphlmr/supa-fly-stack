@@ -10,9 +10,9 @@ import {
 import { LOGIN_URL } from "../const";
 import type { AuthSession } from "../session.server";
 import { getAuthSession, commitAuthSession } from "../session.server";
-import { mapAuthSession } from "../utils/map-auth-session";
+import { mapAuthSession } from "../utils/map-auth-session.server";
 
-async function refreshAccessToken(refreshToken?: string) {
+export async function refreshAccessToken(refreshToken?: string) {
   if (!refreshToken) return null;
 
   const { data, error } = await getSupabaseAdmin().auth.api.refreshAccessToken(
