@@ -1,9 +1,9 @@
 import { useFetcher } from "@remix-run/react";
 import type { FetcherWithComponents } from "@remix-run/react";
-import type { UseDataFunctionReturn } from "@remix-run/react/dist/components";
+import type { SerializeFrom } from "@remix-run/node";
 
 type TypedFetcherWithComponents<T> = Omit<FetcherWithComponents<T>, "data"> & {
-  data: UseDataFunctionReturn<T> | null;
+  data: SerializeFrom<T> | null;
 };
 export function useTypedFetcher<T>(): TypedFetcherWithComponents<T> {
   return useFetcher<T>() as TypedFetcherWithComponents<T>;
