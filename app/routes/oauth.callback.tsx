@@ -7,11 +7,11 @@ import { getFormData } from "remix-params-helper";
 import { z } from "zod";
 
 import { getSupabase } from "~/integrations/supabase";
+import { refreshAccessToken } from "~/modules/auth/mutations";
 import {
   commitAuthSession,
   getAuthSession,
 } from "~/modules/auth/session.server";
-import { mapAuthSession } from "~/modules/auth/utils/map-auth-session";
 import { tryCreateUser } from "~/modules/user/mutations";
 import { getUserByEmail } from "~/modules/user/queries";
 import { assertIsPost, safeRedirect } from "~/utils/http.server";
@@ -30,13 +30,8 @@ export async function action({ request }: ActionArgs) {
   assertIsPost(request);
 
   const schema = z.object({
-    accessToken: z.string(),
     refreshToken: z.string(),
-    userId: z.string(),
-    email: z.string().email(),
     redirectTo: z.string().optional(),
-    expiresIn: z.number(),
-    expiresAt: z.number(),
   });
 
   const form = await getFormData(request, schema);
@@ -44,16 +39,29 @@ export async function action({ request }: ActionArgs) {
   if (!form.success) {
     return json(
       {
-        message: "invalid-token",
+        message: "invalid-request",
       },
       { status: 400 }
     );
   }
 
-  const { redirectTo, ...authSession } = form.data;
+  const { redirectTo, refreshToken } = form.data;
   const safeRedirectTo = safeRedirect(redirectTo, "/notes");
 
-  // user have un account, skip creation part and just commit session
+  // We should not trust what is sent from the client
+  // https://github.com/rphlmr/supa-fly-stack/issues/45
+  const authSession = await refreshAccessToken(refreshToken);
+
+  if (!authSession) {
+    return json(
+      {
+        message: "invalid-refresh-token",
+      },
+      { status: 401 }
+    );
+  }
+
+  // user have an account, skip creation part and just commit session
   if (await getUserByEmail(authSession.email)) {
     return redirect(safeRedirectTo, {
       headers: {
@@ -100,17 +108,16 @@ export default function LoginCallback() {
           // this fragment url looks like https://.....#access_token=evxxxxxxxx&refresh_token=xxxxxx, and it's not readable server-side (Oauth security)
           // supabase auth listener gives us a user session, based on what it founds in this fragment url
           // we can't use it directly, client-side, because we can't access sessionStorage from here
-          // so, we map what we need, and let's back-end to the work
-          const authSession = mapAuthSession(supabaseSession);
 
-          if (!authSession) return;
+          // we should not trust what's happen client side
+          // so, we only pick the refresh token, and let's back-end getting user session from it
+          const refreshToken = supabaseSession?.refresh_token;
+
+          if (!refreshToken) return;
 
           const formData = new FormData();
 
-          for (const [key, value] of Object.entries(authSession)) {
-            formData.append(key, value as string);
-          }
-
+          formData.append("refreshToken", refreshToken);
           formData.append("redirectTo", redirectTo);
 
           fetcher.submit(formData, { method: "post", replace: true });
