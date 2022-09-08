@@ -1,8 +1,11 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 
 import { getAuthSession } from "~/modules/auth/session.server";
+
+export const handle = { i18n: ["common", "auth"] };
 
 export async function loader({ request }: LoaderArgs) {
   const { email } = (await getAuthSession(request)) || {};
@@ -12,6 +15,7 @@ export async function loader({ request }: LoaderArgs) {
 
 export default function Index() {
   const { email } = useLoaderData<typeof loader>();
+  const { t } = useTranslation(["common", "auth"]);
   return (
     <main className="relative min-h-screen bg-black sm:flex sm:items-center sm:justify-center">
       <div className="relative sm:pb-16 sm:pt-8">
@@ -56,13 +60,13 @@ export default function Index() {
                         to="/join"
                         className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
                       >
-                        Sign up
+                        {t("register.action", { ns: "auth" })}
                       </Link>
                       <Link
                         to="/login"
                         className="flex items-center justify-center rounded-md bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600  "
                       >
-                        Log In
+                        {t("login.action", { ns: "auth" })}
                       </Link>
                     </div>
                   </div>
