@@ -9,9 +9,11 @@ import {
   useSearchParams,
   useTransition,
 } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
 
+import i18next from "~/i18next.server";
 import { ContinueWithEmailForm } from "~/modules/auth/components";
 import {
   createAuthSession,
@@ -21,12 +23,16 @@ import { createUserAccount } from "~/modules/user/mutations";
 import { getUserByEmail } from "~/modules/user/queries";
 import { assertIsPost } from "~/utils/http.server";
 
+export const handle = { i18n: "auth" };
+
 export async function loader({ request }: LoaderArgs) {
   const authSession = await getAuthSession(request);
+  const t = await i18next.getFixedT(request, "auth");
+  const title = t("register.title");
 
   if (authSession) return redirect("/notes");
 
-  return json({});
+  return json({ title });
 }
 
 const JoinFormSchema = z.object({
@@ -82,8 +88,8 @@ export async function action({ request }: ActionArgs) {
   });
 }
 
-export const meta: MetaFunction = () => ({
-  title: "Sign Up",
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
 });
 
 export default function Join() {
@@ -94,6 +100,7 @@ export default function Join() {
   const passwordRef = React.useRef<HTMLInputElement>(null);
   const inputProps = useFormInputProps(JoinFormSchema);
   const transition = useTransition();
+  const { t } = useTranslation("auth");
   const disabled =
     transition.state === "submitting" || transition.state === "loading";
 
@@ -118,7 +125,7 @@ export default function Join() {
               htmlFor="email"
               className="block text-sm font-medium text-gray-700"
             >
-              Email address
+              {t("register.email")}
             </label>
             <div className="mt-1">
               <input
@@ -151,7 +158,7 @@ export default function Join() {
               htmlFor="password"
               className="block text-sm font-medium text-gray-700"
             >
-              Password
+              {t("register.password")}
             </label>
             <div className="mt-1">
               <input
@@ -187,11 +194,11 @@ export default function Join() {
             className="w-full rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
             disabled={disabled}
           >
-            Create Account
+            {t("register.action")}
           </button>
           <div className="flex items-center justify-center">
             <div className="text-center text-sm text-gray-500">
-              Already have an account?{" "}
+              {t("register.alreadyHaveAnAccount")}{" "}
               <Link
                 className="text-blue-500 underline"
                 to={{
@@ -199,7 +206,7 @@ export default function Join() {
                   search: searchParams.toString(),
                 }}
               >
-                Log in
+                {t("register.login")}
               </Link>
             </div>
           </div>
@@ -211,7 +218,7 @@ export default function Join() {
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="bg-white px-2 text-gray-500">
-                Or continue with
+                {t("register.orContinueWith")}
               </span>
             </div>
           </div>
