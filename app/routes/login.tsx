@@ -9,6 +9,7 @@ import {
   useSearchParams,
   useTransition,
 } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
 
@@ -76,6 +77,8 @@ export const meta: MetaFunction = () => ({
   title: "Login",
 });
 
+export const handle = { i18n: "auth" };
+
 export default function LoginPage() {
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? undefined;
@@ -84,6 +87,7 @@ export default function LoginPage() {
   const passwordRef = React.useRef<HTMLInputElement>(null);
   const inputProps = useFormInputProps(LoginFormSchema);
   const transition = useTransition();
+  const { t } = useTranslation("auth");
   const disabled =
     transition.state === "submitting" || transition.state === "loading";
 
@@ -108,7 +112,7 @@ export default function LoginPage() {
               htmlFor="email"
               className="block text-sm font-medium text-gray-700"
             >
-              Email address
+              {t("login.email")}
             </label>
 
             <div className="mt-1">
@@ -141,7 +145,7 @@ export default function LoginPage() {
               htmlFor="password"
               className="block text-sm font-medium text-gray-700"
             >
-              Password
+              {t("login.password")}
             </label>
             <div className="mt-1">
               <input
@@ -176,11 +180,11 @@ export default function LoginPage() {
             className="w-full rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
             disabled={disabled}
           >
-            Log in
+            {t("login.action")}
           </button>
           <div className="flex items-center justify-center">
             <div className="text-center text-sm text-gray-500">
-              Don't have an account?{" "}
+              {t("login.dontHaveAccount")}{" "}
               <Link
                 className="text-blue-500 underline"
                 to={{
@@ -188,7 +192,7 @@ export default function LoginPage() {
                   search: searchParams.toString(),
                 }}
               >
-                Sign up
+                {t("login.signUp")}
               </Link>
             </div>
           </div>
@@ -200,7 +204,7 @@ export default function LoginPage() {
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="bg-white px-2 text-gray-500">
-                Or continue with
+                {t("login.orContinueWith")}
               </span>
             </div>
           </div>
