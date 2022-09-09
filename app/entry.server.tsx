@@ -42,7 +42,7 @@ export default async function handleRequest(
       .use(Backend) // Setup our backend
       .init({
         ...i18n, // spread the configuration
-        debug: true,
+        debug: process.env.NODE_ENV === "development",
         lng, // The locale we detected above
         ns, // The namespaces the routes about to render wants to use
         backend: {
