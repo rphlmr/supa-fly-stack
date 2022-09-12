@@ -10,7 +10,20 @@ import { getInitialNamespaces } from "remix-i18next";
 
 import i18n from "./i18n"; // your i18n configuration file
 
-const i18Init = i18next
+function hydrate() {
+  React.startTransition(() => {
+    hydrateRoot(
+      document,
+      <React.StrictMode>
+        <I18nextProvider i18n={i18next}>
+          <RemixBrowser />
+        </I18nextProvider>
+      </React.StrictMode>
+    );
+  });
+}
+
+i18next
   .use(initReactI18next) // Tell i18next to use the react-i18next plugin
   .use(LanguageDetector) // Setup a client-side language detector
   .use(Backend) // Setup your backend
@@ -30,25 +43,11 @@ const i18Init = i18next
       // on the browser, so we disable it
       caches: [],
     },
+  })
+  .then(() => {
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(hydrate);
+    } else {
+      window.setTimeout(hydrate, 1);
+    }
   });
-
-function hydrate() {
-  React.startTransition(() => {
-    hydrateRoot(
-      document,
-      <React.StrictMode>
-        <I18nextProvider i18n={i18next}>
-          <RemixBrowser />
-        </I18nextProvider>
-      </React.StrictMode>
-    );
-  });
-}
-
-i18Init.then(() => {
-  if (window.requestIdleCallback) {
-    window.requestIdleCallback(hydrate);
-  } else {
-    window.setTimeout(hydrate, 1);
-  }
-});
