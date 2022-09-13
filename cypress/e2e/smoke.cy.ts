@@ -15,16 +15,16 @@ describe("smoke tests", () => {
     cy.then(() => ({ email: loginForm.email })).as("user");
 
     cy.visit("/");
-    cy.findByRole("link", { name: /sign up/i }).click();
+    cy.findByTestId("join").click();
 
-    cy.findByRole("textbox", { name: /email/i }).type(loginForm.email);
-    cy.findByLabelText(/password/i).type(loginForm.password);
-    cy.findByRole("button", { name: /create account/i }).click();
+    cy.findByTestId("email").type(loginForm.email);
+    cy.findByTestId("password").type(loginForm.password);
+    cy.findByTestId("create-account").click();
 
     cy.findByText("No notes yet");
 
-    cy.findByRole("button", { name: /logout/i }).click();
-    cy.findByRole("link", { name: /log in/i });
+    cy.findByTestId("logout").click();
+    cy.findByTestId("login");
   });
 
   it("should allow you to make a note", () => {
@@ -42,11 +42,11 @@ describe("smoke tests", () => {
     cy.log("Create account with", credentials);
     cy.createAccount(credentials);
     cy.visit("/");
-    cy.findByRole("link", { name: /log in/i }).click();
+    cy.findByTestId("login").click();
 
-    cy.findByRole("textbox", { name: /email/i }).type(credentials.email);
-    cy.findByLabelText(/password/i).type(credentials.password);
-    cy.findByRole("button", { name: /Log in/i }).click();
+    cy.findByTestId("email").type(credentials.email);
+    cy.findByTestId("password").type(credentials.password);
+    cy.findByTestId("login").click();
 
     cy.findByText("No notes yet");
 
@@ -59,7 +59,7 @@ describe("smoke tests", () => {
     cy.findByRole("button", { name: /delete/i }).click();
 
     cy.findByText("No notes yet");
-    cy.findByRole("button", { name: /logout/i }).click();
-    cy.findByRole("link", { name: /log in/i });
+    cy.findByTestId("logout").click();
+    cy.findByTestId("login");
   });
 });

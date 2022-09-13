@@ -118,6 +118,7 @@ export default function LoginPage() {
             <div className="mt-1">
               <input
                 {...inputProps("email")}
+                data-test-id="email"
                 ref={emailRef}
                 id="email"
                 type="email"
@@ -150,6 +151,7 @@ export default function LoginPage() {
             <div className="mt-1">
               <input
                 {...inputProps("password")}
+                data-test-id="password"
                 type="password"
                 id="password"
                 ref={passwordRef}
@@ -176,6 +178,7 @@ export default function LoginPage() {
             value={redirectTo}
           />
           <button
+            data-test-id="login"
             type="submit"
             className="w-full rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
             disabled={disabled}

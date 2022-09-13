@@ -1,4 +1,5 @@
 import "@testing-library/cypress/add-commands";
+import { configure } from "@testing-library/cypress";
 import "./commands";
 
 Cypress.on("uncaught:exception", (err) => {
@@ -13,3 +14,5 @@ Cypress.on("uncaught:exception", (err) => {
     return false;
   }
 });
+
+configure({ testIdAttribute: "data-test-id" });

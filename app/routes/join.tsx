@@ -131,6 +131,7 @@ export default function Join() {
               <input
                 {...inputProps("email")}
                 ref={emailRef}
+                data-test-id="email"
                 id="email"
                 required
                 autoFocus={true}
@@ -163,8 +164,9 @@ export default function Join() {
             <div className="mt-1">
               <input
                 {...inputProps("password")}
-                id="password"
                 ref={passwordRef}
+                data-test-id="password"
+                id="password"
                 name="password"
                 type="password"
                 autoComplete="new-password"
@@ -190,6 +192,7 @@ export default function Join() {
             value={redirectTo}
           />
           <button
+            data-test-id="create-account"
             type="submit"
             className="w-full rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
             disabled={disabled}
