@@ -9,9 +9,11 @@ import {
   useSearchParams,
   useTransition,
 } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
 
+import i18next from "~/i18next.server";
 import { ContinueWithEmailForm } from "~/modules/auth/components";
 import { signInWithEmail } from "~/modules/auth/mutations";
 import {
@@ -22,10 +24,12 @@ import { assertIsPost } from "~/utils/http.server";
 
 export async function loader({ request }: LoaderArgs) {
   const authSession = await getAuthSession(request);
+  const t = await i18next.getFixedT(request, "auth");
+  const title = t("login.title");
 
   if (authSession) return redirect("/notes");
 
-  return json({});
+  return json({ title });
 }
 
 const LoginFormSchema = z.object({
@@ -72,9 +76,11 @@ export async function action({ request }: ActionArgs) {
   });
 }
 
-export const meta: MetaFunction = () => ({
-  title: "Login",
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
 });
+
+export const handle = { i18n: "auth" };
 
 export default function LoginPage() {
   const [searchParams] = useSearchParams();
@@ -84,6 +90,7 @@ export default function LoginPage() {
   const passwordRef = React.useRef<HTMLInputElement>(null);
   const inputProps = useFormInputProps(LoginFormSchema);
   const transition = useTransition();
+  const { t } = useTranslation("auth");
   const disabled =
     transition.state === "submitting" || transition.state === "loading";
 
@@ -108,12 +115,13 @@ export default function LoginPage() {
               htmlFor="email"
               className="block text-sm font-medium text-gray-700"
             >
-              Email address
+              {t("login.email")}
             </label>
 
             <div className="mt-1">
               <input
                 {...inputProps("email")}
+                data-test-id="email"
                 ref={emailRef}
                 id="email"
                 type="email"
@@ -141,11 +149,12 @@ export default function LoginPage() {
               htmlFor="password"
               className="block text-sm font-medium text-gray-700"
             >
-              Password
+              {t("login.password")}
             </label>
             <div className="mt-1">
               <input
                 {...inputProps("password")}
+                data-test-id="password"
                 type="password"
                 id="password"
                 ref={passwordRef}
@@ -172,15 +181,16 @@ export default function LoginPage() {
             value={redirectTo}
           />
           <button
+            data-test-id="login"
             type="submit"
             className="w-full rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
             disabled={disabled}
           >
-            Log in
+            {t("login.action")}
           </button>
           <div className="flex items-center justify-center">
             <div className="text-center text-sm text-gray-500">
-              Don't have an account?{" "}
+              {t("login.dontHaveAccount")}{" "}
               <Link
                 className="text-blue-500 underline"
                 to={{
@@ -188,7 +198,7 @@ export default function LoginPage() {
                   search: searchParams.toString(),
                 }}
               >
-                Sign up
+                {t("login.signUp")}
               </Link>
             </div>
           </div>
@@ -200,7 +210,7 @@ export default function LoginPage() {
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="bg-white px-2 text-gray-500">
-                Or continue with
+                {t("login.orContinueWith")}
               </span>
             </div>
           </div>
