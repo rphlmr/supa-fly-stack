@@ -253,6 +253,4 @@ To extend your prisma schema and apply changes on your supabase database :
 
 If you have a lower token lifetime than me (1 hour), you should take a look at `REFRESH_THRESHOLD` in [./app/modules/auth/const.ts](./app/modules/auth/const.ts) and set what you think is the best value for your use case.
 
----
 
-CC BY-NC-SA 4.0
