@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
 
-import i18next from "~/i18next.server";
+import { i18nextServer } from "~/integrations/i18n";
 import { ContinueWithEmailForm } from "~/modules/auth/components";
 import { signInWithEmail } from "~/modules/auth/mutations";
 import {
@@ -24,7 +24,7 @@ import { assertIsPost } from "~/utils/http.server";
 
 export async function loader({ request }: LoaderArgs) {
   const authSession = await getAuthSession(request);
-  const t = await i18next.getFixedT(request, "auth");
+  const t = await i18nextServer.getFixedT(request, "auth");
   const title = t("login.title");
 
   if (authSession) return redirect("/notes");

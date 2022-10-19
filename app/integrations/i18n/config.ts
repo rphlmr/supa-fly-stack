@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-default-export
-export default {
+export const config = {
   // This is the list of languages your application supports
   supportedLngs: ["en", "fr", "ru"],
   // This is the language you want to use in case
