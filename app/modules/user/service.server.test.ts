@@ -203,11 +203,15 @@ describe(createUserAccount.name, () => {
 
     const result = await createUserAccount(USER_EMAIL, USER_PASSWORD);
 
+    // we don't want to test the implementation of the function
+    result!.expiresAt = -1;
+
     server.events.removeAllListeners();
 
     expect(db.user.create).toBeCalledWith({
       data: { email: USER_EMAIL, id: USER_ID },
     });
+
     expect(result).toEqual(authSession);
     expect(fetchAuthAdminUserAPI.size).toEqual(1);
     expect(fetchAuthTokenAPI.size).toEqual(1);

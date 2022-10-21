@@ -2,12 +2,6 @@ const { rest } = require("msw");
 
 const { USER_EMAIL, USER_ID, USER_PASSWORD } = require("./user");
 
-// This is what supabase uses to create expires_at from expires_in
-function expiresAt(expiresIn) {
-  const timeNow = Math.round(Date.now() / 1000);
-  return timeNow + expiresIn;
-}
-
 const supabaseAuthSession = {
   user: { id: USER_ID, email: USER_EMAIL },
   refresh_token: "valid",
@@ -21,7 +15,7 @@ const authSession = {
   userId: USER_ID,
   email: USER_EMAIL,
   expiresIn: -1,
-  expiresAt: expiresAt(-1),
+  expiresAt: -1,
 };
 
 const authAccount = {
