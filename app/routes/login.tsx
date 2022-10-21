@@ -14,13 +14,13 @@ import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
 
 import { i18nextServer } from "~/integrations/i18n";
-import { ContinueWithEmailForm } from "~/modules/auth/components";
-import { signInWithEmail } from "~/modules/auth/mutations";
 import {
   createAuthSession,
   getAuthSession,
-} from "~/modules/auth/session.server";
-import { assertIsPost } from "~/utils/http.server";
+  signInWithEmail,
+  ContinueWithEmailForm,
+} from "~/modules/auth";
+import { assertIsPost } from "~/utils";
 
 export async function loader({ request }: LoaderArgs) {
   const authSession = await getAuthSession(request);
@@ -79,8 +79,6 @@ export async function action({ request }: ActionArgs) {
 export const meta: MetaFunction = ({ data }) => ({
   title: data.title,
 });
-
-export const handle = { i18n: "auth" };
 
 export default function LoginPage() {
   const [searchParams] = useSearchParams();
@@ -183,7 +181,7 @@ export default function LoginPage() {
           <button
             data-test-id="login"
             type="submit"
-            className="w-full rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
+            className="w-full rounded bg-blue-500 py-2 px-4 text-white focus:bg-blue-400 hover:bg-blue-600"
             disabled={disabled}
           >
             {t("login.action")}

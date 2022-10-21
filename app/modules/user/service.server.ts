@@ -1,10 +1,15 @@
+import type { User } from "~/database";
 import { db } from "~/database";
+import type { AuthSession } from "~/modules/auth";
 import {
-  createAuthAccount,
-  deleteAuthAccount,
+  createEmailAuthAccount,
   signInWithEmail,
-} from "~/modules/auth/mutations";
-import type { AuthSession } from "~/modules/auth/session.server";
+  deleteAuthAccount,
+} from "~/modules/auth";
+
+export async function getUserByEmail(email: User["email"]) {
+  return db.user.findUnique({ where: { email: email.toLowerCase() } });
+}
 
 async function createUser({
   email,
@@ -44,7 +49,7 @@ export async function createUserAccount(
   email: string,
   password: string
 ): Promise<AuthSession | null> {
-  const authAccount = await createAuthAccount(email, password);
+  const authAccount = await createEmailAuthAccount(email, password);
 
   // ok, no user account created
   if (!authAccount) return null;

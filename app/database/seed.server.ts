@@ -1,10 +1,14 @@
+/* eslint-disable no-console */
 import { PrismaClient } from "@prisma/client";
 import { createClient } from "@supabase/supabase-js";
+
 import { SUPABASE_SERVICE_ROLE, SUPABASE_URL } from "../utils/env";
 
 const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, {
-  autoRefreshToken: false,
-  persistSession: false,
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false,
+  },
 });
 
 const prisma = new PrismaClient();
@@ -12,19 +16,19 @@ const prisma = new PrismaClient();
 const email = "hello@supabase.com";
 
 const getUserId = async (): Promise<string> => {
-  const existingUserId = await supabaseAdmin.auth.api
+  const existingUserId = await supabaseAdmin.auth.admin
     .listUsers()
-    .then(({ data }) => data?.find((user) => user.email === email)?.id);
+    .then(({ data }) => data.users.find((user) => user.email === email)?.id);
 
   if (existingUserId) return existingUserId;
 
-  const newUserId = await supabaseAdmin.auth.api
+  const newUserId = await supabaseAdmin.auth.admin
     .createUser({
       email,
       password: "supabase",
       email_confirm: true,
     })
-    .then(({ user }) => user?.id);
+    .then(({ data }) => data.user?.id);
 
   if (newUserId) return newUserId;
 

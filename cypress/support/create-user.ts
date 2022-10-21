@@ -5,8 +5,9 @@
 // as that new user.
 
 import { installGlobals } from "@remix-run/node";
-import { createAuthAccount } from "~/modules/auth/mutations";
+
 import { db } from "~/database";
+import { createEmailAuthAccount } from "~/modules/auth";
 
 installGlobals();
 
@@ -18,7 +19,7 @@ async function createAccount(email: string, password: string) {
     throw new Error("All test emails must end in @example.com");
   }
 
-  const authAccount = await createAuthAccount(email, password);
+  const authAccount = await createEmailAuthAccount(email, password);
 
   if (!authAccount) {
     throw new Error("Failed to create user account for cypress");

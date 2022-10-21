@@ -3,11 +3,9 @@ import { redirect, json } from "@remix-run/node";
 import { Form, useCatch, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
-import { requireAuthSession } from "~/modules/auth/guards";
-import { commitAuthSession } from "~/modules/auth/session.server";
-import { deleteNote } from "~/modules/note/mutations";
-import { getNote } from "~/modules/note/queries";
-import { assertIsDelete } from "~/utils/http.server";
+import { requireAuthSession, commitAuthSession } from "~/modules/auth";
+import { deleteNote, getNote } from "~/modules/note";
+import { assertIsDelete } from "~/utils";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { userId } = await requireAuthSession(request);
@@ -46,7 +44,7 @@ export default function NoteDetailsPage() {
       <Form method="delete">
         <button
           type="submit"
-          className="rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
+          className="rounded bg-blue-500  py-2 px-4 text-white focus:bg-blue-400 hover:bg-blue-600"
         >
           Delete
         </button>

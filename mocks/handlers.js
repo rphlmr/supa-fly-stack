@@ -1,13 +1,18 @@
 const { rest } = require("msw");
+
 const { USER_EMAIL, USER_ID, USER_PASSWORD } = require("./user");
 
+// This is what supabase uses to create expires_at from expires_in
+function expiresAt(expiresIn) {
+  const timeNow = Math.round(Date.now() / 1000);
+  return timeNow + expiresIn;
+}
+
 const supabaseAuthSession = {
+  user: { id: USER_ID, email: USER_EMAIL },
   refresh_token: "valid",
   access_token: "valid",
-  user: {
-    id: USER_ID,
-    email: USER_EMAIL,
-  },
+  expires_in: -1,
 };
 
 const authSession = {
@@ -16,7 +21,7 @@ const authSession = {
   userId: USER_ID,
   email: USER_EMAIL,
   expiresIn: -1,
-  expiresAt: -1,
+  expiresAt: expiresAt(-1),
 };
 
 const authAccount = {
@@ -33,7 +38,7 @@ const handlers = [
   rest.post(
     `${SUPABASE_URL}${SUPABASE_AUTH_TOKEN_API}`,
     async (req, res, ctx) => {
-      const { email, password, refresh_token } = JSON.parse(req.body);
+      const { email, password, refresh_token } = await req.json();
 
       if (refresh_token) {
         if (refresh_token !== "valid")
@@ -61,15 +66,11 @@ const handlers = [
   ),
   rest.post(
     `${SUPABASE_URL}${SUPABASE_AUTH_ADMIN_USER_API}`,
-    async (req, res, ctx) => {
-      return res(ctx.status(200), ctx.json(authAccount));
-    }
+    async (req, res, ctx) => res(ctx.status(200), ctx.json(authAccount))
   ),
   rest.delete(
     `${SUPABASE_URL}${SUPABASE_AUTH_ADMIN_USER_API}/*`,
-    async (req, res, ctx) => {
-      return res(ctx.status(200), ctx.json({}));
-    }
+    async (req, res, ctx) => res(ctx.status(200), ctx.json({}))
   ),
 ];
 

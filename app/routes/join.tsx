@@ -14,16 +14,13 @@ import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
 
 import { i18nextServer } from "~/integrations/i18n";
-import { ContinueWithEmailForm } from "~/modules/auth/components";
 import {
   createAuthSession,
   getAuthSession,
-} from "~/modules/auth/session.server";
-import { createUserAccount } from "~/modules/user/mutations";
-import { getUserByEmail } from "~/modules/user/queries";
-import { assertIsPost } from "~/utils/http.server";
-
-export const handle = { i18n: "auth" };
+  ContinueWithEmailForm,
+} from "~/modules/auth";
+import { getUserByEmail, createUserAccount } from "~/modules/user";
+import { assertIsPost } from "~/utils";
 
 export async function loader({ request }: LoaderArgs) {
   const authSession = await getAuthSession(request);
@@ -194,7 +191,7 @@ export default function Join() {
           <button
             data-test-id="create-account"
             type="submit"
-            className="w-full rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
+            className="w-full rounded bg-blue-500  py-2 px-4 text-white focus:bg-blue-400 hover:bg-blue-600"
             disabled={disabled}
           >
             {t("register.action")}

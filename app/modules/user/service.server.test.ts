@@ -10,10 +10,10 @@ import {
 import { USER_EMAIL, USER_ID, USER_PASSWORD } from "mocks/user";
 import { db } from "~/database";
 
-import { createUserAccount } from "./create-user-account.server";
+import { createUserAccount } from "./service.server";
 
 // mock db
-vitest.mock("~/database/db.server", () => ({
+vitest.mock("~/database", () => ({
   db: {
     user: {
       create: vitest.fn().mockResolvedValue({}),
@@ -42,7 +42,7 @@ describe(createUserAccount.name, () => {
     server.use(
       rest.post(
         `${SUPABASE_URL}${SUPABASE_AUTH_ADMIN_USER_API}`,
-        async (req, res, ctx) =>
+        async (_req, res, ctx) =>
           res.once(
             ctx.status(400),
             ctx.json({ message: "create-account-error", status: 400 })
@@ -57,13 +57,11 @@ describe(createUserAccount.name, () => {
     expect(result).toBeNull();
     expect(fetchAuthAdminUserAPI.size).toEqual(1);
     const [request] = fetchAuthAdminUserAPI.values();
-    expect(request.body).toEqual(
-      JSON.stringify({
-        email: USER_EMAIL,
-        password: USER_PASSWORD,
-        email_confirm: true,
-      })
-    );
+    expect(request.body).toEqual({
+      email: USER_EMAIL,
+      password: USER_PASSWORD,
+      email_confirm: true,
+    });
   });
 
   it("should return null and delete auth account if unable to sign in", async () => {
@@ -97,7 +95,7 @@ describe(createUserAccount.name, () => {
     server.use(
       rest.post(
         `${SUPABASE_URL}${SUPABASE_AUTH_TOKEN_API}`,
-        async (req, res, ctx) =>
+        async (_req, res, ctx) =>
           res.once(
             ctx.status(400),
             ctx.json({ message: "sign-in-error", status: 400 })
@@ -112,13 +110,12 @@ describe(createUserAccount.name, () => {
     expect(result).toBeNull();
     expect(fetchAuthTokenAPI.size).toEqual(1);
     const [signInRequest] = fetchAuthTokenAPI.values();
-    expect(signInRequest.body).toEqual(
-      JSON.stringify({
-        email: USER_EMAIL,
-        password: USER_PASSWORD,
-        gotrue_meta_security: {},
-      })
-    );
+    expect(signInRequest.body).toEqual({
+      email: USER_EMAIL,
+      password: USER_PASSWORD,
+      data: {},
+      gotrue_meta_security: {},
+    });
     expect(fetchAuthAdminUserAPI.size).toEqual(1);
     // expect call delete auth account with the expected user id
     const [authAdminUserReq] = fetchAuthAdminUserAPI.values();

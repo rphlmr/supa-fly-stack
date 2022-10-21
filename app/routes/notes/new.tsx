@@ -6,10 +6,9 @@ import { Form, useActionData, useTransition } from "@remix-run/react";
 import { getFormData, useFormInputProps } from "remix-params-helper";
 import { z } from "zod";
 
-import { requireAuthSession } from "~/modules/auth/guards";
-import { commitAuthSession } from "~/modules/auth/session.server";
-import { createNote } from "~/modules/note/mutations";
-import { assertIsPost } from "~/utils/http.server";
+import { requireAuthSession, commitAuthSession } from "~/modules/auth";
+import { createNote } from "~/modules/note";
+import { assertIsPost } from "~/utils";
 
 export const NewNoteFormSchema = z.object({
   title: z.string().min(2, "require-title"),
@@ -131,7 +130,7 @@ export default function NewNotePage() {
       <div className="text-right">
         <button
           type="submit"
-          className="rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
+          className="rounded bg-blue-500  py-2 px-4 text-white focus:bg-blue-400 hover:bg-blue-600"
           disabled={disabled}
         >
           Save

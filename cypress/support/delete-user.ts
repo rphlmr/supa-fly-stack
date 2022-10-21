@@ -6,9 +6,9 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { installGlobals } from "@remix-run/node";
 
-import { deleteAuthAccount } from "~/modules/auth/mutations";
 import { db } from "~/database";
-import { getUserByEmail } from "~/modules/user/queries";
+import { deleteAuthAccount } from "~/modules/auth";
+import { getUserByEmail } from "~/modules/user";
 
 installGlobals();
 
