@@ -15,9 +15,8 @@ npx create-remix --template rphlmr/supa-fly-stack
 - [Fly app deployment](https://fly.io) with [Docker](https://www.docker.com/products/docker-desktop/)
 - Production-ready [Supabase Database](https://supabase.com/)
 - Healthcheck endpoint for [Fly backups region fallbacks](https://fly.io/docs/reference/configuration/#services-http_checks)
-- [GitHub Actions](https://github.com/features/actions) for deploy on merge to production and staging environments
-- Email/Password Authentication with [cookie-based sessions](https://remix.run/docs/en/v1/api/remix#createcookiesessionstorage)
-  - **NEW** : Magic Link login 🥳
+- [GitHub Actions](https://github.com/features/actions) to deploy on merge to production and staging environments
+- Email/Password Authentication / Magic Link, with [cookie-based sessions](https://remix.run/docs/en/v1/api/remix#createcookiesessionstorage)
 - Database ORM with [Prisma](https://prisma.io)
 - Forms Schema (client and server sides !) validation with [Remix Params Helper](https://github.com/kiliman/remix-params-helper)
 - Styling with [Tailwind](https://tailwindcss.com/)
@@ -32,7 +31,7 @@ Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --
 
 ## Development
 
-- Create a [Supabase Database](https://supabase.com/) (Free tiers gives you 2 databases)
+- Create a [Supabase Database](https://supabase.com/) (free tier gives you 2 databases)
 
   > **Note:** Only one for playing around with Supabase or 2 for `staging` and `production`
 
@@ -84,7 +83,7 @@ The database seed script creates a new user with some data you can use to get st
 
 ### Relevant code:
 
-This is a pretty simple note-taking app, but it's a good example of how you can build a full stack app with Prisma, Supabase and Remix. The main functionality is creating users, logging in and out (handling access and refresh tokens + refresh on expire), and creating and deleting notes.
+This is a pretty simple note-taking app, but it's a good example of how you can build a full-stack app with Prisma, Supabase, and Remix. The main functionality is creating users, logging in and out (handling access and refresh tokens + refresh on expiration), and creating and deleting notes.
 
 - auth / session [./app/modules/auth](./app/modules/auth)
 - creating, and deleting notes [./app/modules/note](./app/modules/note)
@@ -197,7 +196,7 @@ For lower level tests of utilities and individual components, we use `vitest`. W
 
 ### Type Checking
 
-This project uses TypeScript. It's recommended to get TypeScript set up for your editor to get a really great in-editor experience with type checking and auto-complete. To run type checking across the whole project, run `npm run typecheck`.
+This project uses TypeScript. It's recommended to get TypeScript set up for your editor to get a great in-editor experience with type checking and auto-complete. To run type checking across the whole project, run `npm run typecheck`.
 
 ### Linting
 
@@ -209,48 +208,23 @@ We use [Prettier](https://prettier.io/) for auto-formatting in this project. It'
 
 ## Start working with Supabase
 
-Your are now ready to go further, congrats !
+You are now ready to go further, congrats!
 
-To extend your prisma schema and apply changes on your supabase database :
-
-- Download and run [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-
-  > **Note:** Needed to create a [shadow database for prisma](https://www.prisma.io/docs/concepts/components/prisma-migrate/shadow-database)
-
-  > **Note:** Shadow database is local and run by `docker-compose.yml`
-
+To extend your Prisma schema and apply changes on your supabase database :
 - Make your changes in [./app/database/schema.prisma](./app/database/schema.prisma)
 - Prepare your schema migration
-
-  > **Note:** First time take a long moment 😅
-
   ```sh
   npm run db:prepare-migration
   ```
-
-- Check your migration in [./app/database/migrations](./app/database/migrations)
-- Apply this migration in production
+- Check your migration in [./app/database/migrations](./app/database)
+- Apply this migration to production
 
   ```sh
   npm run db:deploy-migration
   ```
 
-## Use with Supabase RLS
+## If your token expires in less than 1 hour (3600 seconds in Supabase Dashboard)
 
-> To test this stack with RLS, you can find a demo in [./app/routes/rls](./app/routes/rls)
-
-> **Before playing, add some RLS rules for "Note" table**
-
-| Policy name                        | Target roles  |      WITH CHECK expression |
-| ---------------------------------- | :-----------: | -------------------------: |
-| Creator can see their own notes    | authenticated | ((uid())::text = "userId") |
-| Authenticated user can add notes   | authenticated |                       true |
-| Creator can delete their own posts | authenticated | ((uid())::text = "userId") |
-
-> Then, go to [http://localhost:3000/rls/notes](http://localhost:3000/rls/notes)
-
-## Your token expires in less than 1 hour (3600 seconds in Supabase Dashboard)
-
-If you have a lower token lifetime than me (1 hour), you should take a look at `REFRESH_THRESHOLD` in [./app/modules/auth/const.ts](./app/modules/auth/const.ts) and set what you think is the best value for your use case.
+If you have a lower token lifetime than me (1 hour), you should take a look at `REFRESH_ACCESS_TOKEN_THRESHOLD` in [./app/modules/auth/session.server.ts](./app/modules/auth/session.server.ts) and set what you think is the best value for your use case.
 
 
