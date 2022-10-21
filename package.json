@@ -10,7 +10,7 @@
     "db:deploy-migration": "prisma migrate deploy",
     "dev": "run-p dev:*",
     "dev:css": "npm run generate:css -- --watch",
-    "dev:remix": "cross-env NODE_ENV=development binode --require ./mocks -- @remix-run/dev:remix dev",
+    "dev:remix": "remix dev",
     "shadow-db:start": "docker-compose up -d && dotenv -- node ./wait-shadow-db-setup.js",
     "shadow-db:stop": "docker-compose stop",
     "format": "prettier --write .",
@@ -29,9 +29,7 @@
     "typecheck": "tsc -b && tsc -b cypress",
     "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run"
   },
-  "prettier": {
-    "singleAttributePerLine": true
-  },
+  "prettier": {},
   "dependencies": {
     "@prisma/client": "^4.5.0",
     "@remix-run/node": "*",
@@ -39,7 +37,6 @@
     "@remix-run/serve": "*",
     "@supabase/supabase-js": "^2.0.4",
     "cookie": "^0.5.0",
-    "cuid": "^2.1.8",
     "i18next": "^21.9.1",
     "i18next-browser-languagedetector": "^6.1.5",
     "i18next-fs-backend": "^1.1.5",
@@ -51,7 +48,6 @@
     "remix-i18next": "^4.1.1",
     "remix-params-helper": "^0.4.10",
     "tailwind-merge": "^1.7.0",
-    "tiny-invariant": "^1.2.0",
     "zod": "^3.17.9"
   },
   "devDependencies": {
@@ -66,30 +62,23 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^14.4.2",
-    "@types/eslint": "^8.4.5",
     "@types/i18next-fs-backend": "^1.1.2",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
-    "@typescript-eslint/eslint-plugin": "^5.33.0",
-    "@typescript-eslint/parser": "^5.33.0",
     "@vitejs/plugin-react": "^2.0.0",
-    "binode": "^1.0.5",
     "c8": "^7.12.0",
     "cross-env": "^7.0.3",
     "cypress": "^10.4.0",
     "dotenv-cli": "^6.0.0",
-    "esbuild-register": "^3.3.3",
     "eslint": "^8.21.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-import-resolver-typescript": "^3.4.0",
-    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-tailwindcss": "^3.6.2",
     "happy-dom": "^6.0.4",
     "msw": "^0.47.4",
     "npm-run-all": "^4.1.5",
     "prettier": "2.7.1",
     "prettier-plugin-tailwindcss": "^0.1.13",
-    "prisma": "^4.2.0",
+    "prisma": "^4.5.0",
     "start-server-and-test": "^1.14.0",
     "tailwind-scrollbar": "^2.0.1",
     "tailwindcss": "^3.2.0",
@@ -100,7 +89,7 @@
     "vitest": "^0.24.3"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "prisma": {
     "schema": "app/database/schema.prisma",

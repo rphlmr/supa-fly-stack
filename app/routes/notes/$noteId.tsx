@@ -1,17 +1,17 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
 import { Form, useCatch, useLoaderData } from "@remix-run/react";
-import invariant from "tiny-invariant";
 
 import { requireAuthSession, commitAuthSession } from "~/modules/auth";
 import { deleteNote, getNote } from "~/modules/note";
-import { assertIsDelete } from "~/utils";
+import { assertIsDelete, getRequiredParam } from "~/utils";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { userId } = await requireAuthSession(request);
-  invariant(params.noteId, "noteId not found");
 
-  const note = await getNote({ userId, id: params.noteId });
+  const id = getRequiredParam(params, "noteId");
+
+  const note = await getNote({ userId, id });
   if (!note) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -20,11 +20,10 @@ export async function loader({ request, params }: LoaderArgs) {
 
 export async function action({ request, params }: ActionArgs) {
   assertIsDelete(request);
-
+  const id = getRequiredParam(params, "noteId");
   const authSession = await requireAuthSession(request);
-  invariant(params.noteId, "noteId not found");
 
-  await deleteNote({ userId: authSession.userId, id: params.noteId });
+  await deleteNote({ userId: authSession.userId, id });
 
   return redirect("/notes", {
     headers: {

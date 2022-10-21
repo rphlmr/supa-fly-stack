@@ -146,7 +146,8 @@ export async function requireAuthSession(
     onFailRedirectTo,
   });
 
-  // ok, let's challenge its access token
+  // ok, let's challenge its access token.
+  // by default, we don't verify the access token from supabase auth api to save some time
   const isValidSession = verify ? await verifyAuthSession(authSession) : true;
 
   // damn, access token is not valid or expires soon
