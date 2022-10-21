@@ -1,24 +1,25 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { getFormData } from "remix-params-helper";
+import { parseFormAny } from "react-zorm";
 import { z } from "zod";
 
 import { sendMagicLink } from "~/modules/auth";
 import { assertIsPost } from "~/utils/http.server";
 
-const MagicLinkSchema = z.object({
-  email: z
-    .string()
-    .email("invalid-email")
-    .transform((email) => email.toLowerCase()),
-});
-
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
 
-  const form = await getFormData(request, MagicLinkSchema);
+  const formData = await request.formData();
+  const result = await z
+    .object({
+      email: z
+        .string()
+        .email("invalid-email")
+        .transform((email) => email.toLowerCase()),
+    })
+    .safeParseAsync(parseFormAny(formData));
 
-  if (!form.success) {
+  if (!result.success) {
     return json(
       {
         error: "invalid-email",
@@ -27,7 +28,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const { error } = await sendMagicLink(form.data.email);
+  const { error } = await sendMagicLink(result.data.email);
 
   if (error) {
     return json(

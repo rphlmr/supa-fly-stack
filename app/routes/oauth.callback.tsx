@@ -3,7 +3,7 @@ import { useEffect, useMemo } from "react";
 import { json, redirect } from "@remix-run/node";
 import type { LoaderArgs, ActionArgs } from "@remix-run/node";
 import { useActionData, useFetcher, useSearchParams } from "@remix-run/react";
-import { getFormData } from "remix-params-helper";
+import { parseFormAny } from "react-zorm";
 import { z } from "zod";
 
 import { getSupabase } from "~/integrations/supabase";
@@ -28,14 +28,15 @@ export async function loader({ request }: LoaderArgs) {
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
 
-  const schema = z.object({
-    refreshToken: z.string(),
-    redirectTo: z.string().optional(),
-  });
+  const formData = await request.formData();
+  const result = await z
+    .object({
+      refreshToken: z.string(),
+      redirectTo: z.string().optional(),
+    })
+    .safeParseAsync(parseFormAny(formData));
 
-  const form = await getFormData(request, schema);
-
-  if (!form.success) {
+  if (!result.success) {
     return json(
       {
         message: "invalid-request",
@@ -44,7 +45,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const { redirectTo, refreshToken } = form.data;
+  const { redirectTo, refreshToken } = result.data;
   const safeRedirectTo = safeRedirect(redirectTo, "/notes");
 
   // We should not trust what is sent from the client

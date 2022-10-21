@@ -2,15 +2,9 @@ import * as React from "react";
 
 import type { ActionArgs, LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import {
-  Form,
-  Link,
-  useActionData,
-  useSearchParams,
-  useTransition,
-} from "@remix-run/react";
+import { Form, Link, useSearchParams, useTransition } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { getFormData, useFormInputProps } from "remix-params-helper";
+import { parseFormAny, useZorm } from "react-zorm";
 import { z } from "zod";
 
 import { i18nextServer } from "~/integrations/i18n";
@@ -20,7 +14,7 @@ import {
   signInWithEmail,
   ContinueWithEmailForm,
 } from "~/modules/auth";
-import { assertIsPost } from "~/utils";
+import { assertIsPost, isFormProcessing } from "~/utils";
 
 export async function loader({ request }: LoaderArgs) {
   const authSession = await getAuthSession(request);
@@ -43,22 +37,19 @@ const LoginFormSchema = z.object({
 
 export async function action({ request }: ActionArgs) {
   assertIsPost(request);
+  const formData = await request.formData();
+  const result = await LoginFormSchema.safeParseAsync(parseFormAny(formData));
 
-  const formValidation = await getFormData(request, LoginFormSchema);
-
-  if (!formValidation.success) {
+  if (!result.success) {
     return json(
       {
-        errors: {
-          email: formValidation.errors.email,
-          password: formValidation.errors.password,
-        },
+        errors: result.error,
       },
       { status: 400 }
     );
   }
 
-  const { email, password, redirectTo = "/notes" } = formValidation.data;
+  const { email, password, redirectTo = "/notes" } = result.data;
 
   const authSession = await signInWithEmail(email, password);
 
@@ -81,36 +72,20 @@ export const meta: MetaFunction = ({ data }) => ({
 });
 
 export default function LoginPage() {
+  const zo = useZorm("NewQuestionWizardScreen", LoginFormSchema);
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? undefined;
-  const actionData = useActionData<typeof action>();
-  const emailRef = React.useRef<HTMLInputElement>(null);
-  const passwordRef = React.useRef<HTMLInputElement>(null);
-  const inputProps = useFormInputProps(LoginFormSchema);
   const transition = useTransition();
+  const disabled = isFormProcessing(transition.state);
   const { t } = useTranslation("auth");
-  const disabled =
-    transition.state === "submitting" || transition.state === "loading";
-
-  React.useEffect(() => {
-    if (actionData?.errors?.email) {
-      emailRef.current?.focus();
-    } else if (actionData?.errors?.password) {
-      passwordRef.current?.focus();
-    }
-  }, [actionData]);
 
   return (
     <div className="flex min-h-full flex-col justify-center">
       <div className="mx-auto w-full max-w-md px-8">
-        <Form
-          method="post"
-          className="space-y-6"
-          replace
-        >
+        <Form ref={zo.ref} method="post" className="space-y-6" replace>
           <div>
             <label
-              htmlFor="email"
+              htmlFor={zo.fields.email()}
               className="block text-sm font-medium text-gray-700"
             >
               {t("login.email")}
@@ -118,25 +93,18 @@ export default function LoginPage() {
 
             <div className="mt-1">
               <input
-                {...inputProps("email")}
                 data-test-id="email"
-                ref={emailRef}
-                id="email"
-                type="email"
                 required
                 autoFocus={true}
+                name={zo.fields.email()}
+                type="email"
                 autoComplete="email"
-                aria-invalid={actionData?.errors?.email ? true : undefined}
-                aria-describedby="email-error"
                 className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
                 disabled={disabled}
               />
-              {actionData?.errors?.email && (
-                <div
-                  className="pt-1 text-red-700"
-                  id="email-error"
-                >
-                  {actionData.errors.email}
+              {zo.errors.email()?.message && (
+                <div className="pt-1 text-red-700" id="email-error">
+                  {zo.errors.email()?.message}
                 </div>
               )}
             </div>
@@ -144,30 +112,23 @@ export default function LoginPage() {
 
           <div>
             <label
-              htmlFor="password"
+              htmlFor={zo.fields.password()}
               className="block text-sm font-medium text-gray-700"
             >
-              {t("login.password")}
+              {t("register.password")}
             </label>
             <div className="mt-1">
               <input
-                {...inputProps("password")}
                 data-test-id="password"
+                name={zo.fields.password()}
                 type="password"
-                id="password"
-                ref={passwordRef}
                 autoComplete="new-password"
-                aria-invalid={actionData?.errors?.password ? true : undefined}
-                aria-describedby="password-error"
                 className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
                 disabled={disabled}
               />
-              {actionData?.errors?.password && (
-                <div
-                  className="pt-1 text-red-700"
-                  id="password-error"
-                >
-                  {actionData.errors.password}
+              {zo.errors.password()?.message && (
+                <div className="pt-1 text-red-700" id="password-error">
+                  {zo.errors.password()?.message}
                 </div>
               )}
             </div>
@@ -175,7 +136,7 @@ export default function LoginPage() {
 
           <input
             type="hidden"
-            name="redirectTo"
+            name={zo.fields.redirectTo()}
             value={redirectTo}
           />
           <button

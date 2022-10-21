@@ -2,13 +2,13 @@ import * as React from "react";
 
 import type { LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useActionData, useTransition } from "@remix-run/react";
-import { getFormData, useFormInputProps } from "remix-params-helper";
+import { Form, useTransition } from "@remix-run/react";
+import { parseFormAny, useZorm } from "react-zorm";
 import { z } from "zod";
 
 import { requireAuthSession, commitAuthSession } from "~/modules/auth";
 import { createNote } from "~/modules/note";
-import { assertIsPost } from "~/utils";
+import { assertIsPost, isFormProcessing } from "~/utils";
 
 export const NewNoteFormSchema = z.object({
   title: z.string().min(2, "require-title"),
@@ -17,17 +17,14 @@ export const NewNoteFormSchema = z.object({
 
 export async function action({ request }: LoaderArgs) {
   assertIsPost(request);
-
   const authSession = await requireAuthSession(request);
-  const formValidation = await getFormData(request, NewNoteFormSchema);
+  const formData = await request.formData();
+  const result = await NewNoteFormSchema.safeParseAsync(parseFormAny(formData));
 
-  if (!formValidation.success) {
+  if (!result.success) {
     return json(
       {
-        errors: {
-          title: formValidation.errors.title,
-          body: formValidation.errors.body,
-        },
+        errors: result.error,
       },
       {
         status: 400,
@@ -38,7 +35,7 @@ export async function action({ request }: LoaderArgs) {
     );
   }
 
-  const { title, body } = formValidation.data;
+  const { title, body } = result.data;
 
   const note = await createNote({ title, body, userId: authSession.userId });
 
@@ -50,24 +47,13 @@ export async function action({ request }: LoaderArgs) {
 }
 
 export default function NewNotePage() {
-  const actionData = useActionData<typeof action>();
-  const titleRef = React.useRef<HTMLInputElement>(null);
-  const bodyRef = React.useRef<HTMLTextAreaElement>(null);
-  const inputProps = useFormInputProps(NewNoteFormSchema);
+  const zo = useZorm("NewQuestionWizardScreen", NewNoteFormSchema);
   const transition = useTransition();
-  const disabled =
-    transition.state === "submitting" || transition.state === "loading";
-
-  React.useEffect(() => {
-    if (actionData?.errors?.title) {
-      titleRef.current?.focus();
-    } else if (actionData?.errors?.body) {
-      bodyRef.current?.focus();
-    }
-  }, [actionData]);
+  const disabled = isFormProcessing(transition.state);
 
   return (
     <Form
+      ref={zo.ref}
       method="post"
       style={{
         display: "flex",
@@ -80,23 +66,14 @@ export default function NewNotePage() {
         <label className="flex w-full flex-col gap-1">
           <span>Title: </span>
           <input
-            {...inputProps("title")}
-            ref={titleRef}
-            name="title"
+            name={zo.fields.title()}
             className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
-            aria-invalid={actionData?.errors?.title ? true : undefined}
-            aria-errormessage={
-              actionData?.errors?.title ? "title-error" : undefined
-            }
             disabled={disabled}
           />
         </label>
-        {actionData?.errors?.title && (
-          <div
-            className="pt-1 text-red-700"
-            id="title-error"
-          >
-            {actionData.errors.title}
+        {zo.errors.title()?.message && (
+          <div className="pt-1 text-red-700" id="title-error">
+            {zo.errors.title()?.message}
           </div>
         )}
       </div>
@@ -105,24 +82,15 @@ export default function NewNotePage() {
         <label className="flex w-full flex-col gap-1">
           <span>Body: </span>
           <textarea
-            {...inputProps("body")}
-            ref={bodyRef}
-            name="body"
+            name={zo.fields.body()}
             rows={8}
             className="w-full flex-1 rounded-md border-2 border-blue-500 py-2 px-3 text-lg leading-6"
-            aria-invalid={actionData?.errors?.body ? true : undefined}
-            aria-errormessage={
-              actionData?.errors?.body ? "body-error" : undefined
-            }
             disabled={disabled}
           />
         </label>
-        {actionData?.errors?.body && (
-          <div
-            className="pt-1 text-red-700"
-            id="body-error"
-          >
-            {actionData.errors.body}
+        {zo.errors.body()?.message && (
+          <div className="pt-1 text-red-700" id="body-error">
+            {zo.errors.body()?.message}
           </div>
         )}
       </div>

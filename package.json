@@ -45,8 +45,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^11.18.5",
+    "react-zorm": "^0.6.1",
     "remix-i18next": "^4.1.1",
-    "remix-params-helper": "^0.4.10",
     "tailwind-merge": "^1.7.0",
     "zod": "^3.17.9"
   },
