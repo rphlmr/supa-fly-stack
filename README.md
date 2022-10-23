@@ -227,4 +227,11 @@ To extend your Prisma schema and apply changes on your supabase database :
 
 If you have a lower token lifetime than me (1 hour), you should take a look at `REFRESH_ACCESS_TOKEN_THRESHOLD` in [./app/modules/auth/session.server.ts](./app/modules/auth/session.server.ts) and set what you think is the best value for your use case.
 
+## Supabase RLS
+You may ask "can I use RLS with Remix".
 
+The answer is "Yes" but It has a cost.
+
+Using Supabase SDK server side to query your database (for those using RLS features) adds an extra delay due to calling a Gotrue rest API instead of directly calling the Postgres database (and this is fine because at first Supabase SDK is for those who don't have/want backend).
+
+In my benchmark, it makes my pages twice slower. (~+200ms compared to a direct query with Prisma)
