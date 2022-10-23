@@ -3,9 +3,7 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 
-import { getAuthSession } from "~/modules/auth/session.server";
-
-export const handle = { i18n: ["common", "auth"] };
+import { getAuthSession } from "~/modules/auth";
 
 export async function loader({ request }: LoaderArgs) {
   const { email } = (await getAuthSession(request)) || {};
@@ -152,7 +150,7 @@ export default function Index() {
               <a
                 key={img.href}
                 href={img.href}
-                className="flex h-16 w-32 justify-center p-1 grayscale transition hover:grayscale-0 focus:grayscale-0"
+                className="flex h-16 w-32 justify-center p-1 grayscale transition focus:grayscale-0 hover:grayscale-0"
               >
                 <img
                   alt={img.alt}

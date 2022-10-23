@@ -1,19 +1,17 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
 import { Form, useCatch, useLoaderData } from "@remix-run/react";
-import invariant from "tiny-invariant";
 
-import { requireAuthSession } from "~/modules/auth/guards";
-import { commitAuthSession } from "~/modules/auth/session.server";
-import { deleteNote } from "~/modules/note/mutations";
-import { getNote } from "~/modules/note/queries";
-import { assertIsDelete } from "~/utils/http.server";
+import { requireAuthSession, commitAuthSession } from "~/modules/auth";
+import { deleteNote, getNote } from "~/modules/note";
+import { assertIsDelete, getRequiredParam } from "~/utils";
 
 export async function loader({ request, params }: LoaderArgs) {
   const { userId } = await requireAuthSession(request);
-  invariant(params.noteId, "noteId not found");
 
-  const note = await getNote({ userId, id: params.noteId });
+  const id = getRequiredParam(params, "noteId");
+
+  const note = await getNote({ userId, id });
   if (!note) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -22,11 +20,10 @@ export async function loader({ request, params }: LoaderArgs) {
 
 export async function action({ request, params }: ActionArgs) {
   assertIsDelete(request);
-
+  const id = getRequiredParam(params, "noteId");
   const authSession = await requireAuthSession(request);
-  invariant(params.noteId, "noteId not found");
 
-  await deleteNote({ userId: authSession.userId, id: params.noteId });
+  await deleteNote({ userId: authSession.userId, id });
 
   return redirect("/notes", {
     headers: {
@@ -46,7 +43,7 @@ export default function NoteDetailsPage() {
       <Form method="delete">
         <button
           type="submit"
-          className="rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
+          className="rounded bg-blue-500  py-2 px-4 text-white focus:bg-blue-400 hover:bg-blue-600"
         >
           Delete
         </button>

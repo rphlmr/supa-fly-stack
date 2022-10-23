@@ -2,9 +2,8 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, Outlet, Link, NavLink } from "@remix-run/react";
 
-import { LogoutButton } from "~/modules/auth/components";
-import { requireAuthSession } from "~/modules/auth/guards";
-import { getNotes } from "~/modules/note/queries";
+import { LogoutButton, requireAuthSession } from "~/modules/auth";
+import { getNotes } from "~/modules/note";
 import { notFound } from "~/utils/http.server";
 
 export async function loader({ request }: LoaderArgs) {

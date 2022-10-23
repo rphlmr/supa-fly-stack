@@ -2,7 +2,8 @@ import { Form } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 
 export function LogoutButton() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("auth");
+
   return (
     <Form
       action="/logout"

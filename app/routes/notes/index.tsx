@@ -1,25 +1,15 @@
 import type { LoaderArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 
-import { requireAuthSession } from "~/modules/auth/guards";
-// import { useWatchNotes } from "~/modules/note/hooks";
-import { getNoteCount } from "~/modules/note/queries";
+import { requireAuthSession } from "~/modules/auth";
 
 export async function loader({ request }: LoaderArgs) {
   await requireAuthSession(request);
 
-  const nbOfNotes = await getNoteCount();
-
-  return json({
-    nbOfNotes,
-  });
+  return null;
 }
 
 export default function NoteIndexPage() {
-  const { nbOfNotes } = useLoaderData<typeof loader>();
-  // useWatchNotes();
-
   return (
     <>
       <p>
@@ -31,11 +21,6 @@ export default function NoteIndexPage() {
           create a new note.
         </Link>
       </p>
-      <br />
-      <div>
-        <h2>Total number of notes on database:</h2>
-        <span>{nbOfNotes}</span>
-      </div>
     </>
   );
 }

@@ -16,7 +16,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { useChangeLanguage } from "remix-i18next";
 
-import i18next from "~/i18next.server";
+import { i18nextServer } from "~/integrations/i18n";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import { getBrowserEnv } from "./utils/env";
@@ -32,19 +32,11 @@ export const meta: MetaFunction = () => ({
 });
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const locale = await i18next.getLocale(request);
+  const locale = await i18nextServer.getLocale(request);
   return json({
     locale,
     env: getBrowserEnv(),
   });
-};
-
-export const handle = {
-  // In the handle export, we can add a i18n key with namespaces our route
-  // will need to load. This key can be a single string or an array of strings.
-  // TIP: In most cases, you should set this to your defaultNS from your i18n config
-  // or if you did not set one, set it to the i18next default namespace "translation"
-  i18n: "common",
 };
 
 export default function App() {
