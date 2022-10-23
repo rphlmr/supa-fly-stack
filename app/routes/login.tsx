@@ -49,7 +49,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const { email, password, redirectTo = "/notes" } = result.data;
+  const { email, password, redirectTo } = result.data;
 
   const authSession = await signInWithEmail(email, password);
 
@@ -63,7 +63,7 @@ export async function action({ request }: ActionArgs) {
   return createAuthSession({
     request,
     authSession,
-    redirectTo,
+    redirectTo: redirectTo || "/notes",
   });
 }
 
@@ -75,6 +75,7 @@ export default function LoginPage() {
   const zo = useZorm("NewQuestionWizardScreen", LoginFormSchema);
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? undefined;
+
   const transition = useTransition();
   const disabled = isFormProcessing(transition.state);
   const { t } = useTranslation("auth");

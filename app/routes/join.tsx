@@ -49,7 +49,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const { email, password, redirectTo = "/notes" } = result.data;
+  const { email, password, redirectTo } = result.data;
 
   const existingUser = await getUserByEmail(email);
 
@@ -72,7 +72,7 @@ export async function action({ request }: ActionArgs) {
   return createAuthSession({
     request,
     authSession,
-    redirectTo,
+    redirectTo: redirectTo || "/notes",
   });
 }
 
