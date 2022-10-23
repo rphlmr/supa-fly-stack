@@ -125,6 +125,8 @@ jobs:
         with:
           start: npm run start:ci
           wait-on: "http://localhost:8811"
+          browser: chrome
+          headed: true
         env:
           PORT: "8811"
 
