@@ -48,7 +48,6 @@ Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --
 
 ```en
 DATABASE_URL="postgres://postgres:{STAGING_POSTGRES_PASSWORD}@db.{STAGING_YOUR_INSTANCE_NAME}.supabase.co:5432/postgres"
-SHADOW_DATABASE_URL="postgresql://postgres:postgres@localhost:12345/postgres"
 SUPABASE_ANON_PUBLIC="{ANON_PUBLIC}"
 SUPABASE_SERVICE_ROLE="{SERVICE_ROLE}"
 SUPABASE_URL="https://{STAGING_YOUR_INSTANCE_NAME}.supabase.co"
