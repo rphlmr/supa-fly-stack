@@ -11,6 +11,7 @@ export {
   destroyAuthSession,
   requireAuthSession,
   getAuthSession,
+  refreshAuthSession,
 } from "./session.server";
 export * from "./types";
 export * from "./components";

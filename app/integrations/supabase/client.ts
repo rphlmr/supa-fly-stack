@@ -7,6 +7,8 @@ import {
 } from "~/utils/env";
 import { isBrowser } from "~/utils/is-browser";
 
+import type { Database } from "./database";
+
 // ⚠️ cloudflare needs you define fetch option : https://github.com/supabase/supabase-js#custom-fetch-implementation
 // Use Remix fetch polyfill for node (See https://remix.run/docs/en/v1/other-api/node)
 function getSupabaseClient(supabaseKey: string, accessToken?: string) {
@@ -20,7 +22,9 @@ function getSupabaseClient(supabaseKey: string, accessToken?: string) {
       }
     : {};
 
-  return createClient(SUPABASE_URL, supabaseKey, {
+  // Type <Database> is only required if you fully use Supabase instead of Prisma
+  // See https://supabase.com/docs/reference/cli/usage#supabase-gen-types-typescript
+  return createClient<Database>(SUPABASE_URL, supabaseKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,

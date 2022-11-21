@@ -164,7 +164,9 @@ function isExpiringSoon(expiresAt: number) {
   return (expiresAt - REFRESH_ACCESS_TOKEN_THRESHOLD) * 1000 < Date.now();
 }
 
-async function refreshAuthSession(request: Request): Promise<AuthSession> {
+export async function refreshAuthSession(
+  request: Request
+): Promise<AuthSession> {
   const authSession = await getAuthSession(request);
 
   const refreshedAuthSession = await refreshAccessToken(

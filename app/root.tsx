@@ -17,9 +17,11 @@ import { useTranslation } from "react-i18next";
 import { useChangeLanguage } from "remix-i18next";
 
 import { i18nextServer } from "~/integrations/i18n";
+import { SupabaseProvider } from "~/integrations/supabase";
+import { getAuthSession } from "~/modules/auth";
+import { getBrowserEnv } from "~/utils/env";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
-import { getBrowserEnv } from "./utils/env";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwindStylesheetUrl },
@@ -32,10 +34,21 @@ export const meta: MetaFunction = () => ({
 });
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const locale = await i18nextServer.getLocale(request);
+  const [locale, authSession] = await Promise.all([
+    i18nextServer.getLocale(request),
+    getAuthSession(request),
+  ]);
+
+  const { accessToken, expiresAt, expiresIn } = authSession || {};
+
   return json({
     locale,
     env: getBrowserEnv(),
+    authSession: {
+      accessToken,
+      expiresAt,
+      expiresIn,
+    },
   });
 };
 
@@ -46,17 +59,15 @@ export default function App() {
   useChangeLanguage(locale);
 
   return (
-    <html
-      lang={locale}
-      dir={i18n.dir()}
-      className="h-full"
-    >
+    <html lang={locale} dir={i18n.dir()} className="h-full">
       <head>
         <Meta />
         <Links />
       </head>
       <body className="h-full">
-        <Outlet />
+        <SupabaseProvider>
+          <Outlet />
+        </SupabaseProvider>
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{
