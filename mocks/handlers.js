@@ -6,7 +6,7 @@ const supabaseAuthSession = {
   user: { id: USER_ID, email: USER_EMAIL },
   refresh_token: "valid",
   access_token: "valid",
-  expires_in: -1,
+  expires_in: 3600,
 };
 
 const authSession = {
@@ -14,7 +14,7 @@ const authSession = {
   accessToken: "valid",
   userId: USER_ID,
   email: USER_EMAIL,
-  expiresIn: -1,
+  expiresIn: 3000,
   expiresAt: -1,
 };
 
