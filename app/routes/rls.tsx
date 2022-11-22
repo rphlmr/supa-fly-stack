@@ -42,20 +42,22 @@ export async function loader({ request }: LoaderArgs) {
 export default function NotesPage() {
   const data = useLoaderData<typeof loader>();
   const { submit } = useFetcher();
-  const supabase = useSupabase();
+  const { supabaseClient, accessToken } = useSupabase();
 
   useEffect(() => {
-    if (!supabase) return;
+    // Here we want to listen to changes in the database only for authenticated users
+    if (!supabaseClient || !accessToken) return;
 
     // This is a demo of how to use the realtime client to listen for server changes
+    // This example enable realtime sync for the current user using this app in a mobile and a browser for example
     // On change, we'll reload all Remix loaders
     // More options here : https://supabase.com/docs/reference/javascript/subscribe
-    const subscription = supabase
+    const channel = supabaseClient
       .channel(`public:rls_notes`)
       .on(
         "postgres_changes",
         {
-          event: "INSERT",
+          event: "*",
           schema: "public",
           table: "rls_notes",
         },
@@ -67,10 +69,13 @@ export default function NotesPage() {
       )
       .subscribe();
 
+    // Bind your access token to the channel. It allows you to make RLS based on role authenticated and to use (auth.uid() = my_column_with_user_id)
+    channel.socket.setAuth(accessToken);
+
     return () => {
-      supabase.removeChannel(subscription);
+      supabaseClient.removeChannel(channel);
     };
-  }, [submit, supabase]);
+  }, [submit, supabaseClient, accessToken]);
 
   return (
     <div className="flex h-full min-h-screen flex-col">

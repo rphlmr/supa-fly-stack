@@ -9,6 +9,7 @@ import {
   SESSION_SECRET,
 } from "~/utils";
 
+import { REFRESH_ACCESS_TOKEN_THRESHOLD } from "./const";
 import { refreshAccessToken, verifyAuthSession } from "./service.server";
 import type { AuthSession } from "./types";
 
@@ -16,7 +17,6 @@ const SESSION_KEY = "authenticated";
 const SESSION_ERROR_KEY = "error";
 const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days;
 const LOGIN_URL = "/login";
-const REFRESH_ACCESS_TOKEN_THRESHOLD = 60 * 10; // 10 minutes left before token expires
 
 /**
  * Session storage CRUD

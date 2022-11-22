@@ -70,18 +70,24 @@ import { getSupabase } from "./client";
  *
  * export default function SubscribeToRealtime() {
  *  const [data, setData] = useState([])
- *  const supabase = useSupabase()
+ *  const { supabaseClient, accessToken } = useSupabase()
  *
  *  useEffect(() => {
- *    const channel = supabase
+ *    if (!supabaseClient || !accessToken) return;
+ *
+ *    const channel = supabaseClient
  *      .channel('test')
  *      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'test' }, (payload) => {
+ *        // do something with the payload. You can even trigger Remix to reload data :)
+ *        // fetcher.submit(null, { method: "post" }); to trigger a route action that will reload all loaders
  *        setData((data) => [...data, payload.new])
  *     })
  *      .subscribe()
  *
+ *    channel.socket.setAuth(accessToken);
+ *
  *    return () => {
- *      supabase.removeChannel(channel)
+ *      supabaseClient.removeChannel(channel)
  *    }
  *  }, [session])
  *
@@ -89,16 +95,21 @@ import { getSupabase } from "./client";
  * }
  */
 
-const SupabaseContext = createContext<SupabaseClient | undefined>(undefined);
+const SupabaseContext = createContext<{
+  supabaseClient: SupabaseClient | undefined;
+  accessToken: string | undefined;
+}>({ supabaseClient: undefined, accessToken: undefined });
 
 // in root.tsx, wrap <Outlet /> with <SupabaseProvider> to use supabase'browser client
 export const SupabaseProvider = ({ children }: { children: ReactElement }) => {
   // what root loader data returns
   const { accessToken, expiresIn, expiresAt } = useOptionalAuthSession();
-  const [currentExpiresAt, setCurrentExpiresAt] = useState<
+  const [browserSessionExpiresAt, setBrowserSessionExpiresAt] = useState<
     number | undefined
   >();
-  const [supabase, setSupabase] = useState<SupabaseClient | undefined>(() => {
+  const [supabaseClient, setSupabaseClient] = useState<
+    SupabaseClient | undefined
+  >(() => {
     // prevents server side initial state
     // init a default anonymous client in browser until we have an auth token
     if (isBrowser) return getSupabase();
@@ -118,16 +129,16 @@ export const SupabaseProvider = ({ children }: { children: ReactElement }) => {
 
   // when in browser
   // after root loader fetch, if user session is refresh, it's time to create a new supabase client
-  if (isBrowser && expiresAt !== currentExpiresAt) {
+  if (isBrowser && expiresAt !== browserSessionExpiresAt && accessToken) {
     // recreate a supabase client to force provider's consumer to rerender
-    const client = getSupabase(accessToken);
-
-    // refresh provider's state
-    setCurrentExpiresAt(expiresAt);
-    setSupabase(client);
+    setSupabaseClient(getSupabase(accessToken));
+    setBrowserSessionExpiresAt(expiresAt);
   }
 
-  const value = useMemo(() => supabase, [supabase]);
+  const value = useMemo(
+    () => ({ supabaseClient, accessToken }),
+    [supabaseClient, accessToken]
+  );
 
   return (
     <SupabaseContext.Provider value={value}>

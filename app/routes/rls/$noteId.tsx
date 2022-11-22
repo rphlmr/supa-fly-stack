@@ -42,6 +42,10 @@ export async function action({ request, params }: ActionArgs) {
 export default function NoteDetailsPage() {
   const data = useLoaderData<typeof loader>();
 
+  if (!data.note) {
+    return <div>Not found</div>;
+  }
+
   return (
     <div>
       <h3 className="text-2xl font-bold">{data.note.title}</h3>

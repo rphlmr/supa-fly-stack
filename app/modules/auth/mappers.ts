@@ -1,5 +1,6 @@
 import type { SupabaseAuthSession } from "~/integrations/supabase";
 
+import { REFRESH_ACCESS_TOKEN_THRESHOLD } from "./const";
 import type { AuthSession } from "./types";
 
 export function mapAuthSession(
@@ -18,7 +19,9 @@ export function mapAuthSession(
     refreshToken: supabaseAuthSession.refresh_token,
     userId: supabaseAuthSession.user.id,
     email: supabaseAuthSession.user.email,
-    expiresIn: supabaseAuthSession.expires_in ?? -1,
+    // we set a threshold to force access token refresh before it expires when we use Supabase in Browser
+    expiresIn:
+      (supabaseAuthSession.expires_in ?? 3600) - REFRESH_ACCESS_TOKEN_THRESHOLD,
     expiresAt: supabaseAuthSession.expires_at ?? -1,
   };
 }
