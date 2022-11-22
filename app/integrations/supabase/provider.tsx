@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useMemo } from "react";
 import { useFetcher } from "@remix-run/react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { useInterval, useMatchesData } from "~/hooks";
+import { useInterval } from "~/hooks";
 import type { AuthSession } from "~/modules/auth";
 import { isBrowser } from "~/utils";
 
@@ -100,10 +100,16 @@ const SupabaseContext = createContext<{
   accessToken: string | undefined;
 }>({ supabaseClient: undefined, accessToken: undefined });
 
-// in root.tsx, wrap <Outlet /> with <SupabaseProvider> to use supabase'browser client
-export const SupabaseProvider = ({ children }: { children: ReactElement }) => {
+// in root.tsx, wrap <Outlet /> with <SupabaseProvider authSession={authSession}> to use supabase'browser client
+export const SupabaseProvider = ({
+  children,
+  authSession,
+}: {
+  children: ReactElement;
+  authSession: Partial<AuthSession>;
+}) => {
   // what root loader data returns
-  const { accessToken, expiresIn, expiresAt } = useOptionalAuthSession();
+  const { accessToken, expiresIn, expiresAt } = authSession;
   const [browserSessionExpiresAt, setBrowserSessionExpiresAt] = useState<
     number | undefined
   >();
@@ -116,10 +122,10 @@ export const SupabaseProvider = ({ children }: { children: ReactElement }) => {
   });
   const refresh = useFetcher();
 
-  // auto refresh session at expire time
+  // trigger a refresh session at expire time. We'll send a post request to our resource route /refresh-session
   useInterval(() => {
-    // refreshes only if expiresIn is defined
-    // prevents refresh when user is not logged in
+    // ask to refresh only if expiresIn is defined
+    // prevents trying to refresh when user is not logged in
     if (expiresIn)
       refresh.submit(null, {
         method: "post",
@@ -156,10 +162,3 @@ export const useSupabase = () => {
 
   return context;
 };
-
-// Remix feature here, we can "watch" root loader data
-function useOptionalAuthSession(): Partial<AuthSession> {
-  const data = useMatchesData<{ authSession: AuthSession }>("root");
-
-  return data?.authSession || {};
-}

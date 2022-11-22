@@ -1,8 +1,4 @@
-import type {
-  LinksFunction,
-  LoaderFunction,
-  MetaFunction,
-} from "@remix-run/node";
+import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Links,
@@ -33,7 +29,7 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1",
 });
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: LoaderArgs) {
   const [locale, authSession] = await Promise.all([
     i18nextServer.getLocale(request),
     getAuthSession(request),
@@ -50,10 +46,10 @@ export const loader: LoaderFunction = async ({ request }) => {
       expiresIn,
     },
   });
-};
+}
 
 export default function App() {
-  const { env, locale } = useLoaderData<typeof loader>();
+  const { env, locale, authSession } = useLoaderData<typeof loader>();
   const { i18n } = useTranslation();
 
   useChangeLanguage(locale);
@@ -65,7 +61,7 @@ export default function App() {
         <Links />
       </head>
       <body className="h-full">
-        <SupabaseProvider>
+        <SupabaseProvider authSession={authSession}>
           <Outlet />
         </SupabaseProvider>
         <ScrollRestoration />
