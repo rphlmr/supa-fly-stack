@@ -49,7 +49,7 @@ Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --
 - **⚠️ IMPORTANT** [Create a shadow database in your PostgreSQL server](https://supabase.com/docs/guides/integrations/prisma#configuring-the-project-to-use-postgresql) within the same Supabase project using the `psql` CLI
   > **Note:** It's mandatory to use Prisma `prisma migrate dev`
 
-  > **Note 2:** If you read this after you've already created your database, you must be careful if a migrate error suggests you to reset your database (It will delete all your data). This is because the new shadow db has no migration yet but your target db yes. The way I handle this is to manually `prisma migrate resolve --applied xxxx` my [previous migrations](https://www.prisma.io/docs/guides/database/production-troubleshooting#option-2-manually-complete-migration-and-resolve-as-applied).
+  > **Note 2:** If you read this after you've already created your database, you must be careful if a migrate error suggests you to reset your database (It will delete all your data). This is because the new shadow db has no migration yet but your target db yes. If `We need to reset the PostgreSQL database "postgres"` happen, the way I handle this is to manually `prisma migrate resolve --applied xxxx` my [previous migrations](https://www.prisma.io/docs/guides/database/production-troubleshooting#option-2-manually-complete-migration-and-resolve-as-applied).
 
 ```en
 DATABASE_URL="postgres://postgres:{STAGING_POSTGRES_PASSWORD}@db.{STAGING_YOUR_INSTANCE_NAME}.supabase.co:5432/postgres"
