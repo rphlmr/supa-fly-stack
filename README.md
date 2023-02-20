@@ -235,3 +235,13 @@ The answer is "Yes" but It has a cost.
 Using Supabase SDK server side to query your database (for those using RLS features) adds an extra delay due to calling a Gotrue rest API instead of directly calling the Postgres database (and this is fine because at first Supabase SDK is for those who don't have/want backend).
 
 In my benchmark, it makes my pages twice slower. (~+200ms compared to a direct query with Prisma)
+
+## Supabase login with magic link
+
+In order to make the register/login with magic link work, you will need to add some configuration to your Supabase.
+You need to add the site url as well as the redirect urls of your local, test and live app that will be used for oauth
+To do that navigate to Authentication > URL configiration and add the folowing values:
+
+- https://localhost:3000/oauth/callback
+- https://staging-domain.com/oauth/callback
+- https://live-domain.com/oauth/callback
