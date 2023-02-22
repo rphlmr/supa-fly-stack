@@ -243,5 +243,8 @@ You need to add the site url as well as the redirect urls of your local, test an
 To do that navigate to Authentication > URL configiration and add the folowing values:
 
 - https://localhost:3000/oauth/callback
+- https://localhost:3000/reset-password
 - https://staging-domain.com/oauth/callback
+- https://staging-domain.com/reset-password
 - https://live-domain.com/oauth/callback
+- https://live-domain.com/reset-password

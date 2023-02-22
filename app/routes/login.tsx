@@ -150,6 +150,13 @@ export default function LoginPage() {
           </button>
           <div className="flex items-center justify-center">
             <div className="text-center text-sm text-gray-500">
+              <Link className="text-blue-500 underline" to="/forgot-password">
+                {t("login.forgotPassword")}?
+              </Link>
+            </div>
+          </div>
+          <div className="flex items-center justify-center">
+            <div className="text-center text-sm text-gray-500">
               {t("login.dontHaveAccount")}{" "}
               <Link
                 className="text-blue-500 underline"
