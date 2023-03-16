@@ -22,8 +22,6 @@ node_modules
 # Prisma shadow db
 /postgres-data
 
-/app/styles/tailwind.css
-
 .history
 .vscode
 .idea
