@@ -45,13 +45,13 @@ function getEnv(
 /**
  * Server env
  */
-export const SERVER_URL = getEnv("SERVER_URL");
 export const SUPABASE_SERVICE_ROLE = getEnv("SUPABASE_SERVICE_ROLE");
 export const SESSION_SECRET = getEnv("SESSION_SECRET");
 
 /**
  * Shared envs
  */
+export const SERVER_URL = getEnv("SERVER_URL", { isSecret: false });
 export const NODE_ENV = getEnv("NODE_ENV", {
   isSecret: false,
   isRequired: false,
@@ -65,5 +65,6 @@ export function getBrowserEnv() {
   return {
     SUPABASE_URL,
     SUPABASE_ANON_PUBLIC,
+    SERVER_URL,
   };
 }

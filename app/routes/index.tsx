@@ -3,7 +3,7 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 
-import { getAuthSession } from "~/modules/auth";
+import { ContinueWithGithub, getAuthSession } from "~/modules/auth";
 
 export async function loader({ request }: LoaderArgs) {
   const { email } = (await getAuthSession(request)) || {};
@@ -68,6 +68,9 @@ export default function Index() {
                       >
                         {t("login.action", { ns: "auth" })}
                       </Link>
+                    </div>
+                    <div className="flex justify-center">
+                      <ContinueWithGithub />
                     </div>
                   </div>
                 )}
@@ -152,10 +155,7 @@ export default function Index() {
                 href={img.href}
                 className="flex h-16 w-32 justify-center p-1 grayscale transition focus:grayscale-0 hover:grayscale-0"
               >
-                <img
-                  alt={img.alt}
-                  src={img.src}
-                />
+                <img alt={img.alt} src={img.src} />
               </a>
             ))}
           </div>

@@ -5,4 +5,5 @@ export interface AuthSession {
   email: string;
   expiresIn: number;
   expiresAt: number;
+  providerToken?: string | null;
 }

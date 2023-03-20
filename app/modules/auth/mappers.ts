@@ -20,5 +20,6 @@ export function mapAuthSession(
     email: supabaseAuthSession.user.email,
     expiresIn: supabaseAuthSession.expires_in ?? -1,
     expiresAt: supabaseAuthSession.expires_at ?? -1,
+    providerToken: supabaseAuthSession.provider_token,
   };
 }
