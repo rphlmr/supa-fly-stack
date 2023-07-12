@@ -11,7 +11,7 @@ import { createNote } from "~/modules/note";
 import { assertIsPost, isFormProcessing } from "~/utils";
 
 export const NewNoteFormSchema = z.object({
-  title: z.string().min(2, "require-title"),
+  title: z.string().min(1, "require-title"),
   body: z.string().min(1, "require-body"),
 });
 
@@ -31,7 +31,7 @@ export async function action({ request }: LoaderArgs) {
         headers: {
           "Set-Cookie": await commitAuthSession(request, { authSession }),
         },
-      }
+      },
     );
   }
 

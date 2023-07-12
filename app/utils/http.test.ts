@@ -8,6 +8,9 @@ import {
   safeRedirect,
 } from "./http.server";
 
+// @vitest-environment node
+// 👋 see https://vitest.dev/guide/environment.html#environments-for-specific-files
+
 const BASE_URL = "https://my-app.com";
 
 describe(getCurrentPath.name, () => {
@@ -19,7 +22,7 @@ describe(getCurrentPath.name, () => {
 describe(makeRedirectToFromHere.name, () => {
   it("should return search params with redirectTo set with current request url path", () => {
     expect(makeRedirectToFromHere(new Request(`${BASE_URL}/profile`))).toEqual(
-      new URLSearchParams([["redirectTo", "/profile"]])
+      new URLSearchParams([["redirectTo", "/profile"]]),
     );
   });
 });
@@ -31,13 +34,13 @@ describe(getRedirectTo.name, () => {
 
   it("should return url redirectTo param value", () => {
     expect(getRedirectTo(new Request(`${BASE_URL}?redirectTo=/profile`))).toBe(
-      "/profile"
+      "/profile",
     );
   });
 
   it("should return root redirectTo param value if invalid param value", () => {
     expect(getRedirectTo(new Request(`${BASE_URL}?redirectTo=//profile`))).toBe(
-      "/"
+      "/",
     );
   });
 });
@@ -75,7 +78,7 @@ describe(notFound.name, () => {
 
   it("should return message", async () => {
     expect(await notFound("not-found-message").text()).toBe(
-      "not-found-message"
+      "not-found-message",
     );
   });
 });
