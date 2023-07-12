@@ -24,12 +24,13 @@ export const i18nextServer = new RemixI18Next({
   // The backend you want to use to load the translations
   // Tip: You could pass `resources` to the `i18next` configuration and avoid
   // a backend here
+  // @ts-expect-error - `i18next-fs-backend` is not typed
   backend: Backend,
 });
 
 export async function createI18nextServerInstance(
   request: Request,
-  remixContext: EntryContext
+  remixContext: EntryContext,
 ) {
   // Create a new instance of i18next so every request will have a
   // completely unique instance and not share any state

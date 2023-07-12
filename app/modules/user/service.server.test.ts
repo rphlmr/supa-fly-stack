@@ -12,6 +12,9 @@ import { db } from "~/database";
 
 import { createUserAccount } from "./service.server";
 
+// @vitest-environment node
+// 👋 see https://vitest.dev/guide/environment.html#environments-for-specific-files
+
 // mock db
 vitest.mock("~/database", () => ({
   db: {
@@ -113,7 +116,6 @@ describe(createUserAccount.name, () => {
     expect(signInRequest.body).toEqual({
       email: USER_EMAIL,
       password: USER_PASSWORD,
-      data: {},
       gotrue_meta_security: {},
     });
     expect(fetchAuthAdminUserAPI.size).toEqual(1);
