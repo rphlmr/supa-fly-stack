@@ -1,5 +1,5 @@
 import { installGlobals } from "@remix-run/node";
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom/vitest";
 import { server } from "mocks";
 
 process.env.SESSION_SECRET = "super-duper-s3cret";
@@ -8,12 +8,10 @@ process.env.SUPABASE_ANON_PUBLIC = "{ANON_PUBLIC}";
 process.env.SUPABASE_URL = "https://supabase-project.supabase.co";
 process.env.SERVER_URL = "http://localhost:3000";
 
-
-if(typeof window !== 'undefined'){
-  // @ts-expect-error missing vitest type
-  window.happyDOM.settings.enableFileSystemHttpRequests = true;
+if (typeof window !== "undefined") {
+	// @ts-expect-error missing vitest type
+	window.happyDOM.settings.enableFileSystemHttpRequests = true;
 }
-
 
 installGlobals();
 

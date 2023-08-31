@@ -1,32 +1,32 @@
 import { createClient } from "@supabase/supabase-js";
 
 import {
-  SUPABASE_SERVICE_ROLE,
-  SUPABASE_URL,
-  SUPABASE_ANON_PUBLIC,
+	SUPABASE_SERVICE_ROLE,
+	SUPABASE_URL,
+	SUPABASE_ANON_PUBLIC,
 } from "~/utils/env";
 import { isBrowser } from "~/utils/is-browser";
 
 // ⚠️ cloudflare needs you define fetch option : https://github.com/supabase/supabase-js#custom-fetch-implementation
 // Use Remix fetch polyfill for node (See https://remix.run/docs/en/v1/other-api/node)
 function getSupabaseClient(supabaseKey: string, accessToken?: string) {
-  const global = accessToken
-    ? {
-        global: {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      }
-    : {};
+	const global = accessToken
+		? {
+				global: {
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				},
+		  }
+		: {};
 
-  return createClient(SUPABASE_URL, supabaseKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-    ...global,
-  });
+	return createClient(SUPABASE_URL, supabaseKey, {
+		auth: {
+			autoRefreshToken: false,
+			persistSession: false,
+		},
+		...global,
+	});
 }
 
 /**
@@ -37,12 +37,12 @@ function getSupabaseClient(supabaseKey: string, accessToken?: string) {
  * Reason : https://github.com/rphlmr/supa-fly-stack/pull/43#issue-1336412790
  */
 function getSupabaseAdmin() {
-  if (isBrowser)
-    throw new Error(
-      "getSupabaseAdmin is not available in browser and should NOT be used in insecure environments"
-    );
+	if (isBrowser)
+		throw new Error(
+			"getSupabaseAdmin is not available in browser and should NOT be used in insecure environments",
+		);
 
-  return getSupabaseClient(SUPABASE_SERVICE_ROLE);
+	return getSupabaseClient(SUPABASE_SERVICE_ROLE);
 }
 
 const supabaseClient = getSupabaseClient(SUPABASE_ANON_PUBLIC);

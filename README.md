@@ -12,40 +12,39 @@ npx create-remix --template rphlmr/supa-fly-stack
 
 ## What's in the stack
 
-- [Fly app deployment](https://fly.io) with [Docker](https://www.docker.com/products/docker-desktop/)
-- Production-ready [Supabase Database](https://supabase.com/)
-- Healthcheck endpoint for [Fly backups region fallbacks](https://fly.io/docs/reference/configuration/#services-http_checks)
-- [GitHub Actions](https://github.com/features/actions) to deploy on merge to production and staging environments
-- Email/Password Authentication / Magic Link, with [cookie-based sessions](https://remix.run/docs/en/v1/api/remix#createcookiesessionstorage)
-- Database ORM with [Prisma](https://prisma.io)
-- Forms Schema (client and server sides !) validation with [Remix Params Helper](https://github.com/kiliman/remix-params-helper)
-- Styling with [Tailwind](https://tailwindcss.com/)
-- End-to-end testing with [Cypress](https://cypress.io)
-- Local third party request mocking with [MSW](https://mswjs.io)
-- Unit testing with [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com)
-- Code formatting with [Prettier](https://prettier.io)
-- Linting with [ESLint](https://eslint.org)
-- Static Types with [TypeScript](https://typescriptlang.org)
+-   [Fly app deployment](https://fly.io) with [Docker](https://www.docker.com/products/docker-desktop/)
+-   Production-ready [Supabase Database](https://supabase.com/)
+-   Healthcheck endpoint for [Fly backups region fallbacks](https://fly.io/docs/reference/configuration/#services-http_checks)
+-   [GitHub Actions](https://github.com/features/actions) to deploy on merge to production and staging environments
+-   Email/Password Authentication / Magic Link, with [cookie-based sessions](https://remix.run/docs/en/v1/api/remix#createcookiesessionstorage)
+-   Database ORM with [Prisma](https://prisma.io)
+-   Forms Schema (client and server sides !) validation with [Remix Params Helper](https://github.com/kiliman/remix-params-helper)
+-   Styling with [Tailwind](https://tailwindcss.com/)
+-   End-to-end testing with [Cypress](https://cypress.io)
+-   Local third party request mocking with [MSW](https://mswjs.io)
+-   Unit testing with [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com)
+-   Code formatting with [Prettier](https://prettier.io)
+-   Linting with [ESLint](https://eslint.org)
+-   Static Types with [TypeScript](https://typescriptlang.org)
 
 Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --template your/repo`! Make it your own.
 
 ## Development
 
-- Create a [Supabase Database](https://supabase.com/) (free tier gives you 2 databases)
+-   Create a [Supabase Database](https://supabase.com/) (free tier gives you 2 databases)
 
-  > **Note:** Only one for playing around with Supabase or 2 for `staging` and `production`
+    > **Note:** Only one for playing around with Supabase or 2 for `staging` and `production`
 
-  > **Note:** Used all your free tiers ? Also works with [Supabase CLI](https://github.com/supabase/cli) and local self-hosting
+    > **Note:** Used all your free tiers ? Also works with [Supabase CLI](https://github.com/supabase/cli) and local self-hosting
 
-  > **Note:** Create a strong database password, but prefer a passphrase, it'll be more easy to use in connection string (no need to escape special char)
-  >
-  > _example : my_strong_passphrase_
+    > **Note:** Create a strong database password, but prefer a passphrase, it'll be more easy to use in connection string (no need to escape special char)
+    >
+    > _example : my_strong_passphrase_
 
-- Go to https://app.supabase.io/project/{PROJECT}/settings/api to find your secrets
-- "Project API keys"
-- Add your `SUPABASE_URL`, `SERVER_URL`, `SUPABASE_SERVICE_ROLE` (aka `service_role` `secret`), `SUPABASE_ANON_PUBLIC` (aka `anon` `public`) and `DATABASE_URL` in the `.env` file
-  > **Note:** `SERVER_URL` is your localhost on dev. It'll work for magic link login
-
+-   Go to https://app.supabase.io/project/{PROJECT}/settings/api to find your secrets
+-   "Project API keys"
+-   Add your `SUPABASE_URL`, `SERVER_URL`, `SUPABASE_SERVICE_ROLE` (aka `service_role` `secret`), `SUPABASE_ANON_PUBLIC` (aka `anon` `public`) and `DATABASE_URL` in the `.env` file
+    > **Note:** `SERVER_URL` is your localhost on dev. It'll work for magic link login
 
 ```en
 DATABASE_URL="postgres://postgres:{STAGING_POSTGRES_PASSWORD}@db.{STAGING_YOUR_INSTANCE_NAME}.supabase.co:5432/postgres"
@@ -56,37 +55,37 @@ SESSION_SECRET="super-duper-s3cret"
 SERVER_URL="http://localhost:3000"
 ```
 
-- This step only applies if you've opted out of having the CLI install dependencies for you:
+-   This step only applies if you've opted out of having the CLI install dependencies for you:
 
-  ```sh
-  npx remix init
-  ```
+    ```sh
+    npx remix init
+    ```
 
-- Initial setup:
+-   Initial setup:
 
-  ```sh
-  npm run setup
-  ```
+    ```sh
+    npm run setup
+    ```
 
-- Start dev server:
+-   Start dev server:
 
-  ```sh
-  npm run dev
-  ```
+    ```sh
+    npm run dev
+    ```
 
 This starts your app in development mode, rebuilding assets on file changes.
 
 The database seed script creates a new user with some data you can use to get started:
 
-- Email: `hello@supabase.com`
-- Password: `supabase`
+-   Email: `hello@supabase.com`
+-   Password: `supabase`
 
 ### Relevant code:
 
 This is a pretty simple note-taking app, but it's a good example of how you can build a full-stack app with Prisma, Supabase, and Remix. The main functionality is creating users, logging in and out (handling access and refresh tokens + refresh on expiration), and creating and deleting notes.
 
-- auth / session [./app/modules/auth](./app/modules/auth)
-- creating, and deleting notes [./app/modules/note](./app/modules/note)
+-   auth / session [./app/modules/auth](./app/modules/auth)
+-   creating, and deleting notes [./app/modules/note](./app/modules/note)
 
 ## Deployment
 
@@ -96,65 +95,65 @@ This Remix Stack comes with two GitHub Actions that handle automatically deployi
 
 Prior to your first deployment, you'll need to do a few things:
 
-- [Install Fly](https://fly.io/docs/getting-started/installing-flyctl/)
+-   [Install Fly](https://fly.io/docs/getting-started/installing-flyctl/)
 
-- Sign up and log in to Fly
+-   Sign up and log in to Fly
 
-  ```sh
-  fly auth signup
-  ```
+    ```sh
+    fly auth signup
+    ```
 
-  > **Note:** If you have more than one Fly account, ensure that you are signed into the same account in the Fly CLI as you are in the browser. In your terminal, run `fly auth whoami` and ensure the email matches the Fly account signed into the browser.
+    > **Note:** If you have more than one Fly account, ensure that you are signed into the same account in the Fly CLI as you are in the browser. In your terminal, run `fly auth whoami` and ensure the email matches the Fly account signed into the browser.
 
-- Create two apps on Fly, one for staging and one for production:
+-   Create two apps on Fly, one for staging and one for production:
 
-  ```sh
-  fly apps create supa-fly-stack-template
-  fly apps create supa-fly-stack-template-staging  # ** not mandatory if you don't want a staging environnement **
-  ```
+    ```sh
+    fly apps create supa-fly-stack-template
+    fly apps create supa-fly-stack-template-staging  # ** not mandatory if you don't want a staging environnement **
+    ```
 
-  > **Note:** For production app, make sure this name matches the `app` set in your `fly.toml` file. Otherwise, you will not be able to deploy.
+    > **Note:** For production app, make sure this name matches the `app` set in your `fly.toml` file. Otherwise, you will not be able to deploy.
 
-  - Initialize Git.
+    -   Initialize Git.
 
-  ```sh
-  git init
-  ```
+    ```sh
+    git init
+    ```
 
-- Create a new [GitHub Repository](https://repo.new), and then add it as the remote for your project. **Do not push your app yet!**
+-   Create a new [GitHub Repository](https://repo.new), and then add it as the remote for your project. **Do not push your app yet!**
 
-  ```sh
-  git remote add origin <ORIGIN_URL>
-  ```
+    ```sh
+    git remote add origin <ORIGIN_URL>
+    ```
 
-- Add a `FLY_API_TOKEN` to your GitHub repo. To do this, go to your user settings on Fly and create a new [token](https://web.fly.io/user/personal_access_tokens/new), then add it to [your repo secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) with the name `FLY_API_TOKEN`.
+-   Add a `FLY_API_TOKEN` to your GitHub repo. To do this, go to your user settings on Fly and create a new [token](https://web.fly.io/user/personal_access_tokens/new), then add it to [your repo secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) with the name `FLY_API_TOKEN`.
 
-- Add a `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE`,`SUPABASE_ANON_PUBLIC`, `SERVER_URL` and `DATABASE_URL` to your fly app secrets
+-   Add a `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE`,`SUPABASE_ANON_PUBLIC`, `SERVER_URL` and `DATABASE_URL` to your fly app secrets
 
-  > **Note:** To find your `SERVER_URL`, go to [your fly.io dashboard](https://fly.io/apps/supa-fly-stack-template-3a36)
+    > **Note:** To find your `SERVER_URL`, go to [your fly.io dashboard](https://fly.io/apps/supa-fly-stack-template-3a36)
 
-  To do this you can run the following commands:
+    To do this you can run the following commands:
 
-  ```sh
-  # production (--app name is resolved from fly.toml)
-  fly secrets set SESSION_SECRET=$(openssl rand -hex 32)
-  fly secrets set SUPABASE_URL="https://{YOUR_INSTANCE_NAME}.supabase.co"
-  fly secrets set SUPABASE_SERVICE_ROLE="{SUPABASE_SERVICE_ROLE}"
-  fly secrets set SUPABASE_ANON_PUBLIC="{SUPABASE_ANON_PUBLIC}"
-  fly secrets set DATABASE_URL="postgres://postgres:{POSTGRES_PASSWORD}@db.{YOUR_INSTANCE_NAME}.supabase.co:5432/postgres"
-  fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}"
+    ```sh
+    # production (--app name is resolved from fly.toml)
+    fly secrets set SESSION_SECRET=$(openssl rand -hex 32)
+    fly secrets set SUPABASE_URL="https://{YOUR_INSTANCE_NAME}.supabase.co"
+    fly secrets set SUPABASE_SERVICE_ROLE="{SUPABASE_SERVICE_ROLE}"
+    fly secrets set SUPABASE_ANON_PUBLIC="{SUPABASE_ANON_PUBLIC}"
+    fly secrets set DATABASE_URL="postgres://postgres:{POSTGRES_PASSWORD}@db.{YOUR_INSTANCE_NAME}.supabase.co:5432/postgres"
+    fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}"
 
-  # staging (specify --app name) ** not mandatory if you don't want a staging environnement **
-  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app supa-fly-stack-template-staging
-  fly secrets set SUPABASE_URL="https://{YOUR_STAGING_INSTANCE_NAME}.supabase.co" --app supa-fly-stack-template-staging
-  fly secrets set SUPABASE_SERVICE_ROLE="{STAGING_SUPABASE_SERVICE_ROLE}" --app supa-fly-stack-template-staging
-  fly secrets set SUPABASE_ANON_PUBLIC="{STAGING_SUPABASE_ANON_PUBLIC}" --app supa-fly-stack-template-staging
-  fly secrets set DATABASE_URL="postgres://postgres:{STAGING_POSTGRES_PASSWORD}@db.{STAGING_YOUR_INSTANCE_NAME}.supabase.co:5432/postgres" --app supa-fly-stack-template-staging
-  fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}" --app supa-fly-stack-template-staging
+    # staging (specify --app name) ** not mandatory if you don't want a staging environnement **
+    fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app supa-fly-stack-template-staging
+    fly secrets set SUPABASE_URL="https://{YOUR_STAGING_INSTANCE_NAME}.supabase.co" --app supa-fly-stack-template-staging
+    fly secrets set SUPABASE_SERVICE_ROLE="{STAGING_SUPABASE_SERVICE_ROLE}" --app supa-fly-stack-template-staging
+    fly secrets set SUPABASE_ANON_PUBLIC="{STAGING_SUPABASE_ANON_PUBLIC}" --app supa-fly-stack-template-staging
+    fly secrets set DATABASE_URL="postgres://postgres:{STAGING_POSTGRES_PASSWORD}@db.{STAGING_YOUR_INSTANCE_NAME}.supabase.co:5432/postgres" --app supa-fly-stack-template-staging
+    fly secrets set SERVER_URL="https://{YOUR_STAGING_SERVEUR_URL}" --app supa-fly-stack-template-staging
 
-  ```
+    ```
 
-  If you don't have openssl installed, you can also use [1password](https://1password.com/generate-password) to generate a random secret, just replace `$(openssl rand -hex 32)` with the generated secret.
+    If you don't have openssl installed, you can also use [1password](https://1password.com/generate-password) to generate a random secret, just replace `$(openssl rand -hex 32)` with the generated secret.
 
 Now that everything is set up you can commit and push your changes to your repo. Every commit to your `main` branch will trigger a deployment to your production environment, and every commit to your `dev` branch will trigger a deployment to your staging environment.
 
@@ -184,7 +183,7 @@ We also have a utility to auto-delete the user at the end of your test. Just mak
 
 ```ts
 afterEach(() => {
-  cy.cleanupUser();
+	cy.cleanupUser();
 });
 ```
 
@@ -211,23 +210,25 @@ We use [Prettier](https://prettier.io/) for auto-formatting in this project. It'
 You are now ready to go further, congrats!
 
 To extend your Prisma schema and apply changes on your supabase database :
-- Make your changes in [./app/database/schema.prisma](./app/database/schema.prisma)
-- Prepare your schema migration
-  ```sh
-  npm run db:prepare-migration
-  ```
-- Check your migration in [./app/database/migrations](./app/database)
-- Apply this migration to production
 
-  ```sh
-  npm run db:deploy-migration
-  ```
+-   Make your changes in [./app/database/schema.prisma](./app/database/schema.prisma)
+-   Prepare your schema migration
+    ```sh
+    npm run db:prepare-migration
+    ```
+-   Check your migration in [./app/database/migrations](./app/database)
+-   Apply this migration to production
+
+    ```sh
+    npm run db:deploy-migration
+    ```
 
 ## If your token expires in less than 1 hour (3600 seconds in Supabase Dashboard)
 
 If you have a lower token lifetime than me (1 hour), you should take a look at `REFRESH_ACCESS_TOKEN_THRESHOLD` in [./app/modules/auth/session.server.ts](./app/modules/auth/session.server.ts) and set what you think is the best value for your use case.
 
 ## Supabase RLS
+
 You may ask "can I use RLS with Remix".
 
 The answer is "Yes" but It has a cost.
@@ -242,9 +243,9 @@ In order to make the register/login with magic link work, you will need to add s
 You need to add the site url as well as the redirect urls of your local, test and live app that will be used for oauth
 To do that navigate to Authentication > URL configiration and add the folowing values:
 
-- https://localhost:3000/oauth/callback
-- https://localhost:3000/reset-password
-- https://staging-domain.com/oauth/callback
-- https://staging-domain.com/reset-password
-- https://live-domain.com/oauth/callback
-- https://live-domain.com/reset-password
+-   https://localhost:3000/oauth/callback
+-   https://localhost:3000/reset-password
+-   https://staging-domain.com/oauth/callback
+-   https://staging-domain.com/reset-password
+-   https://live-domain.com/oauth/callback
+-   https://live-domain.com/reset-password
