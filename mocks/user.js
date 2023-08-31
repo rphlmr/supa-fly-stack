@@ -3,7 +3,7 @@ const USER_EMAIL = "hello@supabase.com";
 const USER_PASSWORD = "supabase";
 
 module.exports = {
-  USER_EMAIL,
-  USER_ID,
-  USER_PASSWORD,
+	USER_EMAIL,
+	USER_ID,
+	USER_PASSWORD,
 };

@@ -5,11 +5,11 @@ import { destroyAuthSession } from "~/modules/auth";
 import { assertIsPost } from "~/utils";
 
 export async function action({ request }: ActionArgs) {
-  assertIsPost(request);
+	assertIsPost(request);
 
-  return destroyAuthSession(request);
+	return destroyAuthSession(request);
 }
 
 export async function loader() {
-  return redirect("/");
+	return redirect("/");
 }

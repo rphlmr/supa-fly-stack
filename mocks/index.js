@@ -11,5 +11,5 @@ process.once("SIGINT", () => server.close());
 process.once("SIGTERM", () => server.close());
 
 module.exports = {
-  server,
+	server,
 };
