@@ -26,7 +26,6 @@ export function ContinueWithEmailForm() {
 		<sendMagicLink.Form
 			method="post"
 			action="/send-magic-link"
-			replace={false}
 			ref={ref}
 		>
 			<input
