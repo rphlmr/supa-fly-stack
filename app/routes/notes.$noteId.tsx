@@ -1,12 +1,12 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
-import { Form, useCatch, useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData, useRouteError } from "@remix-run/react";
 
 import { requireAuthSession, commitAuthSession } from "~/modules/auth";
 import { deleteNote, getNote } from "~/modules/note";
 import { assertIsDelete, getRequiredParam } from "~/utils";
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
 	const { userId } = await requireAuthSession(request);
 
 	const id = getRequiredParam(params, "noteId");
@@ -18,7 +18,7 @@ export async function loader({ request, params }: LoaderArgs) {
 	return json({ note });
 }
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
 	assertIsDelete(request);
 	const id = getRequiredParam(params, "noteId");
 	const authSession = await requireAuthSession(request);
@@ -52,16 +52,10 @@ export default function NoteDetailsPage() {
 	);
 }
 
-export function ErrorBoundary({ error }: { error: Error }) {
-	return <div>An unexpected error occurred: {error.message}</div>;
+export function ErrorBoundary() {
+	const error = useRouteError();
+
+	return <div>{JSON.stringify(error, null, 2)}</div>;
 }
 
-export function CatchBoundary() {
-	const caught = useCatch();
 
-	if (caught.status === 404) {
-		return <div>Note not found</div>;
-	}
-
-	throw new Error(`Unexpected caught response with status: ${caught.status}`);
-}

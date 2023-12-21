@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { json, redirect } from "@remix-run/node";
-import type { LoaderArgs, ActionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
 import { useActionData, useFetcher, useSearchParams } from "@remix-run/react";
 import { parseFormAny } from "react-zorm";
 import { z } from "zod";
@@ -17,7 +17,7 @@ import { assertIsPost, safeRedirect } from "~/utils";
 
 // imagine a user go back after OAuth login success or type this URL
 // we don't want him to fall in a black hole 👽
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
 	const authSession = await getAuthSession(request);
 
 	if (authSession) return redirect("/notes");
@@ -25,7 +25,7 @@ export async function loader({ request }: LoaderArgs) {
 	return json({});
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
 	assertIsPost(request);
 
 	const formData = await request.formData();
@@ -120,7 +120,7 @@ export default function LoginCallback() {
 				formData.append("refreshToken", refreshToken);
 				formData.append("redirectTo", redirectTo);
 
-				fetcher.submit(formData, { method: "post", replace: true });
+				fetcher.submit(formData, { method: "post", });
 			}
 		});
 

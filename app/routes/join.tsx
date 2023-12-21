@@ -1,9 +1,9 @@
 import * as React from "react";
 
 import type {
-	ActionArgs,
-	LoaderArgs,
-	V2_MetaFunction as MetaFunction,
+	ActionFunctionArgs,
+	LoaderFunctionArgs,
+	MetaFunction,
 } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
 import { Form, Link, useNavigation, useSearchParams } from "@remix-run/react";
@@ -20,7 +20,7 @@ import {
 import { getUserByEmail, createUserAccount } from "~/modules/user";
 import { assertIsPost, isFormProcessing } from "~/utils";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
 	const authSession = await getAuthSession(request);
 	const t = await i18nextServer.getFixedT(request, "auth");
 	const title = t("register.title");
@@ -39,7 +39,7 @@ const JoinFormSchema = z.object({
 	redirectTo: z.string().optional(),
 });
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
 	assertIsPost(request);
 	const formData = await request.formData();
 	const result = await JoinFormSchema.safeParseAsync(parseFormAny(formData));
@@ -80,9 +80,10 @@ export async function action({ request }: ActionArgs) {
 	});
 }
 
-export const meta: MetaFunction = ({ data }) => [
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => [
 	{
-		title: data.title,
+		title: data?.title,
 	},
 ];
 
