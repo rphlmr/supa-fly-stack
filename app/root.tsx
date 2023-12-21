@@ -1,8 +1,7 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
 import type {
 	LinksFunction,
 	LoaderFunction,
-	V2_MetaFunction as MetaFunction,
+	MetaFunction,
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
@@ -23,14 +22,7 @@ import tailwindStylesheetUrl from "./styles/tailwind.css";
 import { getBrowserEnv } from "./utils/env";
 
 export const links: LinksFunction = () => [
-	{ rel: "preload", href: tailwindStylesheetUrl, as: "style" },
-	{ rel: "stylesheet", href: tailwindStylesheetUrl, as: "style" },
-	...(cssBundleHref
-		? [
-				{ rel: "preload", href: cssBundleHref, as: "style" },
-				{ rel: "stylesheet", href: cssBundleHref },
-		  ]
-		: []),
+	{ rel: "stylesheet preload prefetch", href: tailwindStylesheetUrl, as: "style" },
 ];
 
 export const meta: MetaFunction = () => [
@@ -55,12 +47,12 @@ export default function App() {
 	return (
 		<html lang={locale} dir={i18n.dir()} className="h-full">
 			<head>
-				<Meta />
 				<meta charSet="utf-8" />
 				<meta
 					name="viewport"
 					content="width=device-width,initial-scale=1.0,maximum-scale=1.0"
 				/>
+				<Meta />
 				<Links />
 			</head>
 			<body className="h-full">

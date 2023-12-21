@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, Outlet, Link, NavLink } from "@remix-run/react";
 
@@ -6,7 +6,7 @@ import { LogoutButton, requireAuthSession } from "~/modules/auth";
 import { getNotes } from "~/modules/note";
 import { notFound } from "~/utils/http.server";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
 	const { userId, email } = await requireAuthSession(request);
 
 	const notes = await getNotes({ userId });

@@ -1,4 +1,5 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs,
+	LoaderFunctionArgs, } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useNavigation } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
@@ -9,7 +10,7 @@ import { i18nextServer } from "~/integrations/i18n";
 import { getAuthSession, sendResetPasswordLink } from "~/modules/auth";
 import { assertIsPost, isFormProcessing, tw } from "~/utils";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
 	const authSession = await getAuthSession(request);
 	const t = await i18nextServer.getFixedT(request, "auth");
 	const title = t("login.forgotPassword");
@@ -26,7 +27,7 @@ const ForgotPasswordSchema = z.object({
 		.transform((email) => email.toLowerCase()),
 });
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
 	assertIsPost(request);
 
 	const formData = await request.formData();
