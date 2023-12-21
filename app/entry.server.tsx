@@ -1,9 +1,10 @@
 import { PassThrough } from "stream";
 
 import {
-    createReadableStreamFromReadable,
-    type EntryContext,
-} from "@remix-run/node";import { RemixServer } from "@remix-run/react";
+	createReadableStreamFromReadable,
+	type EntryContext,
+} from "@remix-run/node";
+import { RemixServer } from "@remix-run/react";
 import isbot from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import { I18nextProvider } from "react-i18next";
@@ -39,7 +40,7 @@ export default async function handleRequest(
 			{
 				[callbackName]() {
 					const body = new PassThrough();
-                    const stream = createReadableStreamFromReadable(body);
+					const stream = createReadableStreamFromReadable(body);
 
 					responseHeaders.set("Content-Type", "text/html");
 
