@@ -1,4 +1,4 @@
-const { rest } = require("msw");
+import { http } from "msw";
 
 const { USER_EMAIL, USER_ID, USER_PASSWORD } = require("./user");
 
@@ -29,7 +29,7 @@ const SUPABASE_AUTH_USER_API = "/auth/v1/user";
 const SUPABASE_AUTH_ADMIN_USER_API = "/auth/v1/admin/users";
 
 const handlers = [
-	rest.post(
+	http.post(
 		`${SUPABASE_URL}${SUPABASE_AUTH_TOKEN_API}`,
 		async (req, res, ctx) => {
 			const { email, password, refresh_token } = await req.json();
@@ -51,7 +51,7 @@ const handlers = [
 			return res(ctx.status(200), ctx.json(supabaseAuthSession));
 		},
 	),
-	rest.get(
+	http.get(
 		`${SUPABASE_URL}${SUPABASE_AUTH_USER_API}`,
 		async (req, res, ctx) => {
 			const token = req.headers
@@ -66,13 +66,13 @@ const handlers = [
 			return res(ctx.status(200), ctx.json({ id: USER_ID }));
 		},
 	),
-	rest.post(
+	http.post(
 		`${SUPABASE_URL}${SUPABASE_AUTH_ADMIN_USER_API}`,
-		async (req, res, ctx) => res(ctx.status(200), ctx.json(authAccount)),
+		async (_, res, ctx) => res(ctx.status(200), ctx.json(authAccount)),
 	),
-	rest.delete(
+	http.delete(
 		`${SUPABASE_URL}${SUPABASE_AUTH_ADMIN_USER_API}/*`,
-		async (req, res, ctx) => res(ctx.status(200), ctx.json({})),
+		async (_, res, ctx) => res(ctx.status(200), ctx.json({})),
 	),
 ];
 

@@ -9,7 +9,7 @@ export default defineConfig({
 	test: {
 		globals: true,
 		environment: "happy-dom",
-		// setupFiles: ["./test/setup-test-env.ts"], DISABLED because I have not had the time to upgrade MSW mocks
+		setupFiles: ["./test/setup-test-env.ts"],
 		includeSource: ["app/**/*.{js,ts}"],
 		exclude: ["node_modules", "mocks/**/*.{js,ts}"],
 		coverage: {
