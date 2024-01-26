@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useNavigation } from "@remix-run/react";
 import { parseFormAny, useZorm } from "react-zorm";
@@ -15,7 +15,7 @@ export const NewNoteFormSchema = z.object({
 	body: z.string().min(1, "require-body"),
 });
 
-export async function action({ request }: LoaderFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
 	assertIsPost(request);
 	const authSession = await requireAuthSession(request);
 	const formData = await request.formData();
