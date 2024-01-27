@@ -1,15 +1,11 @@
-const { setupServer } = require("msw/node");
+import { setupServer } from "msw/node";
 
-const { handlers } = require("./handlers");
+import { handlers } from "./handlers";
 
-const server = setupServer(...handlers);
+export const server = setupServer(...handlers);
 
 server.listen({ onUnhandledRequest: "bypass" });
 console.info("🔶 Mock server running");
 
 process.once("SIGINT", () => server.close());
 process.once("SIGTERM", () => server.close());
-
-module.exports = {
-	server,
-};
