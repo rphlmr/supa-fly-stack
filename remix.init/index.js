@@ -89,7 +89,7 @@ async function main({ rootDirectory, packageManager }) {
 		),
 	]);
 
-	execSync("npm run format -- --loglevel warn", {
+	execSync("npm run format -- --log-level warn", {
 		stdio: "inherit",
 		cwd: rootDirectory,
 	});
